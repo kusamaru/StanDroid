@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/bottom_fragment_history_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_history_24px"
+        android:gravity="center_vertical"
+        android:padding="10sp"
+        android:text="@string/nico_history"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_fragment_history_horizontal_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottom_fragment_history_horizontal_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bottom_fragment_history_text_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_fragment_history_horizontal_recycler_view">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bottom_fragment_history_live_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/nicolive"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_outline_live_tv_24px_black" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bottom_fragment_history_video_chip"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/nicovideo"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_local_movies_24px" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bottom_fragment_history_today_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:checked="false"
+                android:text="@string/today_only"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_event_available_24px" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/bottom_fragment_history_distinct_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:checkable="true"
+                android:checked="false"
+                android:text="@string/zyuuhuku_hide"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_filter_alt_black_24dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottom_fragment_history_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view" />
+</androidx.constraintlayout.widget.ConstraintLayout>

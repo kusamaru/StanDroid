@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.github.takusan23.tatimidroid.SwipeFixFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_nicovideo_motionlayout_parent_framelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- こっちに制約（app:layout_constraintBottomなんとか～）みたいなのは書かなくていいらしい。 -->
+    <!-- Sceneの方に制約を書く（初期状態含め） -->
+    <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/fragment_nicovideo_motion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layoutDescription="@xml/fragment_nicovideo_land_scene">
+
+        <View
+                android:id="@+id/fragment_nicovideo_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp" />
+
+        <!-- 映像 -->
+        <SurfaceView
+                android:id="@+id/fragment_nicovideo_surface_view"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:elevation="5dp" />
+
+        <!-- コメント描画 -->
+        <io.github.takusan23.tatimidroid.ReCommentCanvas
+                android:id="@+id/fragment_nicovideo_comment_canvas"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:elevation="5dp" />
+
+        <!-- コントローラー -->
+        <include
+                android:id="@+id/fragment_nicovideo_control_include"
+                layout="@layout/include_nicovideo_player_controller" />
+
+        <!-- ViewPagerなど -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/fragment_nicovideo_viewpager_parent"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/fragment_nicovideo_tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_scrollFlags="scroll|enterAlways|snap"
+                        app:tabMode="scrollable" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/fragment_nicovideo_swipe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/fragment_nicovideo_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                </androidx.viewpager2.widget.ViewPager2>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+</io.github.takusan23.tatimidroid.SwipeFixFrameLayout>

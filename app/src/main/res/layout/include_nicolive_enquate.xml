@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+    <TextView
+            android:id="@+id/enquate_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="アンケート内容"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+    <LinearLayout
+            android:id="@+id/enquate_linearlayout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <!--
+
+                <Button
+                        android:id="@+id/enquate_button_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+        -->
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/enquate_linearlayout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <!--
+                <Button
+                        android:id="@+id/enquate_button_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+        -->
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/enquate_linearlayout_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <!--
+                <Button
+                        android:id="@+id/enquate_button_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+
+                <Space
+                        android:layout_width="10sp"
+                        android:layout_height="wrap_content" />
+
+                <Button
+                        android:id="@+id/enquate_button_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Button" />
+        -->
+    </LinearLayout>
+
+</LinearLayout>

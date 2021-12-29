@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:animateLayoutChanges="true">
+
+        <SurfaceView
+                android:id="@+id/overlay_surfaceview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        <io.github.takusan23.tatimidroid.CommentCanvas
+                android:id="@+id/overlay_commentCanvas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        <include
+                android:id="@+id/overlay_control_include"
+                layout="@layout/include_nicolive_player_controller" />
+
+    </FrameLayout>
+
+</LinearLayout>

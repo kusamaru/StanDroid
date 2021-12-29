@@ -1,0 +1,126 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:drawablePadding">5sp</item>
+    </style>
+
+    <!--いつもつかうやつ-->
+    <style name="OLEDTheme" parent="Theme.MaterialComponents">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:tint">#ffffff</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="materialButtonStyle">@style/ButtonStyle</item>
+        <item name="materialButtonOutlinedStyle">@style/OutlineButtonStyle</item>
+        <!-- DrawableStartの色とPadding -->
+        <item name="drawableTint">#ffffff</item>
+        <item name="android:drawablePadding">5sp</item>
+        <item name="chipIconTint">#ffffff</item>
+    </style>
+
+    <!--  MainActivity用。ToolBarが省略されている  -->
+    <style name="MainActivity_AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:drawablePadding">5sp</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- MainActivity_AppTheme の DarkTheme版 -->
+    <style name="MainActivity_OLEDTheme" parent="Theme.MaterialComponents">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:tint">#ffffff</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="materialButtonStyle">@style/ButtonStyle</item>
+        <item name="materialButtonOutlinedStyle">@style/OutlineButtonStyle</item>
+        <!-- DrawableStartの色とPadding -->
+        <item name="drawableTint">#ffffff</item>
+        <item name="android:drawablePadding">5sp</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="chipIconTint">#ffffff</item>
+        <item name="iconTint">#ffffff</item>
+    </style>
+
+
+    <!--にまど用レイアウト。SupportActionBarを消すために-->
+    <style name="NimadoTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--
+                <item name="android:statusBarColor">@android:color/transparent</item>
+        -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:drawablePadding">5sp</item>
+    </style>
+
+    <!--にまど用レイアウト。上記のダークモード版-->
+    <style name="NimadoOLEDTheme" parent="Theme.MaterialComponents">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--
+                <item name="android:statusBarColor">@android:color/transparent</item>
+        -->
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:tint">#ffffff</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="materialButtonStyle">@style/ButtonStyle</item>
+        <item name="materialButtonOutlinedStyle">@style/OutlineButtonStyle</item>
+        <!-- DrawableStartの色とPadding -->
+        <item name="drawableTint">#ffffff</item>
+        <item name="android:drawablePadding">5sp</item>
+    </style>
+
+    <!--ボタンのテキスト色-->
+    <style name="ButtonStyle" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:textColor">#ffffff</item>
+        <item name="iconTint">#ffffff</item>
+    </style>
+
+    <style name="OutlineButtonStyle" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="iconTint">#ffffff</item>
+        <item name="backgroundTint">#ffffff</item>
+    </style>
+
+    <!-- ボタンだけのトグルボタン（複数アイコン有る中から選ぶやつ）のStyle -->
+    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <!-- NavigationViewの色が薄くて見にくいので特別に作ってあげた -->
+    <style name="NavigationViewSelectColor" parent="Widget.Design.NavigationView">
+        <item name="itemShapeFillColor">@color/navigation_item_color</item>
+        <item name="itemTextColor">@color/navigation_item_text_color</item>
+        <item name="itemIconTint">@color/navigation_item_text_color</item>
+    </style>
+
+    <style name="MainActivity_MaterialYou" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- なんか色おかしいのでなおす -->
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MaterialComponents.BottomSheetDialog</item>
+    </style>
+
+</resources>

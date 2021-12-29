@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/comment_activity_comment_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:cardElevation="5dp"
+        android:layout_margin="16dp"
+        android:visibility="visible"
+        app:cardCornerRadius="10dp"
+        tools:visibility="visible">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <ImageButton
+                    android:id="@+id/comment_cardview_close_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_clear_black" />
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:id="@+id/comment_cardview_command_edit_linearlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                    <LinearLayout
+                            android:id="@+id/comment_cardview_comment_command_size_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_big_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:text="www"
+                                android:textAllCaps="false"
+                                android:textSize="18sp" />
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_medium_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:text="www"
+                                android:textAllCaps="false"
+                                android:textSize="14sp" />
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_small_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:maxLines="1"
+                                android:text="www"
+                                android:textAllCaps="false"
+                                android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:id="@+id/comment_cardview_comment_command_pos_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_ue_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:text="↑" />
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_naka_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:text="←" />
+
+                        <Button
+                                android:id="@+id/comment_cardview_comment_command_shita_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:text="↓" />
+                    </LinearLayout>
+
+                    <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <LinearLayout
+                                    android:id="@+id/comment_cardview_command_edit_color_linearlayout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal">
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FFFFFF"
+                                        android:tag="white" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FF0000"
+                                        android:tag="red" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FF8080"
+                                        android:tag="pink" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FFC000"
+                                        android:tag="orange" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FFFF00"
+                                        android:tag="yellow" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#00FF00"
+                                        android:tag="green" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#00FFFF"
+                                        android:tag="cyan" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#0000FF"
+                                        android:tag="blue" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#C000FF"
+                                        android:tag="purple" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#000000	"
+                                        android:tag="black" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:id="@+id/comment_cardview_command_edit_color_premium_linearlayout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#CCCC99"
+                                        android:tag="white2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#CC0033"
+                                        android:tag="red2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FF33CC"
+                                        android:tag="pink2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#FF6600"
+                                        android:tag="orange2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#999900"
+                                        android:tag="yellow2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#00CC66"
+                                        android:tag="green2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#00CCCC"
+                                        android:tag="cyan2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#3399FF"
+                                        android:tag="blue2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#666666"
+                                        android:tag="purple2" />
+
+                                <Button
+                                        android:layout_width="40sp"
+                                        android:layout_height="40sp"
+                                        android:layout_margin="2sp"
+                                        android:backgroundTint="#000000	"
+                                        android:tag="black2" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <ImageButton
+                                android:id="@+id/comment_cardview_comment_command_edit_reset_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@android:color/transparent"
+                                android:clickable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_backspace_24px" />
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2sp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/comment_cardview_command_color_textinputlayout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:hint="@string/color"
+                                        android:maxLines="1" />
+
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2sp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/comment_cardview_command_size_textinputlayout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:hint="@string/size"
+                                        android:maxLines="1" />
+
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2sp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/comment_cardview_command_position_textinputlayout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:hint="@string/position"
+                                        android:maxLines="1" />
+
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <ImageButton
+                            android:id="@+id/comment_cardview_comment_command_edit_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_outline_format_color_fill_24px" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/comment_cardview_comment_textinput_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2sp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/comment_cardview_comment_textinput_edittext"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/comment"
+                                android:inputType="text"
+                                android:maxLines="1" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageButton
+                    android:id="@+id/comment_cardview_comment_send_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_send_black" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

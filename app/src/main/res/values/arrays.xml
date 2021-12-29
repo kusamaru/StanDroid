@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 起動時の設定 表示される値  -->
+    <string-array name="launch_fragment">
+        <item>@string/nicolive</item>
+        <item>@string/nicovideo</item>
+        <item>@string/cache</item>
+        <item>@string/nico_jk</item>
+    </string-array>
+    <!-- 起動時の設定 設定される値  -->
+    <string-array name="launch_fragment_value">
+        <item>live</item>
+        <item>video</item>
+        <item>cache</item>
+        <item>jk</item>
+    </string-array>
+
+    <!-- デフォルトの再生方法 表示される値  -->
+    <string-array name="play_type">
+        <item>@string/default_play</item>
+        <item>@string/popup_player</item>
+        <item>@string/background_play</item>
+    </string-array>
+    <!-- デフォルトの再生方法 設定される値  -->
+    <string-array name="play_type_value">
+        <item>default</item>
+        <item>popup</item>
+        <item>background</item>
+    </string-array>
+
+    <!-- ダークモード選択肢。表示される値 -->
+    <string-array name="darkmode_setting_type">
+        <item>@string/setting_darkmode_device</item>
+        <item>@string/setting_darkmode_dark</item>
+        <item>@string/setting_darkmode_light</item>
+    </string-array>
+    <!-- ダークモード選択肢。保存される値 -->
+    <string-array name="darkmode_setting_type_value">
+        <item>device</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+    <!-- アプリの言語を変更 -->
+    <string-array name="setting_language_type">
+        <item>@string/setting_language_default</item>
+        <item>@string/setting_language_ja</item>
+        <item>@string/setting_language_en</item>
+    </string-array>
+    <!-- アプリの言語を変更。保存される値 -->
+    <string-array name="setting_language_value">
+        <item>default</item>
+        <item>ja</item>
+        <item>en</item>
+    </string-array>
+
+    <!-- モバイルデータ通信時。表示される値 -->
+    <string-array name="setting_nicolive_mobile_data_type">
+        <item>@string/setting_nicolive_mobile_data_quality_default</item>
+        <item>@string/setting_nicolive_mobile_data_quality_low_quality</item>
+        <item>@string/setting_nicolive_mobile_data_quality_audio_only</item>
+    </string-array>
+    <!-- モバイルデータ通信時。保存される値 -->
+    <string-array name="setting_nicolive_mobile_data_value">
+        <item>default</item>
+        <item>super_low_quality</item>
+        <item>audio_only</item>
+    </string-array>
+
+</resources>

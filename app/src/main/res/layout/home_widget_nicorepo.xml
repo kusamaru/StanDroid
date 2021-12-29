@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/home_widget_nicorepo_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background_snow_cone"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="3dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="3dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/tatimidroid_icon_vector"
+            android:tint="#ffffff" />
+
+        <TextView
+            android:id="@+id/home_widget_nicorepo_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/nicorepo"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/home_widget_nicorepo_latest_update_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_refresh_black_24dp"
+            android:drawableTint="#ffffff"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:text=""
+            android:textColor="#fff"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/home_widget_nicorepo_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@drawable/widget_list_background_snow_cone"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+</LinearLayout>

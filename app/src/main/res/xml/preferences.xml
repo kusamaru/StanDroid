@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:defaultValue="device"
+        android:entries="@array/darkmode_setting_type"
+        android:entryValues="@array/darkmode_setting_type_value"
+        android:icon="@drawable/ic_paint_black"
+        android:key="setting_darkmode_app"
+        android:summary="@string/setting_darkmode_app_description"
+        android:title="@string/setting_darkmode_app_title" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_outline_format_color_fill_24px"
+        android:key="setting_material_you"
+        android:summary="@string/setting_material_you_description"
+        android:title="@string/setting_material_you_title" />
+
+    <PreferenceCategory
+        android:summary="@string/launch_setting_description"
+        android:title="@string/launch_setting">
+        <ListPreference
+            android:defaultValue="live"
+            android:dialogTitle="@string/setting_launch_fragment_title"
+            android:entries="@array/launch_fragment"
+            android:entryValues="@array/launch_fragment_value"
+            android:icon="@drawable/ic_outline_info_24px"
+            android:key="setting_launch_fragment"
+            android:summary="@string/setting_launch_fragment_description"
+            android:title="@string/setting_launch_fragment_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:key="setting_mobile_data_show_cache"
+            android:title="@string/setting_mobile_data_show_cache" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_video_and_live">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_do_not_disturb_alt_black_24dp"
+            android:key="setting_show_ng"
+            android:title="@string/setting_show_ng_score" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_import_export_black_24dp"
+            android:key="setting_oikakeru_hide"
+            android:summary="@string/setting_oikakeru_button_description"
+            android:title="@string/setting_oikakeru_button_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_vertical_align_top_black_24dp"
+            android:key="setting_scroll_tab_hide"
+            android:summary="@string/setting_scroll_tab_hide_description"
+            android:title="@string/setting_scroll_tab_hide_title" />
+
+        <Preference
+            android:fragment="io.github.takusan23.tatimidroid.setting.FontSettingFragment"
+            android:icon="@drawable/ic_font_download_24px"
+            android:key="font_preference"
+            android:summary="@string/setting_font_description"
+            android:title="@string/font_setting" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_screen_rotation_24px"
+            android:key="setting_rotation_sensor"
+            android:summary="@string/setting_rotation_sensor_description"
+            android:title="@string/setting_rotation_sensor_title" />
+
+        <Preference
+            android:icon="@drawable/ic_link_black_24dp"
+            android:key="setting_open_app_info"
+            android:summary="@string/setting_open_app_info_description"
+            android:title="@string/setting_open_app_info_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_newplayer_jc_title">
+
+        <Preference android:summary="@string/setting_newplayer_jc_description" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_outline_block_24px"
+            android:key="setting_nicovideo_use_old_ui"
+            android:summary="@string/setting_nicovideo_jc_disable_description"
+            android:title="@string/setting_nicovideo_jc_disable_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_vertical_align_top_black_24dp"
+            android:key="setting_nicovideo_jc_comment_auto_show_off"
+            android:summary="@string/setting_nicovideo_jc_comment_auto_show_off_description"
+            android:title="@string/setting_nicovideo_jc_comment_auto_show_off_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_baseline_picture_in_picture_alt_24"
+            android:key="setting_nicovideo_jc_disable_mini_player"
+            android:summary="無効にすると、戻るキーがプレイヤー終了になります。"
+            android:title="ミニプレイヤーを無効にする" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_aspect_ratio_24px"
+            android:key="setting_nicovideo_jc_cinema_wide_aspect"
+            android:summary="@string/setting_nicovideo_jc_cinema_wide_aspect_description"
+            android:title="@string/setting_nicovideo_jc_cinema_wide_aspect_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/video">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_lock_outline_black_24dp"
+            android:key="setting_no_login"
+            android:summary="@string/setting_no_login_description"
+            android:title="@string/setting_no_login_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_signal_cellular_null_24px"
+            android:key="setting_nicovideo_economy"
+            android:summary="@string/setting_economy_description"
+            android:title="@string/setting_economy_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_signal_cellular_null_24px"
+            android:key="setting_nicovideo_low_quality"
+            android:summary="@string/setting_mobiledata_quality_description"
+            android:title="@string/setting_mobiledata_quality" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_outline_comment_24px"
+            android:key="setting_nicovideo_comment_only"
+            android:summary="@string/setting_comment_only_description"
+            android:title="@string/setting_comment_only_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_sort_black_24dp"
+            android:key="setting_nicovideo_mylist_sort_itemcount"
+            android:title="@string/mylist_sort_itemcount_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
+            android:key="setting_nicovideo_nicoru_show"
+            android:summary="@string/setting_show_nicoru_button_description"
+            android:title="@string/setting_show_nicoru_button_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_outline_favorite_border_24"
+            android:key="setting_nicovideo_show_like_count"
+            android:summary="@string/setting_nicovideo_show_like_count_description"
+            android:title="@string/setting_nicovideo_show_like_count_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_tatimidroid_list_icon_black"
+            android:key="setting_nicovideo_default_playlist_mode_v2"
+            android:summary="@string/setting_nicovideo_default_playlist_mode_description"
+            android:title="@string/setting_nicovideo_default_playlist_mode_title" />
+
+        <ListPreference
+            android:defaultValue="default"
+            android:dialogTitle="@string/setting_play_type_title"
+            android:entries="@array/play_type"
+            android:entryValues="@array/play_type_value"
+            android:icon="@drawable/ic_popup_icon_black"
+            android:key="setting_play_type_video"
+            android:summary="@string/setting_play_type_description"
+            android:title="@string/setting_play_type_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_screen_rotation_24px"
+            android:key="setting_nicovideo_screen_rotation_not_pause"
+            android:title="@string/setting_nicovideo_screen_rotation_not_pause_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/get_cache">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:key="setting_nicovideo_cache_priority"
+            android:summary="@string/setting_cache_priority_description"
+            android:title="@string/setting_cache_priority_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_outline_sd_card_24"
+            android:key="setting_nicovideo_cache_use_sd_card"
+            android:summary="@string/setting_nicovideo_cache_use_sd_card_description"
+            android:title="@string/setting_nicovideo_cache_use_sd_card_title" />
+
+        <SeekBarPreference
+            android:defaultValue="1"
+            android:icon="@drawable/ic_cache_progress_icon"
+            android:key="setting_cache_split_count"
+            android:max="5"
+            android:summary="@string/setting_cache_split_count_description"
+            android:title="@string/setting_cache_split_count_title"
+            app:min="1"
+            app:showSeekBarValue="true" />
+
+        <Preference
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:key="setting_cache_folder_path"
+            android:summary="@string/setting_cache_folder_path_description"
+            android:title="@string/setting_cache_folder_path_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/nicolive">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_outline_people_outline_24px"
+            android:key="setting_id_hidden"
+            android:title="@string/setting_hidden_id" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_looks_one"
+            android:key="setting_one_line"
+            android:title="@string/setting_one_line" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_keyboard_return_24px"
+            android:key="setting_enter_post"
+            android:summary="@string/setting_enter_post_description"
+            android:title="@string/setting_enter_post_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_outline_live_tv_24px_black"
+            android:key="setting_watch_live"
+            android:summary="@string/setting_watch_view_description"
+            android:title="@string/setting_watch_view_title" />
+
+        <ListPreference
+            android:defaultValue="default"
+            android:dialogTitle="@string/setting_nicolive_mobiledata_quality_title"
+            android:entries="@array/setting_nicolive_mobile_data_type"
+            android:entryValues="@array/setting_nicolive_mobile_data_value"
+            android:icon="@drawable/ic_signal_cellular_null_24px"
+            android:key="setting_nicolive_mobile_data_quality"
+            android:summary="@string/setting_nicolive_mobiledata_quality_description"
+            android:title="@string/setting_nicolive_mobiledata_quality_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_signal_cellular_null_24px"
+            android:key="setting_nicolive_quality_low"
+            android:summary="@string/setting_nicolive_quality_low_description"
+            android:title="@string/setting_nicolive_quality_low_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_outline_query_builder_24px"
+            android:key="setting_zettai_zikoku_hyouzi"
+            android:summary="@string/setting_zettaihyouzi_desciption"
+            android:title="@string/setting_zettaihyouzi_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_outline_format_color_fill_24px"
+            android:key="setting_room_color"
+            android:summary="@string/room_color_description"
+            android:title="@string/room_color_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_aspect_ratio_24px"
+            android:key="setting_display_cutout"
+            android:summary="@string/setting_display_cutoutdesciprion"
+            android:title="@string/setting_display_cutout_title" />
+
+        <Preference
+            android:icon="@drawable/ic_outline_block_24px"
+            android:key="ng_list_activity"
+            android:title="@string/ng_list">
+            <!--Activity起動-->
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="io.github.takusan23.tatimidroid.activity.NGListActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid" />
+        </Preference>
+
+
+        <Preference
+            android:icon="@drawable/ic_local_offer_24px"
+            android:title="@string/kotehan_list">
+            <!--Activity起動-->
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="io.github.takusan23.tatimidroid.activity.KotehanListActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <!-- コメント描画系 -->
+    <PreferenceCategory android:title="@string/setting_comment_canvas">
+
+        <Preference android:summary="@string/setting_comment_canvas_priority" />
+
+        <!-- テキストに影をつける -->
+        <EditTextPreference
+            android:defaultValue="1"
+            android:icon="@drawable/ic_comment_on"
+            android:key="setting_comment_canvas_text_shadow"
+            android:title="@string/setting_comment_canvas_text_shadow_title" />
+
+        <!-- 10行確保 -->
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_format_line_spacing_black_24dp"
+            android:key="setting_comment_canvas_10_line"
+            android:summary="@string/setting_comment_10_line_description"
+            android:title="@string/setting_comment_10_line_title" />
+
+        <!-- 自由に設定できるモード -->
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_waves_black_24dp"
+            android:key="setting_comment_canvas_custom_line_use"
+            android:summary="@string/setting_custom_comment_line_use_description"
+            android:title="@string/setting_custom_comment_line_use_title" />
+
+        <EditTextPreference
+            android:defaultValue="20"
+            android:dependency="setting_comment_canvas_custom_line_use"
+            android:key="setting_comment_canvas_custom_line_value"
+            android:summary="@string/setting_custom_comment_line_value_description"
+            android:title="@string/setting_custom_comment_line_value_title" />
+
+        <!-- 最低限確保する設定 -->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_format_line_spacing_black_24dp"
+            android:key="setting_comment_canvas_min_line"
+            android:summary="@string/setting_comment_canvas_min_line_description"
+            android:title="@string/setting_comment_canvas_min_line_title" />
+
+        <!-- 10行確保 -->
+        <EditTextPreference
+            android:defaultValue="10"
+            android:dependency="setting_comment_canvas_min_line"
+            android:key="setting_comment_canvas_min_line_value"
+            android:title="@string/setting_comment_canvas_min_line_value_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_sports_esports_24px"
+            android:key="setting_comment_canvas_edit_fps_enable"
+            android:summary="@string/setting_comment_canvas_edit_fps_enable_description"
+            android:title="@string/setting_comment_canvas_edit_fps_enable_title" />
+
+        <EditTextPreference
+            android:defaultValue="60"
+            android:dependency="setting_comment_canvas_edit_fps_enable"
+            android:icon="@drawable/ic_outline_query_builder_24px"
+            android:key="setting_comment_canvas_edit_fps"
+            android:title="@string/setting_comment_canvas_edit_fps_title" />
+
+        <EditTextPreference
+            android:defaultValue="5"
+            android:icon="@drawable/ic_outline_query_builder_24px"
+            android:key="setting_comment_canvas_show_time"
+            android:summary="@string/setting_comment_canvas_show_time_description"
+            android:title="@string/setting_comment_canvas_show_time_title" />
+
+        <EditTextPreference
+            android:defaultValue="1.0"
+            android:icon="@drawable/ic_paint_black"
+            android:key="setting_comment_alpha"
+            android:summary="@string/setting_comment_canvas_alpha_descripton"
+            android:title="@string/setting_comment_canvas_alpha_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/leave_app">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_background_icon_black"
+            android:key="setting_leave_background"
+            android:summary="@string/leave_background_description"
+            android:title="@string/background_play" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_popup_icon_black"
+            android:key="setting_leave_popup"
+            android:summary="@string/leave_popup_description"
+            android:title="@string/popup_player" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_database_title">
+        <Preference android:summary="@string/setting_database_description" />
+
+        <Preference
+            android:icon="@drawable/ic_backup_icon"
+            android:key="database_backup"
+            android:summary="@string/setting_database_backup_description"
+            android:title="@string/setting_database_backup_title" />
+
+        <Preference
+            android:icon="@drawable/ic_restore_icon"
+            android:key="database_restore"
+            android:summary="@string/setting_database_restore_description"
+            android:title="@string/setting_database_restore_title" />
+
+        <Preference
+            android:fragment="io.github.takusan23.tatimidroid.setting.dbclear.DatabaseClearFragment"
+            android:icon="@drawable/ic_outline_delete_24px"
+            android:key="database_clear"
+            android:summary="@string/setting_database_clear_description"
+            android:title="@string/setting_database_clear_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/deprecated">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_content_paste_black_24dp"
+            android:key="setting_deprecated_clipbord_get_id"
+            android:title="【非推奨】クリップボードからIDを取得する機能を無効化する" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/sonta">
+
+        <ListPreference
+            android:defaultValue="default"
+            android:dialogTitle="@string/setting_language_title"
+            android:entries="@array/setting_language_type"
+            android:entryValues="@array/setting_language_value"
+            android:icon="@drawable/ic_translate_black_24dp"
+            android:key="setting_language"
+            android:summary="@string/setting_language_description"
+            android:title="@string/setting_language_title" />
+
+        <Preference
+            android:icon="@drawable/ic_history_24px"
+            android:key="first_time_preference"
+            android:summary="@string/setting_first_time_show_description"
+            android:title="@string/setting_first_time_show_title" />
+
+        <Preference
+            android:icon="@drawable/ic_outline_info_24px"
+            android:key="licence_preference"
+            android:title="@string/licence" />
+
+        <Preference
+            android:icon="@drawable/ic_outline_android_24px"
+            android:key="konoapp_preference"
+            android:title="@string/kono_app" />
+
+        <Preference
+            android:icon="@drawable/ic_policy_black"
+            android:key="konoapp_privacy"
+            android:title="@string/privacy_policy" />
+
+        <Preference
+            android:icon="@drawable/ic_cache_progress_icon"
+            android:key="about_cache"
+            android:summary="@string/about_cache_description"
+            android:title="@string/about_cache" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:summary="フリとかじゃなくて"
+        android:title="開発者用設定"
+        app:initialExpandedChildrenCount="0">
+
+        <Preference
+            android:fragment="io.github.takusan23.tatimidroid.setting.DevSettingFragment"
+            android:icon="@drawable/ic_policy_black"
+            android:title="実験的" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="dev_setting_save_crash_report"
+            android:summary="Android/dataに保存されます"
+            android:title="クラッシュレポートを保存する" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="dev_setting_comment_canvas_text_rect"
+            android:title="テキストに枠を付けて検証する" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

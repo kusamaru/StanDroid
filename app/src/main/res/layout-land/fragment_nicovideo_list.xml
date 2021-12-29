@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_nicovideo_list_motionlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:showPaths="true">
+
+    <LinearLayout
+        android:id="@+id/fragment_video_backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Buttonを並べるより良さそう。 -->
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/fragment_nicovideo_list_menu"
+            style="@style/NavigationViewSelectColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            app:menu="@menu/fragment_nicovideo_list_menu" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/fragment_video_list_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_video_bar">
+
+        <!--
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/fragment_program_list_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable" />
+
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/fragment_program_list_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+-->
+    </LinearLayout>
+
+</LinearLayout>

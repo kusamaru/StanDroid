@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adapter_nicovideo_list_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/adapter_nicovideo_list_thum"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_local_movies_24px" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_list_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/adapter_nicovideo_list_menu"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_thum"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/adapter_nicovideo_list_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="5sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_more_vert_24px" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_list_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:maxLines="2"
+            android:scrollbars="none"
+            android:text=""
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/adapter_nicovideo_list_play_image_view"
+            app:layout_constraintEnd_toStartOf="@+id/adapter_nicovideo_list_menu"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_thum"
+            app:layout_constraintTop_toBottomOf="@+id/adapter_nicovideo_list_date" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#80000000"
+            android:padding="2dp"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/adapter_nicovideo_list_thum"
+            app:layout_constraintEnd_toEndOf="@+id/adapter_nicovideo_list_thum"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/adapter_nicovideo_list_play_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_thum"
+            app:srcCompat="@drawable/ic_play_arrow_24px" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_list_play_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@+id/adapter_nicovideo_list_play_image_view"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_play_image_view"
+            app:layout_constraintTop_toTopOf="@+id/adapter_nicovideo_list_play_image_view" />
+
+        <ImageView
+            android:id="@+id/adapter_nicovideo_list_comment_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_play_count_text_view"
+            app:layout_constraintTop_toTopOf="@+id/adapter_nicovideo_list_play_image_view"
+            app:srcCompat="@drawable/ic_outline_comment_24px" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_list_comment_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@+id/adapter_nicovideo_list_comment_image_view"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_comment_image_view"
+            app:layout_constraintTop_toTopOf="@+id/adapter_nicovideo_list_comment_image_view" />
+
+        <ImageView
+            android:id="@+id/adapter_nicovideo_list_mylist_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_comment_count_text_view"
+            app:layout_constraintTop_toTopOf="@+id/adapter_nicovideo_list_comment_image_view"
+            app:srcCompat="@drawable/ic_folder_open_black_24dp" />
+
+        <TextView
+            android:id="@+id/adapter_nicovideo_list_mylist_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@+id/adapter_nicovideo_list_mylist_image_view"
+            app:layout_constraintStart_toEndOf="@+id/adapter_nicovideo_list_mylist_image_view"
+            app:layout_constraintTop_toTopOf="@+id/adapter_nicovideo_list_mylist_image_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

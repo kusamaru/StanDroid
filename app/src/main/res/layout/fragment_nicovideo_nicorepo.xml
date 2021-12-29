@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+        <com.google.android.material.chip.Chip
+                android:id="@+id/fragment_nicovideo_nicorepo_filter_video_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/video"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_local_movies_24px" />
+
+        <com.google.android.material.chip.Chip
+                android:id="@+id/fragment_nicovideo_nicorepo_filter_live_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/nicolive"
+                app:chipCornerRadius="5dp"
+                app:chipIcon="@drawable/ic_outline_live_tv_24px_black" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/fragment_nicovideo_nicorepo_swipe"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_nicovideo_nicorepo_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

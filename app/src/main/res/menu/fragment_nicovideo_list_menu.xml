@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nicovideo_select_menu_ranking"
+            android:checked="true"
+            android:icon="@drawable/ic_format_list_numbered_black_24dp"
+            android:title="@string/ranking" />
+        <item
+            android:id="@+id/nicovideo_select_menu_post"
+            android:icon="@drawable/ic_cloud_upload_black_24dp"
+            android:title="@string/post_video" />
+        <item
+            android:id="@+id/nicovideo_select_menu_nicorepo"
+            android:icon="@drawable/ic_outline_people_outline_24px"
+            android:title="@string/nicorepo" />
+        <item
+            android:id="@+id/nicovideo_select_menu_mylist"
+            android:icon="@drawable/ic_folder_open_black_24dp"
+            android:title="@string/mylist" />
+        <item
+            android:id="@+id/nicovideo_select_menu_history"
+            android:icon="@drawable/ic_history_24px"
+            android:title="@string/history" />
+        <item
+            android:id="@+id/nicovideo_select_menu_search"
+            android:icon="@drawable/ic_24px"
+            android:title="@string/serch" />
+        <item
+            android:id="@+id/nicovideo_select_menu_account"
+            android:icon="@drawable/ic_outline_account_circle_24px"
+            android:title="@string/mypage" />
+    </group>
+</menu>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ニコ動 -->
+    <shortcut
+            android:icon="@drawable/video_icon"
+            android:shortcutId="nicovideo"
+            android:shortcutShortLabel="@string/nicovideo">
+        <!-- インテント -->
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid">
+            <extra
+                    android:name="app_shortcut"
+                    android:value="nicovideo" />
+        </intent>
+    </shortcut>
+    <!-- ニコ生 -->
+    <shortcut
+            android:icon="@drawable/live_icon"
+            android:shortcutId="nicolive"
+            android:shortcutShortLabel="@string/nicolive">
+        <!-- インテント -->
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid">
+            <extra
+                    android:name="app_shortcut"
+                    android:value="nicolive" />
+        </intent>
+    </shortcut>
+    <!-- キャッシュ -->
+    <shortcut
+            android:icon="@drawable/ic_cache_icon_list"
+            android:shortcutId="cache"
+            android:shortcutShortLabel="@string/cache">
+        <!-- インテント -->
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid">
+            <extra
+                    android:name="app_shortcut"
+                    android:value="cache" />
+        </intent>
+    </shortcut>
+    <!-- ニコニコ実況 -->
+    <shortcut
+            android:icon="@drawable/jk_icon"
+            android:shortcutId="jk"
+            android:shortcutShortLabel="@string/nico_jk">
+        <!-- インテント -->
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
+                android:targetPackage="io.github.takusan23.tatimidroid">
+            <extra
+                    android:name="app_shortcut"
+                    android:value="jk" />
+        </intent>
+    </shortcut>
+
+</shortcuts>

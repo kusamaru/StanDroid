@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bottom_fragment_comment_menu_parent_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/bottom_fragment_comment_menu_kotehan_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="ID"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="20sp" />
+
+            <Button
+                    android:id="@+id/bottom_fragment_comment_menu_kotehan_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_kotehan_button"
+                    app:icon="@drawable/ic_local_offer_24px" />
+        </LinearLayout>
+
+        <include
+                android:id="@+id/bottom_fragment_comment_include"
+                layout="@layout/adapter_comment_layout" />
+
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_nicovideo_seek_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_play_arrow_24px"
+                        android:text="@string/lockon_jump_button"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_nico_video_menu_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_local_movies_24px"
+                        android:text="@string/lockon_nicovideo_menu"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_nico_live_menu_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_outline_live_tv_24px_black"
+                        android:text="@string/lockon_nicolive_menu"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_comment_url"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_link_black_24dp"
+                        android:text="@string/open_url"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_get_user_name_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_outline_account_circle_24px"
+                        android:text="@string/get_user_name"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_open_user_page_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_outline_open_in_browser_24px"
+                        android:text="@string/open_user_page"
+                        android:visibility="gone" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_comment_copy_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_content_paste_black_24dp"
+                        android:text="@string/comment_copy" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_comment_ng_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_do_not_disturb_alt_black_24dp"
+                        android:text="@string/add_comment_ng" />
+
+                <Button
+                        android:id="@+id/bottom_fragment_comment_menu_user_ng_button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_do_not_disturb_alt_black_24dp"
+                        android:text="@string/add_user_ng" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/bottom_fragment_comment_menu_ng_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_do_not_disturb_alt_black_24dp"
+                    android:padding="5dp"
+                    android:text="" />
+
+            <TextView
+                    android:id="@+id/bottom_fragment_comment_menu_count_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_outline_comment_24px"
+                    android:padding="5dp"
+                    android:text="" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottom_fragment_comment_menu_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

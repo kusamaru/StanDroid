@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#ffffff" android:state_activated="true" />
+    <item android:color="#ffffff" android:state_checked="true" />
+    <!-- ライトテーマでは黒色、ダークモードでは白色になるやつ。覚えておこうと思った -->
+    <item android:color="?android:attr/textColorPrimary" />
+</selector>

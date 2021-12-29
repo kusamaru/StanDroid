@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 通常時 -->
+    <ConstraintSet android:id="@+id/comment_fragment_transition_start">
+        <!-- 通常時はそのまま -->
+        <Constraint
+                android:id="@+id/comment_fragment_control"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_background"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_background"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_background"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_background" />
+    </ConstraintSet>
+
+    <!-- ミニプレイヤー時 -->
+    <ConstraintSet android:id="@+id/comment_fragment_transition_end">
+        <Constraint
+                android:id="@+id/comment_fragment_surface_view"
+                android:layout_width="320dp"
+                android:layout_height="180dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        <Constraint
+                android:id="@+id/comment_fragment_fab_coordinator"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toBottomOf="@+id/comment_fragment_surface_view" />
+        <Constraint
+                android:id="@+id/comment_fragment_control"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+    </ConstraintSet>
+
+    <!-- 左へスワイプして終了する -->
+    <ConstraintSet android:id="@+id/comment_fragment_transition_finish">
+        <Constraint
+                android:id="@+id/comment_fragment_surface_view"
+                android:layout_width="320dp"
+                android:layout_height="180dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="parent" />
+        <Constraint
+                android:id="@+id/comment_fragment_fab_coordinator"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toBottomOf="@+id/comment_fragment_surface_view" />
+        <Constraint
+                android:id="@+id/comment_fragment_control"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+    </ConstraintSet>
+
+    <!-- ミニプレイヤーへの遷移 -->
+    <Transition
+            android:id="@+id/comment_fragment_transition"
+            app:constraintSetEnd="@id/comment_fragment_transition_end"
+            app:constraintSetStart="@+id/comment_fragment_transition_start">
+        <OnSwipe
+                app:dragDirection="dragDown"
+                app:touchAnchorId="@+id/comment_fragment_control"
+                app:touchRegionId="@+id/comment_fragment_control" />
+    </Transition>
+
+    <!-- 終了遷移 -->
+    <Transition
+            app:constraintSetEnd="@+id/comment_fragment_transition_finish"
+            app:constraintSetStart="@+id/comment_fragment_transition_end">
+        <OnSwipe
+                app:dragDirection="dragLeft"
+                app:touchAnchorId="@+id/comment_fragment_control"
+                app:touchRegionId="@+id/comment_fragment_control" />
+    </Transition>
+
+</MotionScene>

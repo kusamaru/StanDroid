@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nicolive_program_list_menu_follow"
+            android:checked="true"
+            android:icon="@drawable/ic_outline_people_outline_24px"
+            android:title="@string/follow_program" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_nicorepo"
+            android:icon="@drawable/ic_outline_people_outline_24px"
+            android:title="@string/nicorepo" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_osusume"
+            android:icon="@drawable/ic_outline_photo_filter_24px"
+            android:title="@string/osusume" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_konomi_tag"
+            android:icon="@drawable/ic_outline_favorite_border_24"
+            android:title="@string/nicolive_menu_konomi_tag" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_rookie"
+            android:icon="@drawable/ic_new_releases_black_24dp"
+            android:title="@string/rookie" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_ranking"
+            android:icon="@drawable/ic_format_list_numbered_black_24dp"
+            android:title="@string/ranking" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_korekara"
+            android:icon="@drawable/ic_outline_query_builder_24px"
+            android:title="@string/upcoming_programs" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_yoyaku"
+            android:icon="@drawable/ic_photo_filter"
+            android:title="@string/popular_reservation_program" />
+        <item
+            android:id="@+id/nicolive_program_list_menu_nicolive_jk"
+            android:icon="@drawable/jk_icon"
+            android:title="@string/nicolive_jk" />
+
+    </group>
+</menu>

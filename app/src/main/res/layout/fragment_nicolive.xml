@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.github.takusan23.tatimidroid.SwipeFixFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/comment_fragment_motionlayout_parent_framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/comment_fragment_motion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/fragment_comment_scene">
+
+        <!-- 背景 -->
+        <View
+                android:id="@+id/comment_fragment_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clickable="true"
+                android:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+
+        <!-- 映像 -->
+        <SurfaceView
+                android:id="@+id/comment_fragment_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:elevation="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 音声のみ -->
+        <TextView
+                android:id="@+id/include_nicolive_player_audio_only_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/ic_tatimidroid_playlist_play_black"
+                android:drawableTint="#ffffff"
+                android:gravity="center"
+                android:text="@string/audio_only_play"
+                android:textColor="#ffffff"
+                android:textStyle="italic"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view"
+                tools:visibility="visible" />
+
+        <!-- コメント -->
+        <io.github.takusan23.tatimidroid.CommentCanvas
+                android:id="@+id/comment_fragment_comment_canvas"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+
+        <FrameLayout
+                android:id="@+id/comment_fragment_inco_unei_comment_framelayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view">
+
+            <!-- ニコニ広告の宣伝とかを表示するTextView -->
+            <TextView
+                    android:id="@+id/comment_fragment_info_comment_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="#80000000"
+                    android:elevation="5dp"
+                    android:gravity="center"
+                    android:text="Infoコメント"
+                    android:textColor="#ffffff"
+                    android:textSize="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            <!-- うんこめを表示するTextView -->
+            <TextView
+                    android:id="@+id/comment_fragment_unei_comment_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:autoLink="web"
+                    android:background="#80000000"
+                    android:elevation="5dp"
+                    android:gravity="center"
+                    android:text="UNEIコメント"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+        </FrameLayout>
+
+        <!-- コントローラー -->
+        <include
+                android:id="@+id/comment_fragment_control"
+                layout="@layout/include_nicolive_player_controller"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+
+        <!-- アンケ表示用 -->
+        <FrameLayout
+                android:id="@+id/comment_fragment_enquate_framelayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+
+        <!-- ニコ生ゲーム用 -->
+        <WebView
+                android:id="@+id/comment_fragment_webview"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:elevation="5dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/comment_fragment_background"
+                app:layout_constraintEnd_toEndOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintStart_toStartOf="@+id/comment_fragment_surface_view"
+                app:layout_constraintTop_toTopOf="@+id/comment_fragment_surface_view" />
+
+        <!-- ViewPager -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/comment_fragment_fab_coordinator"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comment_fragment_surface_view">
+
+            <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/comment_fragment_app_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                    <LinearLayout
+                            android:id="@+id/player_nicolive_control_info_main"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                        <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/ic_outline_query_builder_24px" />
+
+                                <TextView
+                                        android:id="@+id/player_nicolive_control_time"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:maxLines="1"
+                                        android:text="00:00"
+                                        android:textSize="18sp"
+                                        android:tooltipText="@string/livetime" />
+
+                                <TextView
+                                        android:id="@+id/player_nicolive_control_end_time"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:maxLines="1"
+                                        android:text="00:00"
+                                        android:textSize="18sp"
+                                        android:tooltipText="@string/end_time_tooltip" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:visibility="visible">
+
+                                <TextView
+                                        android:id="@+id/player_nicolive_control_watch_count"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:drawableStart="@drawable/ic_outline_account_circle_24px"
+                                        android:gravity="center"
+                                        android:maxLines="1"
+                                        android:text=""
+                                        android:textSize="18sp"
+                                        android:tooltipText="@string/watch_count" />
+
+                                <TextView
+                                        android:id="@+id/player_nicolive_control_active_text"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:drawableStart="@drawable/ic_active_icon"
+                                        android:gravity="center"
+                                        android:maxLines="1"
+                                        android:text="計算中"
+                                        android:textSize="18sp"
+                                        android:tooltipText="@string/active" />
+
+                                <TextView
+                                        android:id="@+id/player_nicolive_control_comment_count"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:drawableStart="@drawable/ic_outline_comment_24px"
+                                        android:gravity="center"
+                                        android:maxLines="1"
+                                        android:text=""
+                                        android:textSize="18sp"
+                                        android:tooltipText="@string/comment_count" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageView
+                                android:id="@+id/player_nicolive_control_statistics"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_timeline_black_24dp"
+                                android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:id="@+id/comment_fragment_statistics_show"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                        <View
+                                android:layout_width="100sp"
+                                android:layout_height="10sp"
+                                android:layout_margin="5sp"
+                                android:background="@drawable/backdrop_sheet_bar" />
+                    </LinearLayout>
+
+                    <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/activity_comment_tab_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:tabMode="scrollable" />
+                </LinearLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/comment_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+            <!-- コメント投稿部分だけ別のレイアウトを参照  -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fragment_nico_live_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_outline_create_24px"
+                    app:backgroundTint="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:visibility="visible" />
+
+            <include
+                    android:id="@+id/include"
+                    layout="@layout/comment_card_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="10dp"
+                    android:visibility="gone" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+</io.github.takusan23.tatimidroid.SwipeFixFrameLayout>

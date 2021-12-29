@@ -1,0 +1,140 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+// apply plugin: 'kotlin-android-extensions' さよなら
+
+apply plugin: 'kotlin-kapt' // Room使うときのなにか。一番上に
+
+android {
+    compileSdkVersion 31
+    defaultConfig {
+        applicationId "io.github.takusan23.tatimidroid"
+        minSdkVersion 22
+        targetSdkVersion 31
+        versionCode 111
+        versionName "15.4.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+//        debug {
+//            applicationIdSuffix ".kaihatu"
+//        }
+    }
+
+    // Kotlinを書くきっかけになった Kotlin Android Extensions がいよいよ非推奨になってしまった
+    // のでViewBindingに乗り換える
+    buildFeatures {
+        // ViewBinding有効
+        viewBinding true
+        // Jetpack Compose有効
+        compose true
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+
+    // Compose関係
+    composeOptions {
+        kotlinCompilerVersion kotlin_version // 1.5.10 が入ると思う。プロジェクトのbuild.gradleを開いてみて
+        kotlinCompilerExtensionVersion compose_version // 1.0.0-beta07 が入ると思う。プロジェクトのbuild.gradleを開いてみて
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Jetpack Compose --- ここから
+
+    implementation "androidx.compose.ui:ui:$compose_version"
+    // Tooling support (Previews, etc.)
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation "androidx.compose.foundation:foundation:$compose_version"
+    // Material Design
+    implementation "androidx.compose.material:material:$compose_version"
+    // Integration with observables
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    // LayoutInspector
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    // Jetpack Compose --- ここまで
+
+    // 自作ライブラリ --- Jipackで入れられます
+
+    // アニメーションしながら出てくるView
+    implementation 'com.github.takusan23:DropPopAlert:1.1.0'
+    // 検索PreferenceFragment
+    implementation 'com.github.takusan23:SearchPreferenceFragment:1.3.0'
+    // MotionLayoutのonSwipe直す自作ライブラリ
+    implementation 'com.github.takusan23:MotionLayoutSwipeFixFrameLayout:0552b935c2'
+
+    // 自作ライブラリ --- ここまで
+
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.7.0-beta01"
+    // Activity Result APIでonActivityResultを駆逐する。
+    implementation 'androidx.activity:activity-ktx:1.4.0-alpha01'
+    implementation 'androidx.fragment:fragment-ktx:1.3.6'
+    // ViewModel と LiveData
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    // Room
+    def room_version = "2.2.6"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    // MotionLayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    // MediaSession
+    implementation "androidx.media:media:1.4.1"
+    //GoogleCast
+    implementation 'com.google.android.gms:play-services-cast-framework:18.1.0'
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.12.0'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.12.0'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.12.0'
+    // WebSocket
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+    // HTML Parser
+    implementation 'org.jsoup:jsoup:1.12.1'
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1" // バージョン合わせないとだめなんか？
+    // CoroutineとLifeCycle考えてくれるやつ
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    // Preference
+    implementation "androidx.preference:preference:1.1.1"
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    // Material Design
+    implementation 'com.google.android.material:material:1.5.0-alpha03'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Android 5.x でWebViewが落ちるので
+    implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

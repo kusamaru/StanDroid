@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:orientation="horizontal">
+
+    <TextView
+            android:id="@+id/adapter_tag_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5sp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="18sp" />
+
+    <ImageButton
+            android:id="@+id/adapter_tag_is_locked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_margin="5sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_lock_outline_black_24dp"
+            android:visibility="gone" />
+
+    <ImageButton
+            android:id="@+id/adapter_tag_remove_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:layout_margin="5sp"
+            android:focusable="true"
+            android:src="@drawable/ic_outline_delete_24px" />
+</LinearLayout>

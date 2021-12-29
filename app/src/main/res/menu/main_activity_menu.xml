@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/menu_community"
+            android:icon="@drawable/live_icon"
+            android:title="@string/nicolive" />
+    <item
+            android:id="@+id/menu_nicovideo"
+            android:icon="@drawable/video_icon"
+            android:title="@string/nicovideo" />
+    <item
+            android:id="@+id/menu_cache"
+            android:icon="@drawable/ic_cache_icon_list"
+            android:title="@string/cache" />
+    <!--
+        <item
+                android:id="@+id/menu_liveid"
+                android:icon="@drawable/ic_link_black_24dp"
+                android:title="@string/liveid_fragment" />
+    -->
+    <item
+            android:id="@+id/menu_login"
+            android:icon="@drawable/ic_lock_outline_black_24dp"
+            android:title="@string/login" />
+    <item
+            android:id="@+id/menu_setting"
+            android:icon="@drawable/ic_outline_settings_24px"
+            android:title="@string/setting" />
+</menu>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_program_list_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:showPaths="true">
+
+    <LinearLayout
+        android:id="@+id/fragment_program_backdrop_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/fragment_program_navigation_view"
+            style="@style/NavigationViewSelectColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            app:menu="@menu/nicolive_program_list_menu" />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/fragment_program_list_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_program_bar_linear_layout">
+
+        <!--
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/fragment_program_list_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="scrollable" />
+
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/fragment_program_list_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+-->
+    </LinearLayout>
+
+</LinearLayout>

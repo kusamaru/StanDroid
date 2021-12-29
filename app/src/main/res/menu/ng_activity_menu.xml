@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/ng_menu_user"
+            android:icon="@drawable/ic_outline_account_circle_24px"
+            android:title="@string/ng_user" />
+    <item
+            android:id="@+id/ng_menu_comment"
+            android:icon="@drawable/ic_outline_comment_24px"
+            android:title="@string/ng_comment" />
+</menu>

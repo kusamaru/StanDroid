@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:orientation="vertical"
+        android:theme="@style/OLEDTheme">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                app:srcCompat="@drawable/ic_tatimidroid_list_icon" />
+
+        <TextView
+                android:id="@+id/bottom_fragment_nicovideo_playlist_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:textSize="18sp" />
+
+        <ImageView
+                android:id="@+id/bottom_fragment_nicovideo_playlist_close_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                app:srcCompat="@drawable/ic_expand_more_24px" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/bottom_fragment_nicovideo_playlist_duration_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:chipBackgroundColor="?android:colorBackground"
+                    app:chipCornerRadius="5dp"
+                    app:chipIcon="@drawable/ic_outline_query_builder_24px"
+                    app:chipIconTint="?android:textColor"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/bottom_fragment_nicovideo_playlist_count_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:chipBackgroundColor="?android:colorBackground"
+                    app:chipCornerRadius="5dp"
+                    app:chipIcon="@drawable/ic_view_list_black"
+                    app:chipIconTint="?android:textColor"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/bottom_fragment_nicovideo_playlist_reverse_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:checkable="true"
+                    android:checked="false"
+                    android:text="@string/reverse"
+                    app:chipBackgroundColor="?android:colorBackground"
+                    app:chipCornerRadius="5dp"
+                    app:chipIcon="@drawable/ic_import_export_black_24dp"
+                    app:chipIconTint="?android:textColor"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/bottom_fragment_nicovideo_playlist_shuffle_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:checkable="true"
+                    android:checked="false"
+                    android:text="@string/shuffle"
+                    app:chipBackgroundColor="?android:colorBackground"
+                    app:chipCornerRadius="5dp"
+                    app:chipIcon="@drawable/ic_shuffle_black_24dp"
+                    app:chipIconTint="?android:textColor"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottom_fragment_nicovideo_playlist_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

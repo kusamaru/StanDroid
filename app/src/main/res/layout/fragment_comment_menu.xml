@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2sp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2sp"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_view_live_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_outline_live_tv_24px_black"
+                                android:drawableTint="#ffffff"
+                                android:text="@string/play_live_broadcast" />
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_background_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_background_icon_black"
+                                android:drawableTint="#ffffff"
+                                android:text="@string/background_play" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_popup_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_popup_icon_black"
+                                android:drawableTint="#ffffff"
+                                android:text="@string/popup_player" />
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_floating_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_library_books_24px"
+                                android:drawableTint="#ffffff"
+                                android:maxLines="1"
+                                android:text="@string/floating_comment_viewer" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5sp"
+                            android:orientation="horizontal">
+
+                        <TextView
+                                android:id="@+id/textView12"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/cast" />
+
+                        <androidx.mediarouter.app.MediaRouteButton
+                                android:id="@+id/fragment_comment_fragment_menu_cast_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:mediaRouteTypes="user" />
+
+                    </LinearLayout>
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_comment_hidden_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5sp"
+                            android:text="@string/comment_hidden" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_hide_info_perm_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5sp"
+                            android:text="@string/hide_info_perm" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_hide_emotion_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5sp"
+                            android:text="@string/hide_emotion" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_iyayo_comment_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:padding="5sp"
+                            android:text="@string/iyayo_comment" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_iyayo_hidden_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:padding="5sp"
+                            android:text="@string/iyayo_hidden" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_low_latency_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5sp"
+                            android:text="@string/low_latency" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_not_live_receive_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5sp"
+                            android:text="@string/not_receive_live" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_command_save_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5sp"
+                            android:text="@string/setting_comment_send_command_save" />
+
+                    <Switch
+                            android:id="@+id/fragment_comment_fragment_menu_display_cutout_info_switch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5sp"
+                            android:text="@string/setting_display_cutout_title" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5sp"
+                            android:text="@string/comment_viewer_setting"
+                            android:textSize="18sp" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5sp">
+
+                        <Switch
+                                android:id="@+id/fragment_comment_fragment_menu_comment_setting_hidden_id_swtich"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5sp"
+                                android:text="@string/setting_hidden_id" />
+
+                        <Switch
+                                android:id="@+id/fragment_comment_fragment_menu_setting_one_line_switch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5sp"
+                                android:text="@string/setting_one_line" />
+                    </LinearLayout>
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_quality_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/quality" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_rotation_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/landscape_portrait" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_copy_live_id_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/copy_program_id" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_copy_community_id_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/copy_communityid" />
+
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_open_browser_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/open_browser" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_ng_list_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ng_list" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_kotehan_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/kotehan_list" />
+
+                    <Button
+                            android:id="@+id/fragment_comment_fragment_menu_dymanic_shortcut_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_homescreen" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2sp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2sp"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:id="@+id/textView14"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_sports_esports_24px"
+                                android:padding="5sp"
+                                android:text="@string/nico_nama_game"
+                                android:textSize="18sp" />
+
+                        <Switch
+                                android:id="@+id/fragment_comment_fragment_nico_nama_game_switch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5sp"
+                                android:text="@string/play_nico_nama_game" />
+
+                        <Switch
+                                android:id="@+id/fragment_comment_fragment_nico_nama_game_webview_player_switch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="5sp"
+                                android:text="@string/play_nico_nama_game_webview_player" />
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_outline_info_24px"
+                                android:text="@string/nico_nama_game_description" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2sp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2sp"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_share"
+                            android:gravity="center_vertical"
+                            android:text="@string/share" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="2sp"
+                            android:orientation="horizontal">
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_share_image_attach_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:text="@string/share_attach_image" />
+
+                        <Button
+                                android:id="@+id/fragment_comment_fragment_menu_share_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="2sp"
+                                android:layout_weight="1"
+                                android:text="@string/share" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2sp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2sp"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_share"
+                            android:gravity="center_vertical"
+                            android:text="@string/volume_control" />
+
+                    <SeekBar
+                            android:id="@+id/fragment_comment_fragment_volume_seek"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10sp"
+                            android:max="10"
+                            android:min="0"
+                            android:progress="10" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

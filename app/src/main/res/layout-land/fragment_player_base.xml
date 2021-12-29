@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.github.takusan23.tatimidroid.PlayerParentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/fragment_player_base_fragment_parent_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:orientation="horizontal">
+
+        <!-- ぷれいやーぶぶんの -->
+        <FrameLayout
+            android:id="@+id/fragment_player_base_player_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#000"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 動画情報とかをおくFragment -->
+            <FrameLayout
+                android:id="@+id/fragment_player_base_fragment_frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- コメント一覧、生放送では累計視聴者をおいておくViewGroup -->
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/fragment_player_comment_view_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff">
+
+                <!-- スクロールしたら見え隠れするやつ -->
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/fragment_player_comment_panel_compose_view_parent_app_bar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- コメント一覧を重ねるためのFragment -->
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/fragment_player_comment_panel_compose_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_scrollFlags="scroll|enterAlways|snap" />
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+                <!-- コメント一覧を置くためのFrameLayout -->
+                <FrameLayout
+                    android:id="@+id/fragment_player_comment_fragment_frame_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <!-- 動画/生放送のコメント展開ボタン。Jetpack Composeで作る！ -->
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/fragment_player_bottom_compose_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</io.github.takusan23.tatimidroid.PlayerParentFrameLayout>
