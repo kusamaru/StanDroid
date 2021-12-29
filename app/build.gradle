@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt' // Room使うときのなにか。一番上に
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "io.github.takusan23.tatimidroid"
+        applicationId "com.kusamaru.standroid"
         minSdkVersion 22
         targetSdkVersion 31
         versionCode 111

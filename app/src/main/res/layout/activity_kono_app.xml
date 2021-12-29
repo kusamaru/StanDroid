@@ -8,7 +8,7 @@
     android:gravity="bottom"
     tools:context=".activity.KonoApp">
 
-    <io.github.takusan23.tatimidroid.CommentCanvas
+    <com.kusamaru.standroid.CommentCanvas
         android:id="@+id/activty_kono_app_comment_canvas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <io.github.takusan23.tatimidroid.CommentCanvas
+    <com.kusamaru.standroid.CommentCanvas
         android:id="@+id/activty_kono_app_comment_canvas_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

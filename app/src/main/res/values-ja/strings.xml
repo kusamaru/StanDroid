@@ -142,7 +142,7 @@
     <string name="re_login_successful">ユーザーセッションが切れたので再度ログインしました。</string>
     <string name="setting_select_font">フォントを選択する</string>
     <string name="setting_reset_font">選択したフォントを削除する</string>
-    <string name="setting_font_file_description">もしフォント選択で選べないフォントファイルを利用したい場合は以下の場所においてください。\n /sdcard/Android/data/io.github.takusan23.tatimidroid/font</string>
+    <string name="setting_font_file_description">もしフォント選択で選べないフォントファイルを利用したい場合は以下の場所においてください。\n /sdcard/Android/data/com.kusamaru.standroid/font</string>
     <string name="nico_nama_game">ニコ生ゲーム</string>
     <string name="play_nico_nama_game">ニコ生ゲームを遊ぶ（試験的）</string>
     <string name="nico_nama_game_engineers">技術者向け：ニコ生ゲームを利用するために、PC版ニコ生をWebViewに表示させることで実現しています。</string>

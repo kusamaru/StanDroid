@@ -60,7 +60,7 @@
             android:title="@string/setting_scroll_tab_hide_title" />
 
         <Preference
-            android:fragment="io.github.takusan23.tatimidroid.setting.FontSettingFragment"
+            android:fragment="com.kusamaru.standroid.setting.FontSettingFragment"
             android:icon="@drawable/ic_font_download_24px"
             android:key="font_preference"
             android:summary="@string/setting_font_description"
@@ -293,8 +293,8 @@
             <!--Activity起動-->
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="io.github.takusan23.tatimidroid.activity.NGListActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid" />
+                android:targetClass="com.kusamaru.standroid.activity.NGListActivity"
+                android:targetPackage="com.kusamaru.standroid" />
         </Preference>
 
 
@@ -304,8 +304,8 @@
             <!--Activity起動-->
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="io.github.takusan23.tatimidroid.activity.KotehanListActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid" />
+                android:targetClass="com.kusamaru.standroid.activity.KotehanListActivity"
+                android:targetPackage="com.kusamaru.standroid" />
         </Preference>
 
     </PreferenceCategory>
@@ -423,7 +423,7 @@
             android:title="@string/setting_database_restore_title" />
 
         <Preference
-            android:fragment="io.github.takusan23.tatimidroid.setting.dbclear.DatabaseClearFragment"
+            android:fragment="com.kusamaru.standroid.setting.dbclear.DatabaseClearFragment"
             android:icon="@drawable/ic_outline_delete_24px"
             android:key="database_clear"
             android:summary="@string/setting_database_clear_description"
@@ -486,7 +486,7 @@
         app:initialExpandedChildrenCount="0">
 
         <Preference
-            android:fragment="io.github.takusan23.tatimidroid.setting.DevSettingFragment"
+            android:fragment="com.kusamaru.standroid.setting.DevSettingFragment"
             android:icon="@drawable/ic_policy_black"
             android:title="実験的" />
 

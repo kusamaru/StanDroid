@@ -49,7 +49,7 @@ Android 5.1以上で利用可能<br>
         - ということはコメントが多くなっても全コメント拾える？(ユーザー番組は全部拾ってるはず)
 
 ## インストール
-https://play.google.com/store/apps/details?id=io.github.takusan23.tatimidroid&hl=ja
+https://play.google.com/store/apps/details?id=com.kusamaru.standroid&hl=ja
 
 ## 使い方
 初回起動時はログイン画面が表示されるので、ログインしてください。  
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         // たちみどろいどのMainActivityを起動させる
         val intent = Intent()
-        intent.setClassName("io.github.takusan23.tatimidroid", "io.github.takusan23.tatimidroid.MainActivity")
+        intent.setClassName("com.kusamaru.standroid", "com.kusamaru.standroid.MainActivity")
         intent.putExtra("videoId", "sm157")
         startActivity(intent)
     }
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         // たちみどろいどのMainActivityを起動させる
         val intent = Intent()
-        intent.setClassName("io.github.takusan23.tatimidroid", "io.github.takusan23.tatimidroid.MainActivity")
+        intent.setClassName("com.kusamaru.standroid", "com.kusamaru.standroid.MainActivity")
         intent.putExtra("liveId", "ch2646436") // ニコニコ実況。NHK総合
         startActivity(intent)
     }

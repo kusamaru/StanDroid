@@ -9,8 +9,8 @@
         <!-- インテント -->
         <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid">
+                android:targetClass="com.kusamaru.standroid.MainActivity"
+                android:targetPackage="com.kusamaru.standroid">
             <extra
                     android:name="app_shortcut"
                     android:value="nicovideo" />
@@ -24,8 +24,8 @@
         <!-- インテント -->
         <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid">
+                android:targetClass="com.kusamaru.standroid.MainActivity"
+                android:targetPackage="com.kusamaru.standroid">
             <extra
                     android:name="app_shortcut"
                     android:value="nicolive" />
@@ -39,8 +39,8 @@
         <!-- インテント -->
         <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid">
+                android:targetClass="com.kusamaru.standroid.MainActivity"
+                android:targetPackage="com.kusamaru.standroid">
             <extra
                     android:name="app_shortcut"
                     android:value="cache" />
@@ -54,8 +54,8 @@
         <!-- インテント -->
         <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="io.github.takusan23.tatimidroid.MainActivity"
-                android:targetPackage="io.github.takusan23.tatimidroid">
+                android:targetClass="com.kusamaru.standroid.MainActivity"
+                android:targetPackage="com.kusamaru.standroid">
             <extra
                     android:name="app_shortcut"
                     android:value="jk" />

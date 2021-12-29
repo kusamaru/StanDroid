@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.github.takusan23.tatimidroid.SwipeFixFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kusamaru.standroid.SwipeFixFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/comment_fragment_motionlayout_parent_framelayout"
@@ -55,7 +55,7 @@
                 tools:visibility="visible" />
 
         <!-- コメント -->
-        <io.github.takusan23.tatimidroid.CommentCanvas
+        <com.kusamaru.standroid.CommentCanvas
                 android:id="@+id/comment_fragment_comment_canvas"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -330,4 +330,4 @@
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
-</io.github.takusan23.tatimidroid.SwipeFixFrameLayout>
+</com.kusamaru.standroid.SwipeFixFrameLayout>

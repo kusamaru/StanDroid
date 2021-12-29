@@ -1,7 +1,0 @@
-homewidget
-
-ニコレポウイジェット関係のクラスはここ。
-一覧表示は`NicoRepoHomeWidgetRemoteViewService`参照。
-
-Pixelのデフォランチャーがグリッドサイズ5以上にできないせいで小さめになってます。（初期状態1x1なので広げてください。）
-(Gesture Navigationと引き換えにデフォルトランチャーを使ってる)

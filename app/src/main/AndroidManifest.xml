@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.takusan23.tatimidroid">
+    package="com.kusamaru.standroid">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- インターネット -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 予約枠自動入場のServiceよう -->
@@ -27,7 +27,7 @@
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="io.github.takusan23.tatimidroid.googlecast.CastOptionsProvider" />
+            android:value="com.kusamaru.standroid.googlecast.CastOptionsProvider" />
 
         <activity
             android:name=".NimadoActivity"
