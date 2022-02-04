@@ -22,6 +22,7 @@
         android:summary="@string/launch_setting_description"
         android:title="@string/launch_setting">
         <ListPreference
+            android:layout_width="wrap_content"
             android:defaultValue="live"
             android:dialogTitle="@string/setting_launch_fragment_title"
             android:entries="@array/launch_fragment"
@@ -44,6 +45,22 @@
             android:icon="@drawable/ic_do_not_disturb_alt_black_24dp"
             android:key="setting_show_ng"
             android:title="@string/setting_show_ng_score" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_comment_off"
+            android:key="setting_ng_by_ng_score"
+            android:title="@string/setting_ng_by_ng_score" />
+
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:defaultValue="1"
+            android:dialogTitle="@string/setting_ng_score_limit"
+            android:entries="@array/setting_ng_score_limit_type"
+            android:entryValues="@array/setting_ng_score_limit_value"
+            android:key="setting_ng_score_limit"
+            android:summary="@string/setting_ng_score_limit_description"
+            android:title="@setting_ng_score_limit_title" />
 
         <SwitchPreference
             android:defaultValue="false"

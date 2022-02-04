@@ -1,0 +1,75 @@
+package com.kusamaru.standroid.nicoad.compose
+
+import android.content.Intent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import com.kusamaru.standroid.nicoapi.nicoad.NicoAdAPI
+import com.kusamaru.standroid.nicoad.viewmodel.NicoAdViewModel
+
+/**
+ * [com.kusamaru.standroid.nicoad.NicoAdBottomFragment]で表示しているCompose
+ * */
+@Composable
+fun NicoAdScreen(viewModel: NicoAdViewModel) {
+    // ニコニ広告データ
+    val nicoAdDataLiveData = viewModel.nicoAdDataLiveData.observeAsState()
+    // ニコニ広告履歴データ
+    val nicoAdHistoryLiveData = viewModel.nicoAdHistoryLiveData.observeAsState()
+    // ニコニ広告ランキングデータ
+    val nicoAdRankingLiveData = viewModel.nicoAdRankingLiveData.observeAsState()
+// Context
+    val context = LocalContext.current
+
+    Column {
+        // タイトル、累計ポイント、アクティブポイント表示
+        if (nicoAdDataLiveData.value != null) {
+            Card(
+                modifier = Modifier.padding(5.dp),
+                elevation = 5.dp,
+                shape = RoundedCornerShape(3.dp)
+            ) {
+                NicoAdTop(
+                    nicoAdData = nicoAdDataLiveData.value!!,
+                    onClickOpenBrowser = {
+                        // ブラウザ起動
+                        val intent = Intent(Intent.ACTION_VIEW, NicoAdAPI.generateURL(nicoAdDataLiveData.value!!.contentId).toUri())
+                        context.startActivity(intent)
+                    }
+                )
+            }
+        }
+        // タブとランキング、履歴表示
+        Card(
+            modifier = Modifier.padding(5.dp),
+            elevation = 5.dp,
+            shape = RoundedCornerShape(3.dp)
+        ) {
+            Column {
+                // 現在選択中ダブ
+                val selectTab = remember { mutableStateOf(0) }
+                // タブ
+                NicoAdTabMenu(
+                    selectTabIndex = selectTab.value,
+                    onClickTabItem = { selectTab.value = it }
+                )
+                if (nicoAdRankingLiveData.value != null && nicoAdHistoryLiveData.value != null) {
+                    // どっちを表示するか
+                    when (selectTab.value) {
+                        0 -> NicoAdRankingList(nicoAdRankingUserList = nicoAdRankingLiveData.value!!)
+                        1 -> NicoAdHistoryList(nicoAdHistoryUserList = nicoAdHistoryLiveData.value!!)
+                    }
+                }
+            }
+        }
+    }
+}

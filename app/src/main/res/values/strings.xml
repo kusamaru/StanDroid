@@ -509,4 +509,8 @@ Sorry to trouble you, but please update the video information.\n
     <string name="database_search_history">Search history database</string>
     <string name="setting_material_you_title">Use Material You (dynamic theme) (experimental)</string>
     <string name="setting_material_you_description">Please enable it when using the dynamic theme added in Android 12 or later. The color extracted from the wallpaper is also applied to this app. It will be reflected after restarting.</string>
+    <string name="setting_ng_by_ng_score">NG Comment by NG Score</string>
+    <string name="setting_ng_score_limit">NG Score limit</string>
+    <string name="setting_ng_score_limit_description">If set to 0, hide all comments with NG scores</string>
+    <string name="setting_ng_score_limit_title">Set NG Score</string>
 </resources>

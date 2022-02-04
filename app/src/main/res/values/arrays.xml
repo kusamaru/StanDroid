@@ -68,4 +68,23 @@
         <item>audio_only</item>
     </string-array>
 
+    <!-- NGスコアの閾値。表示される値 -->
+    <string-array name="setting_ng_score_limit_type">
+        <item>0</item>
+        <item>-240</item>
+        <item>-480</item>
+        <item>-960</item>
+        <item>-1200</item>
+        <item>-2400</item>
+    </string-array>
+    <!-- NGスコアの閾値。保存される値 -->
+    <string-array name="setting_ng_score_limit_value">
+        <item>-1</item>
+        <item>-240</item>
+        <item>-480</item>
+        <item>-960</item>
+        <item>-1200</item>
+        <item>-2400</item>
+    </string-array>
+
 </resources>

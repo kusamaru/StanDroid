@@ -1,0 +1,3 @@
+bottomfragment
+
+動画でも生放送でもないBottomFragmentはここに入ってる。コメントロックオンとか（コメント抽出機能）

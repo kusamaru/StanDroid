@@ -1,0 +1,4 @@
+adapter
+
+RecyclerViewのAdapterか、ViewPagerのAdapterが入ってる。
+これも生放送、動画で共用する場合はこっちに入ってるけど、どっちかしか使わない場合は`nicolive`、`nicovideo`に入ってる

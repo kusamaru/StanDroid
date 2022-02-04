@@ -509,4 +509,8 @@
     <string name="database_search_history">検索履歴データベース</string>
     <string name="setting_material_you_title">Material You（動的テーマ）を利用する（実験的）</string>
     <string name="setting_material_you_description">Android 12以降で追加される動的テーマを利用する場合は有効にしてください。壁紙から取り出した色をこのアプリにも適用します。再起動後反映されます。</string>
+    <string name="setting_ng_by_ng_score">NGスコアを利用したコメントNGを有効にする</string>
+    <string name="setting_ng_score_limit">NGスコアの閾値</string>
+    <string name="setting_ng_score_limit_description">0に設定した場合、NGスコアの存在する全てのコメントを隠します</string>
+    <string name="setting_ng_score_limit_title">NGスコアの設定</string>
 </resources>
