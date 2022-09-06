@@ -27,7 +27,7 @@ class NicoLiveJKHTML {
     suspend fun getNicoLiveJKProgramList(userSession: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://jk.nicovideo.jp/")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

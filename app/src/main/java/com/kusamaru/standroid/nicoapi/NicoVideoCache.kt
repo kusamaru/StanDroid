@@ -214,7 +214,7 @@ class NicoVideoCache(val context: Context?) {
         val resultVideoFile = File("${videoIdFolder.path}/${videoId}.mp4")
         // ヘッダー
         val headers = arrayListOf(
-            Pair("User-Agent", "TatimiDroid;@takusan_23"),
+            Pair("User-Agent", "Stan-Droid;@kusamaru_jp"),
             Pair("Cookie", "user_session=$userSession"),
             Pair("Cookie", nicoHistory),
         )
@@ -261,7 +261,7 @@ class NicoVideoCache(val context: Context?) {
         // リクエスト
         val request = Request.Builder().apply {
             url(thumbnailURL)
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

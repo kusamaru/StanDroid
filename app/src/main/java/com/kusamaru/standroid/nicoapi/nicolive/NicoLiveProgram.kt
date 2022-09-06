@@ -56,7 +56,7 @@ class NicoLiveProgram {
     suspend fun getNicoLiveTopPageHTML(userSession: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://live.nicovideo.jp/?header")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

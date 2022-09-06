@@ -40,7 +40,7 @@ object NicoNamaGameWebViewTool {
             // JS有効
             settings.javaScriptEnabled = true
             // User-Agent変更
-            settings.userAgentString = "TatimiDroid;@takusan_23"
+            settings.userAgentString = "Stan-Droid;@kusamaru_jp"
             // 番組URL
             loadUrl("https://live2.nicovideo.jp/watch/$liveId")
 

@@ -35,7 +35,7 @@ class NicoLiveGameProgram {
     suspend fun getNicoNamaGameProgram(userSession: String, url: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url(url) // なんと！APIがある！
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

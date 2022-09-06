@@ -27,7 +27,7 @@ class NicoVideoHistoryAPI {
             url("https://nvapi.nicovideo.jp/v1/users/me/watch/history?page=1&pageSize=200") // 最大200件？
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "3")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

@@ -31,7 +31,7 @@ class NicoLikeAPI {
             url("https://nvapi.nicovideo.jp/v1/users/me/likes/items?videoId=$videoId")
             addHeader("Cookie", "user_session=$userSession")
             addHeader("x-frontend-id", "6")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("X-Frontend-Version", "0")
             addHeader("X-Request-With", "https://www.nicovideo.jp")
             post(FormBody.Builder().build()) // POST
@@ -61,7 +61,7 @@ class NicoLikeAPI {
             url("https://nvapi.nicovideo.jp/v1/users/me/likes/items?videoId=$videoId")
             addHeader("Cookie", "user_session=$userSession")
             addHeader("x-frontend-id", "6")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("X-Frontend-Version", "0")
             addHeader("X-Request-With", "https://www.nicovideo.jp")
             delete() // Delete

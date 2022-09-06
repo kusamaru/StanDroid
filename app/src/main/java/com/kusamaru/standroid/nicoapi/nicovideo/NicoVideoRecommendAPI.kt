@@ -32,7 +32,7 @@ class NicoVideoRecommendAPI {
                 url("https://nvapi.nicovideo.jp/v1/recommend?recipeId=video_watch_recommendation&videoId=$videoId&site=nicovideo&_frontendId=6")
             }
             header("Cookie", "user_session=$userSession")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

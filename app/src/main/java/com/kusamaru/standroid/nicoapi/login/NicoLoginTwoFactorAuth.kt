@@ -63,7 +63,7 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
     private suspend fun getTwoFactorAPIURL() = withContext(Dispatchers.Default) {
         val request = Request.Builder().apply {
             url(twoFactorAuthAPIURL)
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("Cookie", loginCookie)
             get()
         }.build()
@@ -95,7 +95,7 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
         }.build()
         val request = Request.Builder().apply {
             url(twoFactorAuthAPIURL)
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("Cookie", loginCookie)
             post(formData)
         }.build()
@@ -119,7 +119,7 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
         val url = location // URLを完成させる
         val request = Request.Builder().apply {
             url(url)
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("Cookie", loginCookie)
             get()
         }.build()

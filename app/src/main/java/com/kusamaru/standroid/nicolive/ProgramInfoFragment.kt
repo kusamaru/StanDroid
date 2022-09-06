@@ -349,7 +349,7 @@ class ProgramInfoFragment : Fragment() {
     fun requestFollow(userId: String, response: (Response) -> Unit) {
         val request = Request.Builder().apply {
             url("https://public.api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$usersession")
             // これがないと 200 が帰ってこない
             header(
@@ -392,7 +392,7 @@ class ProgramInfoFragment : Fragment() {
         }.build()
         val request = Request.Builder().apply {
             url("https://com.nicovideo.jp/motion/${communityId}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$usersession")
             header("Content-Type", "application/x-www-form-urlencoded")
             // Referer これないと200が帰ってくる。（ほしいのは302 Found）
@@ -428,7 +428,7 @@ class ProgramInfoFragment : Fragment() {
         }.build()
         val request = Request.Builder().apply {
             url("https://live.nicovideo.jp/api/timeshift.reservations")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$usersession")
             header("Content-Type", "application/x-www-form-urlencoded")
             header("Origin", "https://live2.nicovideo.jp") // これが必須の模様
@@ -454,7 +454,7 @@ class ProgramInfoFragment : Fragment() {
         val request = Request.Builder().apply {
             // 番組IDからlvを抜いた値を指定する
             url("https://live.nicovideo.jp/api/timeshift.reservations?vid=${liveId.replace("lv", "")}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$usersession")
             header("Content-Type", "application/x-www-form-urlencoded")
             header("Origin", "https://live2.nicovideo.jp") // これが必須の模様

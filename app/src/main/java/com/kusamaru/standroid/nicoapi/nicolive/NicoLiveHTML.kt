@@ -109,7 +109,7 @@ class NicoLiveHTML {
         val request = Request.Builder().apply {
             get()
             url(url)
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             if (isLogin) {
                 // ログイン時はユーザーセッションを入れる。
                 addHeader("Cookie", "user_session=$userSession")
@@ -309,7 +309,7 @@ class NicoLiveHTML {
     private fun connectionNicoLiveWebSocket(webSocketUrl: String, onMessageFun: (String, String) -> Unit) {
         // 2020/09/03？あたりからユーザーエージェント未指定の場合は{"type":"error","body":{"code":"CONNECT_ERROR"}}が送られてくるように
         val headerMap = mutableMapOf<String, String>()
-        headerMap["User-Agent"] = "TatimiDroid;@takusan_23"
+        headerMap["User-Agent"] = "Stan-Droid;@kusamaru_jp"
         nicoLiveWebSocketClient = object : WebSocketClient(URI(webSocketUrl), headerMap) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 // 視聴セッションWebSocketに接続したら最初に送らないといけないJSONがあるので送りつける。2020/06/02から送るJSONの中身が変わっているぞおい勝手に変更するな
@@ -446,7 +446,7 @@ class NicoLiveHTML {
         val request = Request.Builder().apply {
             url("https://api.cas.nicovideo.jp/v1/services/live/programs/${liveId}/comments")
             header("Cookie", "user_session=${userSession}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             post(requestBodyJSON)
         }.build()
         okHttpClient.newCall(request).enqueue(object : Callback {

@@ -24,7 +24,7 @@ class NicoLegacyAPI {
     fun getFlv(userSession: String, videoId: String): Deferred<Response> = GlobalScope.async {
         val request = Request.Builder().apply {
             url("https://flapi.nicovideo.jp/api/getflv/$videoId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
         }.build()
         val okHttpClient = OkHttpClient()
@@ -40,7 +40,7 @@ class NicoLegacyAPI {
     fun getThumbInfo(userSession: String, videoId: String): Deferred<Response> = GlobalScope.async {
         val request = Request.Builder().apply {
             url("https://ext.nicovideo.jp/api/getthumbinfo/$videoId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
         }.build()
         val okHttpClient = OkHttpClient()
@@ -76,7 +76,7 @@ class NicoLegacyAPI {
     fun getWayBackKey(threadId: String, userSession: String): Deferred<String?> = GlobalScope.async {
         val request = Request.Builder().apply {
             url("https://flapi.nicovideo.jp/api/getwaybackkey?thread=$threadId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
         }.build()
         val okHttpClient = OkHttpClient()
@@ -94,7 +94,7 @@ class NicoLegacyAPI {
     fun getThreadKey(threadId: String, userSession: String): Deferred<String?> = GlobalScope.async {
         val request = Request.Builder().apply {
             url("https://flapi.nicovideo.jp/api/getthreadkey?thread=$threadId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
         }.build()
         val okHttpClient = OkHttpClient()
@@ -139,7 +139,7 @@ class NicoLegacyAPI {
             // リクエスト
             val request = Request.Builder().apply {
                 url("https://nmsg.nicovideo.jp/api/") // https！？
-                header("User-Agent", "TatimiDroid;@takusan_23")
+                header("User-Agent", "Stan-Droid;@kusamaru_jp")
                 header("Cookie", "user_session=$userSession")
                 header("Content-Type", "application/xml")
                 post(postData.toRequestBody("application/xml".toMediaType())) // xmlをPOST

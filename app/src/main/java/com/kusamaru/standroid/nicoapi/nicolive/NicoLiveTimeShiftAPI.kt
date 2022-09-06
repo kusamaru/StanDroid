@@ -30,7 +30,7 @@ class NicoLiveTimeShiftAPI {
         }.build()
         val request = Request.Builder().apply {
             url("https://live.nicovideo.jp/api/timeshift.reservations")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("Content-Type", "application/x-www-form-urlencoded")
             header("Origin", "https://live2.nicovideo.jp") // これが必須の模様
@@ -49,7 +49,7 @@ class NicoLiveTimeShiftAPI {
         val request = Request.Builder().apply {
             // 番組IDからlvを抜いた値を指定する
             url("https://live.nicovideo.jp/api/timeshift.reservations?vid=${liveId.replace("lv", "")}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("Content-Type", "application/x-www-form-urlencoded")
             header("Origin", "https://live2.nicovideo.jp") // これが必須の模様

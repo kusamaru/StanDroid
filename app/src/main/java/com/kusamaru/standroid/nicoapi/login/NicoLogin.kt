@@ -124,7 +124,7 @@ object NicoLogin {
         val postData = "mail_tel=$mail&password=$pass"
         val request = Request.Builder().apply {
             url(url)
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             if (trustDeviceToken != null) {
                 addHeader("Cookie", trustDeviceToken)
             }

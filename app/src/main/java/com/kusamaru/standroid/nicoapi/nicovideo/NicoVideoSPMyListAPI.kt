@@ -36,7 +36,7 @@ class NicoVideoSPMyListAPI {
                 url("https://nvapi.nicovideo.jp/v1/users/${userId}/mylists")
             }
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             get()
         }.build()
@@ -75,7 +75,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/mylists/$myListId/items?pageSize=500")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             get()
         }.build()
@@ -91,7 +91,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/deflist/items?pageSize=500")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             get()
         }.build()
@@ -111,7 +111,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "6")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             url(url)
             get()
         }.build()
@@ -237,7 +237,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/mylists/$myListId/items?itemIds=$itemId")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             header("x-request-with", "nicovideo")
             delete()
@@ -255,7 +255,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/deflist/items?itemIds=$itemId")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             header("x-request-with", "nicovideo")
             delete()
@@ -276,7 +276,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/mylists/$myListId/items?itemId=$videoId")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             header("x-request-with", "nicovideo")
             post(FormBody.Builder().build())
@@ -295,7 +295,7 @@ class NicoVideoSPMyListAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/deflist/items/$videoId")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3")
             header("x-request-with", "nicovideo")
             post(FormBody.Builder().build())

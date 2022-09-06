@@ -38,7 +38,7 @@ class NicoVideoSeriesAPI {
                 url("https://nvapi.nicovideo.jp/v1/users/${userId}/series")
             }
             addHeader("Cookie", "user_session=$userSession")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("x-frontend-id", "6")
             get()
         }.build()
@@ -76,7 +76,7 @@ class NicoVideoSeriesAPI {
         val request = Request.Builder().apply {
             url("https://nicovideo.jp/series/$seriesId")
             addHeader("Cookie", "user_session=$userSession")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

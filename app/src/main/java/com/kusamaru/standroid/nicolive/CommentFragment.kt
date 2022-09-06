@@ -883,7 +883,7 @@ class CommentFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
             // 高さ更新
             viewBinding.commentFragmentCommentCanvas.finalHeight = viewBinding.commentFragmentCommentCanvas.height
-            val sourceFactory = DefaultDataSourceFactory(requireContext(), "TatimiDroid;@takusan_23", object : TransferListener {
+            val sourceFactory = DefaultDataSourceFactory(requireContext(), "Stan-Droid;@kusamaru_jp", object : TransferListener {
                 override fun onTransferInitializing(source: DataSource, dataSpec: DataSpec, isNetwork: Boolean) {
 
                 }

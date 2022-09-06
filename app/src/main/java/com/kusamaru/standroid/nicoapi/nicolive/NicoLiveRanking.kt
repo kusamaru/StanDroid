@@ -30,7 +30,7 @@ class NicoLiveRanking {
         val request = Request.Builder().apply {
             url("https://sp.live.nicovideo.jp/ranking")
             // スマホのユーザーエージェントを指定してスマホ版ページを得る
-            header("User-Agent", "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Mobile Safari/537.36 TatimiDroid;@takusan_23")
+            header("User-Agent", "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Mobile Safari/537.36 Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

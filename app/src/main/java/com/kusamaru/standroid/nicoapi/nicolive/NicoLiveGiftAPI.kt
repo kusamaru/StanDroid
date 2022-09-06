@@ -26,7 +26,7 @@ class NicoLiveGiftAPI {
     suspend fun getGiftRanking(userSession: String, liveId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/nage_agv/$liveId/ranking/contribution?limit=50")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -72,7 +72,7 @@ class NicoLiveGiftAPI {
     suspend fun getGiftHistory(userSession: String, liveId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/nage_agv/$liveId/histories?limit=50")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -121,7 +121,7 @@ class NicoLiveGiftAPI {
     suspend fun getGiftTotalPoint(userSession: String, liveId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/nage_agv/$liveId/totalGiftPoint")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -148,7 +148,7 @@ class NicoLiveGiftAPI {
     suspend fun getGiftItemList(userSession: String, liveId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/nagenico/nage_agv/$liveId/totalsoldcounts")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

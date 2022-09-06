@@ -579,7 +579,8 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         }
     }
 
-    /** コメントNGを適用したりする */
+    /** コメントNGを適用したりする
+     *  NicoVideoPlayService.kt:420~に半分コピペした、こっち変えたらあっちもいい感じにしてね */
     fun commentFilter(isShowToast: Boolean = false) {
         // 3DSけす？
         val is3DSCommentHidden = prefSetting.getBoolean("nicovideo_comment_3ds_hidden", false)
@@ -608,7 +609,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
             .filter { commentJSONParse -> if (isSwitchCommentHidden) !commentJSONParse.mail.contains("device:Switch") else true}
             .filter { commentJSONParse -> if (isHideKantanComment) commentJSONParse.fork != 2 else true } // fork == 2 が かんたんコメント
             .filter { commentJSONParse ->
-                if (commentJSONParse.score != "") !(commentJSONParse.score.toInt() <= NGScoreLimit)
+                if (isNGScoreCommentHidden && commentJSONParse.score != "") !(commentJSONParse.score.toInt() <= NGScoreLimit)
                 else true } // NGScoreLimitよりもscore値が小さいコメントだけを引き出す
             .filter { commentJSONParse -> !ngCommentList.contains(commentJSONParse.comment) }
             .filter { commentJSONParse -> !ngUserList.contains(commentJSONParse.userId) } as ArrayList<CommentJSONParse>

@@ -41,7 +41,7 @@ class NicoruAPI(val userSession: String, val threadId: String, val isPremium: Bo
     private suspend fun getNicoruKey() = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/nicorukey?language=0&threadId=$threadId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("Content-Type", "application/x-www-form-urlencoded")
             header("X-Frontend-Id", "6")
@@ -87,7 +87,7 @@ class NicoruAPI(val userSession: String, val threadId: String, val isPremium: Bo
                 })
             }
             url("https://nmsg.nicovideo.jp/api.json/")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("Content-Type", "application/x-www-form-urlencoded")
             post(postData.toString().toRequestBody("application/json".toMediaTypeOrNull()))
@@ -104,7 +104,7 @@ class NicoruAPI(val userSession: String, val threadId: String, val isPremium: Bo
     suspend fun deleteNicoru(userSession: String, nicoruId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me/nicoru/send/$nicoruId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("X-Frontend-Id", "6")
             header("X-Frontend-Version", "0")

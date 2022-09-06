@@ -293,7 +293,7 @@ class NicoLivePlayService : Service() {
         // ポップアップ再生、バッググラウンド再生　共にExoPlayer、MediaSessionの初期化を行う。
         // ExoPlayer初期化
         popupExoPlayer = SimpleExoPlayer.Builder(this).build()
-        val sourceFactory = DefaultDataSourceFactory(this, "TatimiDroid;@takusan_23", object : TransferListener {
+        val sourceFactory = DefaultDataSourceFactory(this, "Stan-Droid;@kusamaru_jp", object : TransferListener {
             override fun onTransferInitializing(source: DataSource, dataSpec: DataSpec, isNetwork: Boolean) {
 
             }

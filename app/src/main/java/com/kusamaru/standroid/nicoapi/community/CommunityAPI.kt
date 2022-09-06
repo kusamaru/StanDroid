@@ -29,7 +29,7 @@ class CommunityAPI {
         val request = Request.Builder().apply {
             // coを抜いたコミュIDをURLの中に組み込む
             url("https://com.nicovideo.jp/api/v1/communities/${communityId.replace("co", "")}/follows.json")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             // これがないと失敗する
             header("X-Requested-By", "https://com.nicovideo.jp/motion/$communityId")
@@ -51,7 +51,7 @@ class CommunityAPI {
         // 1.解除ページをリクエスト
         val request = Request.Builder().apply {
             url("https://com.nicovideo.jp/leave/$communityId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -71,7 +71,7 @@ class CommunityAPI {
         // コミュ解除APIを叩く。こっちには「Referer」が必要
         val unfollowRequest = Request.Builder().apply {
             url("https://com.nicovideo.jp/leave/$communityId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("Referer", "https://com.nicovideo.jp/leave/$communityId")
             // URL同じだけどPOSTリクエストになる。DELETEではなかった

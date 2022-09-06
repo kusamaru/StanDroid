@@ -359,14 +359,14 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             // キャッシュを優先的に利用する　もしくは　キャッシュ再生時
             viewModel.isOfflinePlay.value ?: false -> {
                 // キャッシュ再生
-                val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "TatimiDroid;@takusan_23")
+                val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "Stan-Droid;@kusamaru_jp")
                 val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
                 exoPlayer.setMediaSource(videoSource)
             }
             // それ以外：インターネットで取得
             else -> {
                 // SmileサーバーはCookieつけないと見れないため
-                val dataSourceFactory = DefaultHttpDataSourceFactory("TatimiDroid;@takusan_23", null)
+                val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
                 dataSourceFactory.defaultRequestProperties.set("Cookie", viewModel.nicoHistory)
                 val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
                 exoPlayer.setMediaSource(videoSource)

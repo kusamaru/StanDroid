@@ -97,7 +97,7 @@ class NicoLiveTimeShiftComment {
         // ユーザーエージェントとプロトコル
         val protocol = Draft_6455(Collections.emptyList(), Collections.singletonList(Protocol("msg.nicovideo.jp#json")) as List<IProtocol>?)
         val headerMap = mutableMapOf<String, String>()
-        headerMap["User-Agent"] = "TatimiDroid;@takusan_23"
+        headerMap["User-Agent"] = "Stan-Droid;@kusamaru_jp"
         webSocketClient = object : WebSocketClient(URI(commentServerData.webSocketUri), protocol) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 /**

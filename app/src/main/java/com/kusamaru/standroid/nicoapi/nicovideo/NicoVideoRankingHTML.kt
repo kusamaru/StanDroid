@@ -69,7 +69,7 @@ class NicoVideoRankingHTML {
             } else {
                 url("https://sp.nicovideo.jp/ranking/$genre?term=$time")
             }
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         return@withContext okHttpClient.newCall(request).execute()

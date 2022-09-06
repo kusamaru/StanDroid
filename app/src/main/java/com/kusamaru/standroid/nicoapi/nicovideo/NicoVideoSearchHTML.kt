@@ -59,7 +59,7 @@ class NicoVideoSearchHTML {
         val request = Request.Builder().apply {
             url("https://www.nicovideo.jp/$tagOrSearch/$searchText?page=$page&sort=$sort&order=$order")
             addHeader("Cookie", "user_session=$userSession")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()
@@ -155,7 +155,7 @@ class NicoVideoSearchHTML {
         val request = Request.Builder().apply {
             url("https://sug.search.nicovideo.jp/suggestion/expand/$searchText")
             addHeader("Cookie", "user_session=$userSession")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

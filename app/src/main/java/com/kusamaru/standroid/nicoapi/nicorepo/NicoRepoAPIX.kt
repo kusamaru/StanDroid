@@ -31,7 +31,7 @@ class NicoRepoAPIX {
                 url("https://public.api.nicovideo.jp/v1/timelines/nicorepo/last-6-months/users/${userId}/pc/entries.json")
             }
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         val response = okHttpClient.newCall(request).execute()

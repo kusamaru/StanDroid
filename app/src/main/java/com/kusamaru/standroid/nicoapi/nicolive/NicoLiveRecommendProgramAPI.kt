@@ -27,7 +27,7 @@ class NicoLiveRecommendProgramAPI {
         val request = Request.Builder().apply {
             url("https://live2.nicovideo.jp/front/api/v1/recommend-contents?content_meta=true&site=nicolive&recipe=live_top&v=1&user_id=$userId")
             addHeader("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()

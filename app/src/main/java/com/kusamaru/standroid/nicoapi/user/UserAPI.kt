@@ -29,7 +29,7 @@ class UserAPI {
                 url("https://nvapi.nicovideo.jp/v1/users/$userId")
             }
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3") // これ必要。
             get()
         }.build()
@@ -44,7 +44,7 @@ class UserAPI {
         val request = Request.Builder().apply {
             url("https://nvapi.nicovideo.jp/v1/users/me")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "3") // これ必要。
             get()
         }.build()
@@ -87,7 +87,7 @@ class UserAPI {
         val request = Request.Builder().apply {
             url("https://public.api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "6") // これ必要。
             // これがないと 200 が帰ってこない
             header("X-Request-With", "https://www.nicovideo.jp/user/${userId}?ref=pc_mypage_follow_following")
@@ -106,7 +106,7 @@ class UserAPI {
         val request = Request.Builder().apply {
             url("https://public.api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "6") // これ必要。
             // これがないと 200 が帰ってこない
             header("X-Request-With", "https://www.nicovideo.jp/user/${userId}?ref=pc_mypage_follow_following")

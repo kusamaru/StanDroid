@@ -29,7 +29,7 @@ class NicoLiveTagAPI {
         val request = Request.Builder().apply {
             url("https://papi.live.nicovideo.jp/api/relive/livetag/$liveId")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()
@@ -77,7 +77,7 @@ class NicoLiveTagAPI {
             header("Cookie", "user_session=$userSession")
             // なんかログイン情報を渡す方法もCookieからヘッダーに付ける方式に変わってる
             header("X-niconico-session", userSession)
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             put(sendJSON) // 追加はput
         }.build()
         val okHttpClient = OkHttpClient()
@@ -100,7 +100,7 @@ class NicoLiveTagAPI {
             header("Cookie", "user_session=$userSession")
             // なんかログイン情報を渡す方法もCookieからヘッダーに付ける方式に変わってる
             header("X-niconico-session", userSession)
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             delete(sendJSON) // 削除はdelete
         }.build()
         val okHttpClient = OkHttpClient()

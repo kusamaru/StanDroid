@@ -30,7 +30,7 @@ class NicoVideoMyListAPI {
             url(url)
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "6") //3でスマホ、6でPC　なんとなくPCを指定しておく。 指定しないと成功しない
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         val okHttpClient = OkHttpClient()
@@ -73,7 +73,7 @@ class NicoVideoMyListAPI {
             url(url)
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "6") //3でスマホ、6でPC　なんとなくPCを指定しておく。 指定しないと成功しない
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             post(post)
         }.build()
         val okHttpClient = OkHttpClient()
@@ -104,7 +104,7 @@ class NicoVideoMyListAPI {
         val request = Request.Builder().apply {
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "6") //3でスマホ、6でPC　なんとなくPCを指定しておく。 指定しないと成功しない
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             url(url)
             post(post)
         }.build()
@@ -164,7 +164,7 @@ class NicoVideoMyListAPI {
         val request = Request.Builder().apply {
             url("https://www.nicovideo.jp/api/mylist/add")
             header("Cookie", "user_session=${userSession}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             post(formBody)
         }.build()
         val okHttpClient = OkHttpClient()
@@ -189,7 +189,7 @@ class NicoVideoMyListAPI {
             val request = Request.Builder().apply {
                 url("https://www.nicovideo.jp/api/mylist/delete")
                 header("Cookie", "user_session=${userSession}")
-                header("User-Agent", "TatimiDroid;@takusan_23")
+                header("User-Agent", "Stan-Droid;@kusamaru_jp")
                 post(form)
             }.build()
             val okHttpClient = OkHttpClient()
@@ -209,7 +209,7 @@ class NicoVideoMyListAPI {
         val request = Request.Builder().apply {
             header("Cookie", "user_session=${userSession}")
             header("x-frontend-id", "6")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             url(url)
             get()
         }.build()

@@ -38,7 +38,7 @@ class NicoVideoUpload {
         val request = Request.Builder().apply {
             url(url)
             addHeader("Cookie", "user_session=${userSession}")
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("x-frontend-id", "6")
             addHeader("X-Frontend-Version", "0")
             get()

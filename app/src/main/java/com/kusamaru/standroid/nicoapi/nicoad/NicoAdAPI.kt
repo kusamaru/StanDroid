@@ -46,7 +46,7 @@ class NicoAdAPI {
     suspend fun getNicoAd(userSession: String, contentId: String, type: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/$type/$contentId")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -85,7 +85,7 @@ class NicoAdAPI {
     suspend fun getNicoAdRanking(userSession: String, contentId: String, type: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/$type/$contentId/ranking/contribution?limit=50")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -135,7 +135,7 @@ class NicoAdAPI {
     suspend fun getNicoAdHistory(userSession: String, contentId: String, type: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://api.nicoad.nicovideo.jp/v1/contents/$type/$contentId/histories?limit=50")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()

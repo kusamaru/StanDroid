@@ -37,7 +37,7 @@ class NicoLiveKonomiTagAPI {
             } else {
                 url("https://live.nicovideo.jp/recent?hasKonomiTag=true")
             }
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             get()
         }.build()
@@ -138,7 +138,7 @@ class NicoLiveKonomiTagAPI {
         }
         val request = Request.Builder().apply {
             url("https://api.live2.nicovideo.jp/api/v1/konomiTags/GetRecommended")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("x-service-id", "nicolive")
             post(postJSON.toString().toRequestBody("application/json".toMediaTypeOrNull()))
@@ -163,7 +163,7 @@ class NicoLiveKonomiTagAPI {
         }
         val request = Request.Builder().apply {
             url("https://api.live2.nicovideo.jp/api/v1/konomiTags/Follow")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("x-service-id", "nicolive")
             post(postJSON.toString().toRequestBody("application/json".toMediaTypeOrNull()))
@@ -188,7 +188,7 @@ class NicoLiveKonomiTagAPI {
         }
         val request = Request.Builder().apply {
             url("https://api.live2.nicovideo.jp/api/v1/konomiTags/Unfollow")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("x-service-id", "nicolive")
             post(postJSON.toString().toRequestBody("application/json".toMediaTypeOrNull()))
@@ -215,7 +215,7 @@ class NicoLiveKonomiTagAPI {
         }
         val request = Request.Builder().apply {
             url("https://api.live2.nicovideo.jp/api/v1/konomiTags/GetFollowing")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("Cookie", "user_session=$userSession")
             header("x-service-id", "nicolive")
             post(postJSON.toString().toRequestBody("application/json".toMediaTypeOrNull()))

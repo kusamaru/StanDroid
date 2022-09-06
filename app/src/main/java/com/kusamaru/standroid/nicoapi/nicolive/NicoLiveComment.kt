@@ -48,7 +48,7 @@ class NicoLiveComment {
         val request = Request.Builder().apply {
             url("https://live2.nicovideo.jp/watch/$liveId/programinfo")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         val response = okHttpClient.newCall(request).execute()
@@ -122,7 +122,7 @@ class NicoLiveComment {
         // ユーザーエージェントとプロトコル
         val protocol = Draft_6455(Collections.emptyList(), Collections.singletonList(Protocol("msg.nicovideo.jp#json")) as List<IProtocol>?)
         val headerMap = mutableMapOf<String, String>()
-        headerMap["User-Agent"] = "TatimiDroid;@takusan_23"
+        headerMap["User-Agent"] = "Stan-Droid;@kusamaru_jp"
         val webSocketClient = object : WebSocketClient(uri, protocol, headerMap) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 //スレッド番号、過去コメントなど必要なものを最初に送る

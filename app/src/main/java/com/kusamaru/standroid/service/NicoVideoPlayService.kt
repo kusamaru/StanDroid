@@ -47,6 +47,7 @@ import com.kusamaru.standroid.tool.isLoginMode
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.Serializable
+import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
@@ -113,6 +114,9 @@ class NicoVideoPlayService : Service() {
     private var isCurrentVideoCache = false
 
     /** コメント配列 */
+    // 生
+    private var rawVideoCommentList = arrayListOf<CommentJSONParse>()
+    // 最終
     private var currentVideoCommentList = arrayListOf<CommentJSONParse>()
 
     /** シークする場合 */
@@ -391,7 +395,10 @@ class NicoVideoPlayService : Service() {
             // コメント取得
             val commentJSON = nicoVideoHTML.getComment(userSession, jsonObject)
             if (commentJSON != null) {
-                currentVideoCommentList = ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON.body?.string()!!, videoId))
+                rawVideoCommentList =
+                    ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON.body?.string()!!, videoId))
+                // コメントに各種NG設定を適用する
+                applyCommentFilter()
             }
             // タイトル
             currentVideoTitle = jsonObject.getJSONObject("video").getString("title")
@@ -406,6 +413,47 @@ class NicoVideoPlayService : Service() {
                 }
             }
         }
+    }
+
+    /** コメントNGを適用したりする
+     *  NicoVideoViewModel.kt:584~から実装パクってきたので片方変えたらもう片方も書き直すこと */
+    private fun applyCommentFilter() {
+        // 3DSけす？
+        val is3DSCommentHidden = prefSetting.getBoolean("nicovideo_comment_3ds_hidden", false)
+        // Switchを消す
+        val isSwitchCommentHidden = prefSetting.getBoolean("nicovideo_comment_switch_hidden", false)
+        // NGスコア依存のやつ
+        val isNGScoreCommentHidden = prefSetting.getBoolean("setting_ng_by_ng_score", false)
+        // NGスコアの閾値を拾う。stringなので例外対策はする
+        val NGScoreLimit = try {
+            prefSetting.getString("setting_ng_score_limit", "0")!!.toInt()
+        } catch (i: NumberFormatException) { 0 }
+
+        /**
+         * かんたんコメントを消す。forkの値が2の場合はかんたんコメントになる。
+         * どうでもいいんだけどあの機能、関係ないところでうぽつとかできるから控えめに言ってあらし機能だろあれ。てかROM専は何してもコメントしないぞ
+         * */
+        val isHideKantanComment = prefSetting.getBoolean("nicovideo_comment_kantan_comment_hidden", false)
+
+        //// この辺は実装が面倒そうだったので一旦置いとく
+        //// 機能欲しくなったら書く
+        // NGコメント。ngList引数が省略時されてるときはDBから取り出す
+        // val ngCommentList = ngList.map { ngdbEntity -> ngdbEntity.value }
+        // NGユーザー。ngList引数が省略時されてるときはDBから取り出す
+        // val ngUserList = ngList.map { ngdbEntity -> ngdbEntity.value }
+
+        // はい、NGでーす
+        val filteredList = rawVideoCommentList
+            .filter { commentJSONParse -> if (is3DSCommentHidden) !commentJSONParse.mail.contains("device:3DS") else true }
+            .filter { commentJSONParse -> if (isSwitchCommentHidden) !commentJSONParse.mail.contains("device:Switch") else true}
+            .filter { commentJSONParse -> if (isHideKantanComment) commentJSONParse.fork != 2 else true } // fork == 2 が かんたんコメント
+            .filter { commentJSONParse ->
+                if (isNGScoreCommentHidden && commentJSONParse.score != "") !(commentJSONParse.score.toInt() <= NGScoreLimit)
+                else true } // NGScoreLimitよりもscore値が小さいコメントだけを引き出す
+            //.filter { commentJSONParse -> !ngCommentList.contains(commentJSONParse.comment) }
+            //.filter { commentJSONParse -> !ngUserList.contains(commentJSONParse.userId) }
+            as ArrayList<CommentJSONParse>
+        currentVideoCommentList = filteredList
     }
 
     /**
@@ -465,12 +513,12 @@ class NicoVideoPlayService : Service() {
         // キャッシュ再生と分ける
         if (isCache) {
             // キャッシュ再生
-            val dataSourceFactory = DefaultDataSourceFactory(this, "TatimiDroid;@takusan_23")
+            val dataSourceFactory = DefaultDataSourceFactory(this, "Stan-Droid;@kusamaru_jp")
             val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(contentUrl.toUri()))
             exoPlayer.setMediaSource(videoSource)
         } else {
             // SmileサーバーはCookieつけないと見れないため
-            val dataSourceFactory = DefaultHttpDataSourceFactory("TatimiDroid;@takusan_23", null)
+            val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
             dataSourceFactory.defaultRequestProperties.set("Cookie", nicoHistory)
             val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(contentUrl.toUri()))
             exoPlayer.setMediaSource(videoSource)

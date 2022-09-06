@@ -41,7 +41,7 @@ class NicoVideoHTML {
         val request = Request.Builder().apply {
             url("https://www.nicovideo.jp/watch/$videoId?eco=$eco")
             header("Cookie", "user_session=$userSession")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
         }.build()
         okHttpClient.newCall(request).execute()
@@ -258,7 +258,7 @@ class NicoVideoHTML {
         val request = Request.Builder()
             .url("https://api.dmc.nico/api/sessions?_format=json")
             .post(requestBody)
-            .addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            .addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             .addHeader("Content-Type", "application/json")
             .build()
         val response = okHttpClient.newCall(request).execute()
@@ -447,7 +447,7 @@ class NicoVideoHTML {
             //https://nvcomment.nicovideo.jp/legacy/api.json か https://nmsg.nicovideo.jp/api.json のどっちかが入る
             url(commentServerUrl)
             header("Cookie", "user_session=${userSession}")
-            header("User-Agent", "TatimiDroid;@takusan_23")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             post(postData)
         }.build()
         val response = okHttpClient.newCall(request).execute()
@@ -489,7 +489,7 @@ class NicoVideoHTML {
         val request = Request.Builder()
             .url(url).get()
             .header("Cookie", "user_session=${userSession}")
-            .header("User-Agent", "TatimiDroid;@takusan_23")
+            .header("User-Agent", "Stan-Droid;@kusamaru_jp")
             .build()
         val response = okHttpClient.newCall(request).execute()
         if (response.isSuccessful) {
@@ -509,7 +509,7 @@ class NicoVideoHTML {
         val request = Request.Builder().apply {
             url(url)
             post(json.toRequestBody("application/json".toMediaTypeOrNull()))
-            addHeader("User-Agent", "TatimiDroid;@takusan_23")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             build()
         }.build()
         // エラーでまくる？なんで？なので非同期処理に切り替える
