@@ -289,6 +289,9 @@ class NicoVideoPlayService : Service() {
         // あとしまつ
         if (::exoPlayer.isInitialized) {
             // exoPlayer.release()
+
+            // seekMsをリセットする。これしないと途中から再生される
+            seekMs = 0L;
         }
         // 連続再生時のみ利用可能
         val nextVideoPos = if (currentPlaylistPos + 1 < playlist.size) {
@@ -319,7 +322,10 @@ class NicoVideoPlayService : Service() {
         nicoVideoHTML.destroy()
         // あとしまつ
         if (::exoPlayer.isInitialized) {
-            exoPlayer.release()
+            // exoPlayer.release()
+
+            // seekMsをリセットする。これしないと途中から再生される
+            seekMs = 0L;
         }
         // 連続再生時のみ利用可能
         val prevVideoPos = if (currentPlaylistPos - 1 >= 0) {
