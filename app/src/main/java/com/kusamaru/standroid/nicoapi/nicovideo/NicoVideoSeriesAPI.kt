@@ -92,7 +92,13 @@ class NicoVideoSeriesAPI {
         // HTMLスクレイピング
         val document = Jsoup.parse(responseHTML)
         // mapって便利やな
-        val titleList = document.getElementsByClass("NC-VideoMediaObject-title").map { it.text() }
+
+        val titleList = document.getElementsByClass("NC-VideoMediaObject-title")
+            .filter {
+                // 5個上の親がClass持ってるかで分けてみる、すごい汚いのでどうにかならんか
+                !it.parent().parent().parent().parent().parent().hasClass("NC-MutedVideoMediaObject")
+            }
+            .map { it.text() }
         val videoIdList = document.getElementsByClass("NC-Link NC-MediaObject-contents").map { IDRegex(it.attr("href"))!! }
         val thumbUrlList = document.getElementsByClass("NC-Thumbnail-image").map { it.attr("data-background-image") }
         val dateList = document.getElementsByClass("NC-VideoRegisteredAtText-text").map {
@@ -126,7 +132,7 @@ class NicoVideoSeriesAPI {
             simpleDateFormat.parse(it.text()).time / 1000 // 1:00 なら　60 へ
         }
 
-        for (i in titleList.indices) {
+        for (i in videoIdList.indices) {
             val data = NicoVideoData(
                 isCache = false,
                 isMylist = false,
