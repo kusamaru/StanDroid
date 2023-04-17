@@ -566,7 +566,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             // Android 11 systemUiVisibilityが非推奨になり、WindowInsetsControllerを使うように
             activity?.window?.insetsController?.apply {
                 if (isShow) {
-                    systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_TOUCH
+                    systemBarsBehavior = WindowInsetsController.BEHAVIOR_DEFAULT
                     show(WindowInsets.Type.systemBars())
                 } else {
                     systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE // View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY の WindowInset版。ステータスバー表示等でスワイプしても、操作しない場合はすぐに戻るやつです。

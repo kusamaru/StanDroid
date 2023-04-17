@@ -487,15 +487,15 @@ class NicoLivePlayService : Service() {
             // ピンチイン、ピンチアウトでズームなど
             // ピンチイン、ピンチアウトって単語、スマホ黎明期みたいで懐かしいな
             val scaleGestureDetector = ScaleGestureDetector(this@NicoLivePlayService, object : ScaleGestureDetector.OnScaleGestureListener {
-                override fun onScaleBegin(p0: ScaleGestureDetector?): Boolean {
+                override fun onScaleBegin(p0: ScaleGestureDetector): Boolean {
                     return true
                 }
 
-                override fun onScaleEnd(p0: ScaleGestureDetector?) {
+                override fun onScaleEnd(p0: ScaleGestureDetector) {
 
                 }
 
-                override fun onScale(p0: ScaleGestureDetector?): Boolean {
+                override fun onScale(p0: ScaleGestureDetector): Boolean {
                     // ズーム操作中
                     if (p0 == null) return true
                     // なんかうまくいくコード

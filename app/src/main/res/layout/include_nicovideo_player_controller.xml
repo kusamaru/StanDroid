@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/player_control_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,7 +32,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_expand_more_24px"
-                android:tint="#ffffff"
+                app:tint="#ffffff"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -65,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:src="@drawable/screen_shot_icon"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_video_network"
@@ -73,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:src="@drawable/ic_wifi_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_popup"
@@ -83,7 +84,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_popup_icon_black"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_background"
@@ -93,7 +94,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_background_icon_black"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_playlist"
@@ -103,7 +104,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_tatimidroid_list_icon"
-                android:tint="#ffffff"
+                app:tint="#ffffff"
                 android:visibility="gone" />
 
             <ImageView
@@ -114,7 +115,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_repeat_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_fullscreen"
@@ -124,7 +125,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_fullscreen_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_mute"
@@ -134,7 +135,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_volume_up_24px"
-                android:tint="#ffffff"
+                app:tint="#ffffff"
                 android:visibility="gone" />
 
             <ImageView
@@ -145,7 +146,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_clear_black"
-                android:tint="#ffffff"
+                app:tint="#ffffff"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -170,7 +171,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:src="@drawable/ic_undo_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_pause"
@@ -181,7 +182,7 @@
                 android:minWidth="5dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_pause_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
 
             <ImageView
                 android:id="@+id/player_control_next"
@@ -194,7 +195,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:src="@drawable/ic_redo_black_24dp"
-                android:tint="#ffffff" />
+                app:tint="#ffffff" />
         </LinearLayout>
 
         <LinearLayout

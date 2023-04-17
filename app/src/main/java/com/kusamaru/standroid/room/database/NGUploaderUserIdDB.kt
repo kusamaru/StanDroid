@@ -10,7 +10,7 @@ import com.kusamaru.standroid.room.entity.NGUploaderUserIdEntity
  *
  * これとは別に「NG投稿者が投稿した動画ID」データベースが存在する
  * */
-@Database(entities = [NGUploaderUserIdEntity::class], version = 1)
+@Database(entities = [NGUploaderUserIdEntity::class], version = 1, exportSchema = false)
 abstract class NGUploaderUserIdDB : RoomDatabase() {
     abstract fun ngUploaderUserIdDAO(): NGUploaderUserIdDAO
 }

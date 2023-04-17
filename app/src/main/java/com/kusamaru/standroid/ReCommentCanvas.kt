@@ -166,14 +166,14 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
                 // 上コメ、下コメは３秒間表示させる
                 drawUeCommentList.toList().forEach { reDrawCommentData ->
                     // マイナスの値は許されない。これしないとループ再生時に固定コメントが残る
-                    val calc = currentPos - reDrawCommentData?.videoPos
+                    val calc = currentPos - reDrawCommentData.videoPos
                     if (calc > 3000 || calc < -1) {
                         drawUeCommentList.remove(reDrawCommentData)
                     }
                 }
                 drawShitaCommentList.toList().forEach { reDrawCommentData ->
                     // マイナスの値は許されない。これしないとループ再生時に固定コメントが残る
-                    val calc = currentPos - reDrawCommentData?.videoPos
+                    val calc = currentPos - reDrawCommentData.videoPos
                     if (calc > 3000 || calc < -1) {
                         drawShitaCommentList.remove(reDrawCommentData)
                     }

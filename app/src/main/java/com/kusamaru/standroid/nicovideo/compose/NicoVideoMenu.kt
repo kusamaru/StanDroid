@@ -82,7 +82,7 @@ fun NicoVideoMenuTab(
  * @param isSwitchHide Switchを排除するか
  * @param isKandanCommentHide かんたんコメントを排除するか
  * @param onDsSwitchChange 3DS排除スイッチを切り替えたときに呼ばれる
- * @Param onSwitchSwitchChange Switchのスイッチを切り替えたときに呼ばれる。なんちて
+ * @param onSwitchSwitchChange Switchのスイッチを切り替えたときに呼ばれる。
  * @param onKantanCommentSwitchChange かんたんコメント排除スイッチを切り替えたときに呼ばれる
  * */
 

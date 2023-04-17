@@ -52,8 +52,10 @@ class NicoVideoSeriesViewModel(application: Application, private val seriesId: S
             val seriesAPI = NicoVideoSeriesAPI()
             loadingLiveData.postValue(true)
             val response = seriesAPI.getSeriesVideoList(userSession, seriesId)
-            nicoVideoDataListLiveData.postValue(seriesAPI.parseSeriesVideoList(response.body?.string()))
-            loadingLiveData.postValue(false)
+            response?.let {
+                nicoVideoDataListLiveData.postValue(seriesAPI.parseSeriesVideoList(it))
+                loadingLiveData.postValue(false)
+            }
         }
     }
 

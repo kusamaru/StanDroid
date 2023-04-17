@@ -10,7 +10,7 @@ import com.kusamaru.standroid.room.entity.NGUploaderVideoIdEntity
  *
  * 「NG投稿者」のデータベースはこっち：[com.kusamaru.standroid.room.database.NGUploaderUserIdDB]
  * */
-@Database(entities = [NGUploaderVideoIdEntity::class], version = 1)
+@Database(entities = [NGUploaderVideoIdEntity::class], version = 1, exportSchema = false)
 abstract class NGUploaderVideoIdDB : RoomDatabase() {
     abstract fun ngUploaderVideoIdDAO(): NGUploaderVideoIdDAO
 }

@@ -10,7 +10,7 @@ import com.kusamaru.standroid.nicolive.viewmodel.NicoLiveKonomiTagEditViewModel
  * */
 class NicoLiveKonomiTagEditViewModelFactory(val application: Application, val broadCasterUserId: String? = null) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoLiveKonomiTagEditViewModel(application, broadCasterUserId) as T
     }
 

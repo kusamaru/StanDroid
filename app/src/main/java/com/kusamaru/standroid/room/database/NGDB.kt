@@ -9,7 +9,7 @@ import com.kusamaru.standroid.room.entity.NGDBEntity
  * NGのデータベース。
  * クラス名が略しすぎてわからんて
  * */
-@Database(entities = [NGDBEntity::class], version = 2)
+@Database(entities = [NGDBEntity::class], version = 2, exportSchema = false)
 abstract class NGDB : RoomDatabase() {
     abstract fun ngDBDAO(): NGDBDAO
 }

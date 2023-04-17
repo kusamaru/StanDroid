@@ -10,7 +10,7 @@ import com.kusamaru.standroid.nicolive.viewmodel.NicoLiveGiftViewModel
  * */
 class NicoLiveGiftViewModelFactory(val application: Application, val liveId: String) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoLiveGiftViewModel(application, liveId) as T
     }
 

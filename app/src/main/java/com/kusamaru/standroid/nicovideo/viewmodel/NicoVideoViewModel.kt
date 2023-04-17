@@ -857,12 +857,12 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
             val seriesAPI = NicoVideoSeriesAPI()
             val videoList = withContext(Dispatchers.Default) {
                 val response = seriesAPI.getSeriesVideoList(userSession, seriesId)
-                if (!response.isSuccessful) {
+                if (response == null) {
                     // 失敗時
-                    showToast("${getString(R.string.error)}\n${response.code}")
+                    showToast("${getString(R.string.error)}\n")
                     return@withContext null
                 }
-                return@withContext seriesAPI.parseSeriesVideoList(response.body?.string())
+                return@withContext seriesAPI.parseSeriesVideoList(response)
             } ?: return@launch
             // プレイリストに追加
             startPlaylist(videoList)

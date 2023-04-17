@@ -10,7 +10,7 @@ import com.kusamaru.standroid.nicovideo.viewmodel.NicoAccountViewModel
  * */
 class NicoAccountViewModelFactory(val application: Application, val userId: String?) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoAccountViewModel(application, userId) as T
     }
 

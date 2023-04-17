@@ -10,7 +10,7 @@ import com.kusamaru.standroid.nicolive.viewmodel.NicoLiveJKProgramListViewModel
  * */
 class NicoLiveJKProgramListViewModelFactory(val application: Application, val type: String) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoLiveJKProgramListViewModel(application, type) as T
     }
 

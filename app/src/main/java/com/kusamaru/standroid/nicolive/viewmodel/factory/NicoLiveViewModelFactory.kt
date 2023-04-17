@@ -10,7 +10,7 @@ import com.kusamaru.standroid.nicolive.viewmodel.NicoLiveViewModel
  * */
 class NicoLiveViewModelFactory(val application: Application, val liveId: String, val isLoginMode: Boolean) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoLiveViewModel(application, liveId, isLoginMode) as T
     }
 

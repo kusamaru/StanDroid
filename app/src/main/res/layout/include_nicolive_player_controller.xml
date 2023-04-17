@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/player_nicolive_control_parent"
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_expand_more_24px"
-                    android:tint="#ffffff"
+                    app:tint="#ffffff"
                     android:visibility="gone" />
 
             <LinearLayout
@@ -64,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:src="@drawable/ic_outline_format_color_fill_24px"
-                    android:tint="#ffffff"
+                    app:tint="#ffffff"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -74,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:src="@drawable/ic_wifi_black_24dp"
-                    android:tint="#ffffff" />
+                    app:tint="#ffffff" />
 
             <ImageView
                     android:id="@+id/player_nicolive_control_send"
@@ -82,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:src="@drawable/ic_send_black"
-                    android:tint="#ffffff"
+                    app:tint="#ffffff"
                     android:visibility="gone" />
 
             <ImageView
@@ -93,7 +94,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_popup_icon_black"
-                    android:tint="#ffffff" />
+                    app:tint="#ffffff" />
 
             <ImageView
                     android:id="@+id/player_nicolive_control_background"
@@ -103,7 +104,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_background_icon_black"
-                    android:tint="#ffffff" />
+                    app:tint="#ffffff" />
 
             <ImageView
                     android:id="@+id/player_nicolive_control_fullscreen"
@@ -113,7 +114,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_fullscreen_black_24dp"
-                    android:tint="#ffffff" />
+                    app:tint="#ffffff" />
 
             <ImageView
                     android:id="@+id/player_nicolive_control_mute"
@@ -123,7 +124,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_volume_up_24px"
-                    android:tint="#ffffff"
+                    app:tint="#ffffff"
                     android:visibility="gone" />
 
             <ImageView
@@ -134,7 +135,7 @@
                     android:focusable="true"
                     android:padding="10dp"
                     android:src="@drawable/ic_clear_black"
-                    android:tint="#ffffff"
+                    app:tint="#ffffff"
                     android:visibility="gone" />
         </LinearLayout>
 

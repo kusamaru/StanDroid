@@ -13,7 +13,7 @@ import com.kusamaru.standroid.nicovideo.viewmodel.NicoVideoMyListListViewModel
  * */
 class NicoVideoMyListListViewModelFactory(val application: Application, val myListId: String, val isMe: Boolean) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoVideoMyListListViewModel(application, myListId, isMe) as T
     }
 

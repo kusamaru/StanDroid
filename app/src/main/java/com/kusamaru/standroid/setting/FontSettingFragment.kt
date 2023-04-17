@@ -31,7 +31,7 @@ class FontSettingFragment : Fragment() {
     private val viewBinding by lazy { FragmentFontSettingBinding.inflate(layoutInflater) }
 
     /** onActivityResultを駆逐 */
-    private val fontSelectCallBack = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    private val fontSelectCallBack = registerForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let { uri ->
         // ファイル名を取得
         val fileName = getFileName(uri)
         // 削除
@@ -49,7 +49,7 @@ class FontSettingFragment : Fragment() {
         viewBinding.fragmentFontSettingFontFileSelectButton.text = "${getString(R.string.setting_select_font)}\n${getSelectFontName()}"
         // 更新
         updatePreview()
-    }
+    } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return viewBinding.root

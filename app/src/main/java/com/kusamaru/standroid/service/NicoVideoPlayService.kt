@@ -639,15 +639,15 @@ class NicoVideoPlayService : Service() {
 
             // ピンチイン、ピンチアウトでズームできるようにする
             val scaleGestureDetector = ScaleGestureDetector(this@NicoVideoPlayService, object : ScaleGestureDetector.OnScaleGestureListener {
-                override fun onScaleBegin(p0: ScaleGestureDetector?): Boolean {
+                override fun onScaleBegin(p0: ScaleGestureDetector): Boolean {
                     return true
                 }
 
-                override fun onScaleEnd(p0: ScaleGestureDetector?) {
+                override fun onScaleEnd(p0: ScaleGestureDetector) {
 
                 }
 
-                override fun onScale(p0: ScaleGestureDetector?): Boolean {
+                override fun onScale(p0: ScaleGestureDetector): Boolean {
                     // ピンチイン/アウト中。
                     if (p0 == null) return true
                     // なんかうまくいくコード

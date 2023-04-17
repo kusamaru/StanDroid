@@ -41,7 +41,7 @@ object SystemBarVisibility {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Android 11 以上と分岐
             window.insetsController?.apply {
-                systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_TOUCH
+                systemBarsBehavior = WindowInsetsController.BEHAVIOR_DEFAULT
                 show(WindowInsets.Type.systemBars())
             }
         } else {

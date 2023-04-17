@@ -50,7 +50,7 @@
                         android:foreground="?android:attr/selectableItemBackground"
                         android:paddingStart="10sp"
                         android:paddingEnd="10sp"
-                        android:tint="#ffffff"
+                        app:tint="#ffffff"
                         android:tooltipText="@string/nimado"
                         app:srcCompat="@drawable/ic_help_outline_black_24dp" />
 
@@ -63,7 +63,7 @@
                         android:foreground="?android:attr/selectableItemBackground"
                         android:paddingStart="10sp"
                         android:paddingEnd="10sp"
-                        android:tint="#ffffff"
+                        app:tint="#ffffff"
                         android:tooltipText="@string/nimado"
                         app:srcCompat="@drawable/ic_view_week_black_24dp" />
 
@@ -86,7 +86,7 @@
                         android:foreground="?android:attr/selectableItemBackground"
                         android:paddingStart="10sp"
                         android:paddingEnd="10sp"
-                        android:tint="#ffffff"
+                        app:tint="#ffffff"
                         android:tooltipText="@string/history"
                         app:srcCompat="@drawable/ic_history_24px" />
 
@@ -99,7 +99,7 @@
                         android:foreground="?android:attr/selectableItemBackground"
                         android:paddingStart="10sp"
                         android:paddingEnd="10sp"
-                        android:tint="#ffffff"
+                        app:tint="#ffffff"
                         android:tooltipText="@string/connection"
                         app:srcCompat="@drawable/ic_play_arrow_24px" />
                 </LinearLayout>

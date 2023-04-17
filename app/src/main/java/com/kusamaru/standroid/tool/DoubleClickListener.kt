@@ -19,17 +19,17 @@ import androidx.core.view.GestureDetectorCompat
 fun View.setOnDoubleClickListener(click: (MotionEvent?, isDoubleClick: Boolean) -> Unit) {
     val gestureDetector = GestureDetectorCompat(this.context, object : GestureDetector.SimpleOnGestureListener() {})
     gestureDetector.setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-        override fun onDoubleTap(p0: MotionEvent?): Boolean {
+        override fun onDoubleTap(p0: MotionEvent): Boolean {
             // ダブルタップ時
             click(p0, true)
             return true
         }
 
-        override fun onDoubleTapEvent(p0: MotionEvent?): Boolean {
+        override fun onDoubleTapEvent(p0: MotionEvent): Boolean {
             return true
         }
 
-        override fun onSingleTapConfirmed(p0: MotionEvent?): Boolean {
+        override fun onSingleTapConfirmed(p0: MotionEvent): Boolean {
             click(p0, false)
             return true
         }

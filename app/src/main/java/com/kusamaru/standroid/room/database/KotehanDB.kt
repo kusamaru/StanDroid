@@ -8,7 +8,7 @@ import com.kusamaru.standroid.room.entity.KotehanDBEntity
 /**
  * コテハンデータベース
  * */
-@Database(entities = [KotehanDBEntity::class], version = 1)
+@Database(entities = [KotehanDBEntity::class], version = 1, exportSchema = false)
 abstract class KotehanDB : RoomDatabase() {
     abstract fun kotehanDBDAO(): KotehanDBDAO
 }

@@ -9,7 +9,7 @@ import com.kusamaru.standroid.room.entity.SearchHistoryDBEntity
  * 検索履歴DB
  * 利用する際は
  * */
-@Database(entities = [SearchHistoryDBEntity::class], version = 1)
+@Database(entities = [SearchHistoryDBEntity::class], version = 1, exportSchema = false)
 abstract class SearchHistoryDB : RoomDatabase() {
     abstract fun searchHistoryDAO(): SearchHistoryDAO
 }

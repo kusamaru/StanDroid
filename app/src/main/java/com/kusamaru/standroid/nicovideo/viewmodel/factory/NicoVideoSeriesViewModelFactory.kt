@@ -12,7 +12,7 @@ import com.kusamaru.standroid.nicovideo.viewmodel.NicoVideoSeriesViewModel
  * */
 class NicoVideoSeriesViewModelFactory(val application: Application, val seriesId: String) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NicoVideoSeriesViewModel(application, seriesId) as T
     }
 

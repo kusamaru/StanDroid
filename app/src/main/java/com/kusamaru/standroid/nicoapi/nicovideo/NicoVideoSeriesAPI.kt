@@ -1,17 +1,21 @@
 package com.kusamaru.standroid.nicoapi.nicovideo
 
 import android.os.Build
+import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoPlayListAPIResponse
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoSeriesData
 import com.kusamaru.standroid.tool.IDRegex
 import com.kusamaru.standroid.tool.OkHttpClientSingleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.Request
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 import java.time.Duration
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 
@@ -67,86 +71,69 @@ class NicoVideoSeriesAPI {
     }
 
     /**
-     * シリーズの動画一覧へアクセスしてHTMLを取りに行く。スマホ版は申し訳ないが規制が入ってるのでNG。
+     * Playlist APIを叩いてシリーズ情報をもらってくる。
      * @param seriesId シリーズのID。https://nicovideo.jp/series/{ここの文字}
      * @param userSession ユーザーセッション
-     * @return OkHttpのレスポンス
+     * @return OkHttpのレスポンス. [NicoPlayListAPIResponse]
      * */
     suspend fun getSeriesVideoList(userSession: String, seriesId: String) = withContext(Dispatchers.IO) {
+        // ここに置いとくの絶対によくない
+        val FRONTEND_ID = 11
+        val FRONTEND_VERSION = 0
+
+        val url = "https://nvapi.nicovideo.jp/v1/playlist/series/$seriesId"
         val request = Request.Builder().apply {
-            url("https://nicovideo.jp/series/$seriesId")
+            url(url)
             addHeader("Cookie", "user_session=$userSession")
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
+            addHeader("X-Frontend-Id", FRONTEND_ID.toString())
+            addHeader("X-Frontend-Version", FRONTEND_VERSION.toString())
             get()
         }.build()
-        okHttpClient.newCall(request).execute()
+        val response = okHttpClient.newCall(request).execute()
+        if (response.isSuccessful) {
+            response.body?.let {
+                val fmt = Json { ignoreUnknownKeys = true }
+                fmt.decodeFromString<NicoPlayListAPIResponse>(it.string())
+            }
+        } else {
+            null
+        }
     }
 
     /**
-     * [getSeriesVideoList]のHTMLをスクレイピングして配列に変換する
-     * @param responseHTML [getSeriesVideoList]
+     * [getSeriesVideoList]のresponseを[NicoVideoData]に変換する
+     * @param responseData [getSeriesVideoList]
      * @return [NicoVideoData]の配列
      * */
-    suspend fun parseSeriesVideoList(responseHTML: String?) = withContext(Dispatchers.Default) {
+    suspend fun parseSeriesVideoList(responseData: NicoPlayListAPIResponse) = withContext(Dispatchers.Default) {
         val list = arrayListOf<NicoVideoData>()
-        // HTMLスクレイピング
-        val document = Jsoup.parse(responseHTML)
-        // mapって便利やな
-
-        val titleList = document.getElementsByClass("NC-VideoMediaObject-title")
-            .filter {
-                // 5個上の親がClass持ってるかで分けてみる、すごい汚いのでどうにかならんか
-                !it.parent().parent().parent().parent().parent().hasClass("NC-MutedVideoMediaObject")
-            }
-            .map { it.text() }
-        val videoIdList = document.getElementsByClass("NC-Link NC-MediaObject-contents").map { IDRegex(it.attr("href"))!! }
-        val thumbUrlList = document.getElementsByClass("NC-Thumbnail-image").map { it.attr("data-background-image") }
-        val dateList = document.getElementsByClass("NC-VideoRegisteredAtText-text").map {
-            val calendar = Calendar.getInstance()
-            when {
-                it.text().contains("分前") -> {
-                    // 時間操作だるすぎ
-                    calendar.add(Calendar.MINUTE, -it.text().replace("分前", "").toInt())
-                    calendar.timeInMillis
-                }
-                it.text().contains("時間前") -> {
-                    // 大体の値。スクレイピングだとこの処理がきついがJSONだとなんか取れない
-                    calendar.add(Calendar.HOUR_OF_DAY, -it.text().replace("時間前", "").toInt())
-                    calendar.timeInMillis
-                }
-                else -> {
-                    // こっちが良いのにね
-                    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
-                    simpleDateFormat.parse(it.text()).time
-                }
-            }
-        }
-        val viewCountList = document.getElementsByClass("NC-VideoMetaCount NC-VideoMetaCount_view").map { it.text() }
-        val mylistCountList = document.getElementsByClass("NC-VideoMetaCount NC-VideoMetaCount_mylist").map { it.text() }
-        val commentCountList = document.getElementsByClass("NC-VideoMetaCount NC-VideoMetaCount_comment").map { it.text() }
-        val durationList = document.getElementsByClass("NC-VideoLength").map {
-            // SimpleDataFormatで(mm:ss)をパースしたい場合はタイムゾーンをUTCにすればいけます。これで動画時間を秒に変換できる
-            val simpleDateFormat = SimpleDateFormat("mm:ss").apply {
-                timeZone = TimeZone.getTimeZone("UTC")
-            }
-            simpleDateFormat.parse(it.text()).time / 1000 // 1:00 なら　60 へ
+        // メインの情報～
+        val entries = if (responseData.meta.status == 200 && responseData.data != null) {
+            responseData.data.items
+        } else {
+            // エラーだったわ
+            return@withContext list
         }
 
-        for (i in videoIdList.indices) {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        entries.forEach { entry ->
+            val c = entry.content
             val data = NicoVideoData(
                 isCache = false,
                 isMylist = false,
-                title = titleList[i],
-                videoId = videoIdList[i],
-                thum = thumbUrlList[i],
-                date = dateList[i],
-                viewCount = viewCountList[i],
-                commentCount = commentCountList[i],
-                mylistCount = mylistCountList[i],
-                duration = durationList[i]
+                title = c.title,
+                videoId = c.id,
+                thum = c.thumbnail.url,
+                date = sdf.parse(c.registeredAt)?.time ?: 0,
+                viewCount = c.count.view.toString(),
+                commentCount = c.count.comment.toString(),
+                mylistCount = c.count.mylist.toString(),
+                duration = c.duration
             )
             list.add(data)
         }
+
         list
     }
 

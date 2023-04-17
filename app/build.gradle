@@ -1,19 +1,26 @@
-apply plugin: 'com.android.application'
+// apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
+// apply plugin: 'kotlin-android'
 
 // apply plugin: 'kotlin-android-extensions' さよなら
 
-apply plugin: 'kotlin-kapt' // Room使うときのなにか。一番上に
+// apply plugin: 'kotlin-kapt' // Room使うときのなにか。一番上に
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.kusamaru.standroid"
-        minSdkVersion 22
-        targetSdkVersion 31
+        minSdkVersion 24
+        targetSdkVersion 33
         versionCode 112
-        versionName "15.6.2"
+        versionName "15.6.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,13 +43,14 @@ android {
     }
 
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility 1.11
+        sourceCompatibility 1.11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
-        useIR = true
+        jvmTarget = '1.11'
+        // deprecated
+        // useIR = true
     }
 
     // Compose関係
@@ -89,6 +97,8 @@ dependencies {
 
     // 自作ライブラリ --- ここまで
 
+    // json serialization
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3'
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.7.0-beta01"
     // Activity Result APIでonActivityResultを駆逐する。
