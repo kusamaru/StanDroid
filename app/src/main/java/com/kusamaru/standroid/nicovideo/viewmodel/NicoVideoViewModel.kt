@@ -651,7 +651,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
                 // 最初の動画にする
                 0
             }
-            val videoData = playlistLiveData.value!![nextVideoPos]
+            val videoData = playlistLiveData.value!!.getOrNull(nextVideoPos) ?: return
             load(videoData.videoId, videoData.isCache, isEco, useInternet)
         }
     }
@@ -668,7 +668,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
                 // 最初の動画にする
                 playlistLiveData.value!!.size - 1
             }
-            val videoData = playlistLiveData.value!![prevVideoPos]
+            val videoData = playlistLiveData.value!!.getOrNull(prevVideoPos) ?: return
             load(videoData.videoId, videoData.isCache, isEco, useInternet)
         }
     }
