@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
@@ -27,6 +28,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -107,7 +110,21 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
         ViewModelProvider(this, NicoVideoViewModelFactory(requireActivity().application, videoId, isCache, isEconomy, useInternet, isStartFullScreen, videoList, startPos)).get(NicoVideoViewModel::class.java)
     }
 
-    val exoPlayer by lazy { SimpleExoPlayer.Builder(requireContext()).build() }
+    val exoPlayer by lazy {
+        // drip-feeding?だとかで同じにしておくとrebufferingが発生しにくくなるとかなんとか
+        val minBufferMs = 50000
+        val maxBufferMs = 50000
+        val bufferForPlaybackMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS
+        val bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
+
+        SimpleExoPlayer.Builder(requireContext()).apply {
+            // buffering周りの初期設定
+            setLoadControl(DefaultLoadControl.Builder()
+                .setBufferDurationsMs(minBufferMs, maxBufferMs, bufferForPlaybackMs, bufferForPlaybackAfterRebufferMs)
+                .build()
+            )
+        }.build()
+    }
 
     /** findViewById駆逐。さよなら Kotlin Android Extensions */
     val viewBinding by lazy { FragmentNicovideoBinding.inflate(layoutInflater) }
@@ -401,7 +418,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
                 // viewModel.playerIsPlaying.postValue(exoPlayer.playWhenReady)
                 // 動画時間をセットする
                 viewModel.playerDurationMs.postValue(exoPlayer.duration)
-                if (state == Player.STATE_BUFFERING) {
+                if (state == Player.STATE_BUFFERING)  {
                     // STATE_BUFFERING はシークした位置からすぐに再生できないとき。読込み中のこと。
                     showSwipeToRefresh()
                 } else {
@@ -806,6 +823,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
                 isTouchSeekBar = false
             }
         })
+
         // Viewを数秒後に非表示するとか
         updateHideController(job)
     }
@@ -947,6 +965,9 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             // シークバー操作中でなければ
             viewBinding.fragmentNicovideoControlInclude.playerControlSeek.progress = (viewModel.playerCurrentPositionMs / 1000L).toInt()
             viewModel.currentPosition = viewModel.playerCurrentPositionMs
+            // セカンダリの方も変える
+            viewBinding.fragmentNicovideoControlInclude.playerControlSeek.secondaryProgress = exoPlayer.bufferedPercentage
+
             // 再生時間TextView
             val formattedTime = DateUtils.formatElapsedTime(viewModel.playerCurrentPositionMs / 1000L)
             viewBinding.fragmentNicovideoControlInclude.playerControlCurrent.text = formattedTime

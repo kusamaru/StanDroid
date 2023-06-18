@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:drawablePadding">5sp</item>
+        <item name="android:secondaryProgressTint">#ffffff</item>
     </style>
 
     <!--いつもつかうやつ-->
@@ -18,6 +19,7 @@
         <item name="android:textColor">#ffffff</item>
         <item name="materialButtonStyle">@style/ButtonStyle</item>
         <item name="materialButtonOutlinedStyle">@style/OutlineButtonStyle</item>
+        <item name="android:secondaryProgressTint">#cccccc</item>
         <!-- DrawableStartの色とPadding -->
         <item name="drawableTint">#ffffff</item>
         <item name="android:drawablePadding">5sp</item>
@@ -44,6 +46,7 @@
         <item name="android:textColor">#ffffff</item>
         <item name="materialButtonStyle">@style/ButtonStyle</item>
         <item name="materialButtonOutlinedStyle">@style/OutlineButtonStyle</item>
+        <item name="android:secondaryProgressTint">#cccccc</item>
         <!-- DrawableStartの色とPadding -->
         <item name="drawableTint">#ffffff</item>
         <item name="android:drawablePadding">5sp</item>
