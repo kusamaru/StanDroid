@@ -401,6 +401,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
             }
             nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
             val jsonObject = withContext(Dispatchers.Default) {
+                // println("response: ${response.body?.string()}")
                 nicoVideoHTML.parseJSON(response.body?.string())
             }
             nicoVideoJSON.postValue(jsonObject)

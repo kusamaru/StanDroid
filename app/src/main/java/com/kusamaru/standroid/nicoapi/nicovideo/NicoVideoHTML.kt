@@ -1,13 +1,19 @@
 package com.kusamaru.standroid.nicoapi.nicovideo
 
 import com.kusamaru.standroid.CommentJSONParse
+import com.kusamaru.standroid.NvCommentJSONParse
 import com.kusamaru.standroid.nicoapi.nicolive.dataclass.NicoTagItemData
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoHTMLSeriesData
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoSeriesData
 import com.kusamaru.standroid.nicoapi.user.UserData
+import com.kusamaru.standroid.toCommentJSONParse
 import com.kusamaru.standroid.tool.OkHttpClientSingleton
 import kotlinx.coroutines.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -440,24 +446,42 @@ class NicoVideoHTML {
      * @return 取得失敗時はnull。成功時はResponse
      * */
     suspend fun getComment(userSession: String, jsonObject: JSONObject) = withContext(Dispatchers.IO) {
-        val postData = makeCommentAPIJSON(userSession, jsonObject).toString().toRequestBody()
+        // 旧APIご臨終？っぽいのでnvcommentを利用する形に書き直した
+        val nvComment = jsonObject.getJSONObject("comment").getJSONObject("nvComment")
+        val postData = JSONObject().apply {
+            put("params", nvComment.getJSONObject("params"))
+            put("additionals", JSONObject())
+            put("threadKey", nvComment.getString("threadKey"))
+        }.toString().toRequestBody()
         // リクエスト
         val request = Request.Builder().apply {
-            val commentServerUrl = jsonObject.getJSONObject("comment").getJSONObject("server").getString("url").replace("/api/", "/api.json")
-            //https://nvcomment.nicovideo.jp/legacy/api.json か https://nmsg.nicovideo.jp/api.json のどっちかが入る
+            val commentServerUrl = nvComment.getString("server").plus("/v1/threads")
             url(commentServerUrl)
             header("Cookie", "user_session=${userSession}")
+            header("Content-Type", "application/json")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
+            header("X-Frontend-Id", "6")
+            header("X-Frontend-Version", "0")
             post(postData)
         }.build()
         val response = okHttpClient.newCall(request).execute()
         if (response.isSuccessful) {
             response
         } else {
+            println("failed: ${response.body?.string()}")
             null
         }
     }
 
+    enum class CommentForkType(val _i: Int, val str: String, val typeId: Int) {
+        OWNER(0, "owner", 1),
+        MAIN(1, "main", 0),
+        EASY(2, "easy", 2);
+
+        companion object {
+            fun fromInt(value: Int) = CommentForkType.values().first { it._i == value }
+        }
+    }
     /**
      * コメントJSONをパースする
      * @param responseString JSON
@@ -465,12 +489,26 @@ class NicoVideoHTML {
      * */
     fun parseCommentJSON(json: String, videoId: String): ArrayList<CommentJSONParse> {
         val commentList = arrayListOf<CommentJSONParse>()
-        val jsonArray = JSONArray(json)
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            if (jsonObject.has("chat") && !jsonObject.getJSONObject("chat").has("deleted")) {
-                val commentJSONParse = CommentJSONParse(jsonObject.toString(), "ニコ動", videoId)
-                commentList.add(commentJSONParse)
+//        val jsonArray = JSONArray(json)
+//        for (i in 0 until jsonArray.length()) {
+//            val jsonObject = jsonArray.getJSONObject(i)
+//            if (jsonObject.has("chat") && !jsonObject.getJSONObject("chat").has("deleted")) {
+//                val commentJSONParse = CommentJSONParse(jsonObject.toString(), "ニコ動", videoId)
+//                commentList.add(commentJSONParse)
+//            }
+//        }
+        // nvCommentを使う方式に書き直し
+        val jsonObject = JSONObject(json)
+        val threads = jsonObject.getJSONObject("data").getJSONArray("threads")
+        for (i in 0 until threads.length()) {
+            val forkType = CommentForkType.fromInt(i)
+            val data = threads.getJSONObject(i)
+            val comments = data.getJSONArray("comments")
+            for (j in 0 until comments.length()) {
+                val commentJSONParse = Json.decodeFromString<NvCommentJSONParse>(comments.getJSONObject(j).toString())
+                commentJSONParse.toCommentJSONParse(videoId, forkType)?.let {
+                    commentList.add(it)
+                }
             }
         }
         // 新しい順に並び替え

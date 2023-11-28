@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nicovideo
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -77,6 +78,7 @@ class NicoVideoInfoFragment : Fragment() {
     /**
      * LiveDataで動画情報をもらう
      * */
+    @SuppressLint("SetTextI18n")
     private fun setLiveData() {
         // 動画情報
         viewModel.nicoVideoData.observe(viewLifecycleOwner) { nicovideoData ->

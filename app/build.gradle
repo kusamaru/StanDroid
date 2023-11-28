@@ -17,10 +17,10 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "com.kusamaru.standroid"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 33
         versionCode 112
-        versionName "15.6.5"
+        versionName "15.6.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

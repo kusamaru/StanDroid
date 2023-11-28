@@ -112,10 +112,10 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
     val exoPlayer by lazy {
         // drip-feeding?だとかで同じにしておくとrebufferingが発生しにくくなるとかなんとか
-        val minBufferMs = 50000
-        val maxBufferMs = 50000
-        val bufferForPlaybackMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS
-        val bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
+        val minBufferMs = 30000
+        val maxBufferMs = 60000
+        val bufferForPlaybackMs = 2500
+        val bufferForPlaybackAfterRebufferMs = 7500
 
         SimpleExoPlayer.Builder(requireContext()).apply {
             // buffering周りの初期設定
