@@ -513,4 +513,6 @@ Sorry to trouble you, but please update the video information.\n
     <string name="setting_ng_score_limit">NG Score limit</string>
     <string name="setting_ng_score_limit_description">If set to 0, hide all comments with NG scores</string>
     <string name="setting_ng_score_limit_title">Set NG Score</string>
+    <string name="setting_deprecated_clipbord_get_id">[Deprecated] Allows ID to be retrieved from the clipboard</string>
+    <string name="setting_deprecated_clipbord_get_id_description">May be a security risk.</string>
 </resources>

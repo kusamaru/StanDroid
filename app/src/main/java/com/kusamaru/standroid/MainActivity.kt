@@ -346,7 +346,7 @@ class MainActivity : AppCompatActivity() {
     // Android 10からアプリにフォーカスが当たらないとクリップボードの中身が取れなくなったため
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (!prefSetting.getBoolean("setting_deprecated_clipbord_get_id", false)) {
+        if (prefSetting.getBoolean("setting_deprecated_clipbord_get_id", false)) {
             //クリップボードに番組IDが含まれてればテキストボックスに自動で入れる
             if (viewBinding.activityMainContentIdEditText.text.toString().isEmpty()) {
                 setClipBoardProgramID()

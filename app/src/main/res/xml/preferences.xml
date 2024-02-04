@@ -60,7 +60,7 @@
             android:entryValues="@array/setting_ng_score_limit_value"
             android:key="setting_ng_score_limit"
             android:summary="@string/setting_ng_score_limit_description"
-            android:title="@setting_ng_score_limit_title" />
+            android:title="@string/setting_ng_score_limit_title" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -452,7 +452,8 @@
             android:defaultValue="false"
             android:icon="@drawable/ic_content_paste_black_24dp"
             android:key="setting_deprecated_clipbord_get_id"
-            android:title="【非推奨】クリップボードからIDを取得する機能を無効化する" />
+            android:summary="@string/setting_deprecated_clipbord_get_id_description"
+            android:title="@string/setting_deprecated_clipbord_get_id" />
     </PreferenceCategory>
 
 

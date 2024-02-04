@@ -513,4 +513,6 @@
     <string name="setting_ng_score_limit">NGスコアの閾値</string>
     <string name="setting_ng_score_limit_description">0に設定した場合、NGスコアの存在する全てのコメントを隠します</string>
     <string name="setting_ng_score_limit_title">NGスコアの設定</string>
+    <string name="setting_deprecated_clipbord_get_id">【非推奨】クリップボードからIDを取得する機能を有効化する</string>
+    <string name="setting_deprecated_clipbord_get_id_description">セキュリティ的によろしくない可能性があります。ご利用は計画的に</string>
 </resources>
