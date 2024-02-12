@@ -486,9 +486,11 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
             prevHeight = addRect.bottom
         } else {
             // 全パターん
-            val tmpList = drawNakaCommentList.toList().sortedBy { reDrawCommentData -> reDrawCommentData?.rect?.top }
+            val tmpList = drawNakaCommentList.toList()
+                .filter { it.rect != null } // Rectがnullになる条件がいまいちわからない
+                .sortedBy { reDrawCommentData -> reDrawCommentData.rect?.top }
             for (reDrawCommentData in tmpList) {
-                if (reDrawCommentData?.rect != null) {
+                if (reDrawCommentData.rect != null) {
                     if (Rect.intersects(reDrawCommentData.rect, addRect)) {
                         // あたっているので下へ
                         addRect.top = reDrawCommentData.rect.bottom
@@ -550,9 +552,11 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
         // 当たり判定計算
         val addRect = Rect(lect, 0, (lect + measure).toInt(), fontSize)
         // 全パターん
-        val tmpList = drawUeCommentList.toList().sortedBy { reDrawCommentData -> reDrawCommentData?.rect?.top }
+        val tmpList = drawUeCommentList.toList()
+            .filter { it.rect != null }
+            .sortedBy { reDrawCommentData -> reDrawCommentData.rect?.top }
         for (reDrawCommentData in tmpList) {
-            if (reDrawCommentData?.rect != null) {
+            if (reDrawCommentData.rect != null) {
                 if (Rect.intersects(reDrawCommentData.rect, addRect)) {
                     // あたっているので下へ
                     addRect.top = reDrawCommentData.rect.bottom
@@ -600,9 +604,11 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
         // 当たり判定計算
         val addRect = Rect(lect, (finalHeight - fontSize), (lect + measure).toInt(), finalHeight)
         // 全パターん
-        val tmpList = drawShitaCommentList.toList().sortedBy { reDrawCommentData -> reDrawCommentData.videoPos }
+        val tmpList = drawShitaCommentList.toList()
+            .filter { it.rect != null }
+            .sortedBy { reDrawCommentData -> reDrawCommentData.videoPos }
         for (reDrawCommentData in tmpList) {
-            if (reDrawCommentData?.rect != null) {
+            if (reDrawCommentData.rect != null) {
                 if (Rect.intersects(reDrawCommentData.rect, addRect)) {
                     // あたっているので下へ
                     addRect.top = (reDrawCommentData.rect.top - reDrawCommentData.fontSize).roundToInt()

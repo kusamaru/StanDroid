@@ -26,9 +26,9 @@ class NicoRepoAPIX {
     suspend fun getNicoRepoResponse(userSession: String, userId: String? = null) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             if (userId == null) {
-                url("https://public.api.nicovideo.jp/v1/timelines/nicorepo/last-1-month/my/pc/entries.json")
+                url("https://api.repoline.nicovideo.jp/v1/timelines/nicorepo/last-1-month/my/pc/entries.json")
             } else {
-                url("https://public.api.nicovideo.jp/v1/timelines/nicorepo/last-6-months/users/${userId}/pc/entries.json")
+                url("https://api.repoline.nicovideo.jp/v1/timelines/nicorepo/last-6-months/users/${userId}/pc/entries.json")
             }
             header("Cookie", "user_session=$userSession")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
