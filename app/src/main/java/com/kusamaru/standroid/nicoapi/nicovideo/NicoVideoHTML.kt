@@ -12,14 +12,9 @@ import com.kusamaru.standroid.tool.OkHttpClientSingleton
 import kotlinx.coroutines.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.decodeFromJsonElement
-import okhttp3.Call
-import okhttp3.Callback
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.Jsoup
@@ -90,9 +85,17 @@ class NicoVideoHTML {
      * */
     fun isEncryption(json: String): Boolean {
         return when {
-            JSONObject(json).getJSONObject("media").getJSONObject("delivery").isNull("encryption") -> false // encryption が null なら暗号化されてない
-            else -> true // はい見れない。
+            JSONObject(json).getJSONObject("media").optJSONObject("delivery")?.isNull("encryption") == false
+            || JSONObject(json).getJSONObject("payment").getJSONObject("video").getString("billingType") != "free" -> true
+            else -> false // encryption が null なら暗号化されてない
         }
+    }
+
+    /**
+     * Domandでしか再生できない動画か。
+     */
+    fun isDomandOnly(json: JSONObject): Boolean {
+        return json.getJSONObject("media").isNull("delivery") // deliveryがないとDomandのみの動画になる
     }
 
     /**
@@ -140,6 +143,10 @@ class NicoVideoHTML {
         return contentUrl
     }
 
+    fun parseContentURIDomand(sessionJSONObject: JSONObject): String {
+        return sessionJSONObject.getJSONObject("data").getString("contentUrl")
+    }
+
     /**
      * DMC サーバー or Smile　サーバー
      *
@@ -167,6 +174,100 @@ class NicoVideoHTML {
         return "https://api.dmc.nico/api/sessions/${id}?_format=json&_method=PUT"
     }
 
+    // さようなら
+//    suspend fun getSessionAPI(jsonObject: JSONObject, videoQualityId: String? = null, audioQualityId: String? = null) = withContext(Dispatchers.IO) {
+//        return@withContext when {
+//            // deliveryが存在しなかったらdomandっぽい
+//            jsonObject.getJSONObject("media").isNull("delivery") -> getSessionAPIDomand(jsonObject, videoQualityId, audioQualityId)?.first
+//            // あるならDMC
+//            else -> getSessionAPIDMC(jsonObject, videoQualityId, audioQualityId)
+//        }
+//    }
+
+    /**
+     * JSONArrayから条件式にマッチするものを探す。
+     * @param fn JSONObjectをとってBooleanを返すクロージャ
+     * @return 無ければnull
+     */
+    fun JSONArray.findInObject(fn: (JSONObject) -> Boolean): JSONObject? {
+        repeat(this.length()) {
+            val obj = this.getJSONObject(it)
+            if (fn(obj)) { return obj }
+        }
+        return null
+    }
+
+    /**
+     * Domand鯖用の
+     */
+    suspend fun getSessionAPIDomand(
+        jsonObject: JSONObject,
+        videoQualityId: String? = null,
+        audioQualityId: String? = null,
+        nicosIdCookie: String?,
+        userSession: String?
+    ): Pair<JSONObject, List<String>>? = withContext(Dispatchers.IO) {
+        val domandDataObject = jsonObject.getJSONObject("media").getJSONObject("domand")
+        val clientObject = jsonObject.getJSONObject("client")
+
+        val postAudioQualityJSONArray = if (audioQualityId != null) JSONArray().put(audioQualityId) else domandDataObject.getJSONArray("audios")
+        val postVideoQualityJSONArray = if (videoQualityId != null) JSONArray().put(videoQualityId) else domandDataObject.getJSONArray("videos")
+
+        // isAvailableな最高音質で行く
+        // val audioFormat = audioQualityId ?: postAudioQualityJSONArray.findInObject { it.getBoolean("isAvailable") }?.getString("id")
+        val audioFormat = audioQualityId ?: postAudioQualityJSONArray.getJSONObject(0)?.getString("id")
+        val videoIdsList = JSONArray()
+        for (i in 0 until postVideoQualityJSONArray.length()) {
+            val obj = postVideoQualityJSONArray.getJSONObject(i)
+            // if (!obj.getBoolean("isAvailable")) { continue } // !isAvailableなら無視
+            videoIdsList.put(
+                JSONArray().apply {
+                    put(obj.getString("id"))
+                    put(audioFormat)
+                }
+            )
+        }
+
+        val outputs = JSONObject().apply {
+            put("outputs", videoIdsList)
+        }
+        val videoId = clientObject.getString("watchId")
+        val actionTrackId = clientObject.getString("watchTrackId")
+        val accessRightKey = domandDataObject.getString("accessRightKey")
+
+        val url = "https://nvapi.nicovideo.jp/v1/watch/${videoId}/access-rights/hls?actionTrackId=$actionTrackId"
+        val requestBody = outputs.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        val request = Request.Builder().apply {
+            url(url)
+            post(requestBody)
+//            addHeader("Content-Type", "application/json")
+//            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
+            addHeader("Cookie", "user_session=$userSession;")
+//            if (nicosIdCookie != null) {
+//                addHeader("Cookie", nicosIdCookie)
+//            }
+//            addHeader("Accept", "*/*")
+//            addHeader("Accept_encoding", "br")
+//            addHeader("Sec-Fetch-Dest", "empty")
+            addHeader("X-Frontend-Id", "6")
+            addHeader("X-Frontend-Version", "0")
+            addHeader("X-Request-With", "https://www.nicovideo.jp")
+            addHeader("X-Access-Right-Key", accessRightKey)
+        }.build()
+        val response = okHttpClient.newCall(request).execute()
+        if (response.isSuccessful) {
+            // cookie持ってかないとdomandが怒る
+            val cookies = response.headers.filter { (k, _) -> k.lowercase() == "set-cookie" }.map { (_, v) -> v }
+            val responseBody = response.body
+            val jsonObject = JSONObject(responseBody?.string())
+            responseBody?.close()
+            println(jsonObject.toString())
+            Pair(jsonObject, cookies)
+        } else {
+            null
+        }
+    }
+
     /**
      * ハートビートAPIを叩くときにPOSTする中身を返す。
      * @param sessionJSONObject callSessionAPI()の戻り値
@@ -188,7 +289,7 @@ class NicoVideoHTML {
      *
      *  @return APIのレスポンス。JSON形式
      * */
-    suspend fun getSessionAPI(jsonObject: JSONObject, videoQualityId: String? = null, audioQualityId: String? = null) = withContext(Dispatchers.IO) {
+    suspend fun getSessionAPIDMC(jsonObject: JSONObject, videoQualityId: String? = null, audioQualityId: String? = null) = withContext(Dispatchers.IO) {
         val deliveryObject = jsonObject.getJSONObject("media").getJSONObject("delivery")
         // こっから情報をとっていく
         val sessionObject = deliveryObject.getJSONObject("movie").getJSONObject("session")
@@ -670,6 +771,26 @@ class NicoVideoHTML {
     fun registeredAtToUnixTime(registeredAt: String): Long {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
         return simpleDateFormat.parse(registeredAt).time
+    }
+
+    /**
+     * 画質一覧を返す。
+
+     * @param jsonObject js-initial-watch-dataのdata-api-dataの値
+     * @return media.domand.videos の値（配列）
+     * */
+    fun parseVideoQualityDomand(jsonObject: JSONObject): JSONArray {
+        return jsonObject.getJSONObject("media").getJSONObject("domand").getJSONArray("videos")
+    }
+
+    /**
+     * 音質一覧を返す。
+
+     * @param jsonObject js-initial-watch-dataのdata-api-dataの値
+     * @return media.domand.audios の値（配列）
+     * */
+    fun parseAudioQualityDomand(jsonObject: JSONObject): JSONArray {
+        return jsonObject.getJSONObject("media").getJSONObject("domand").getJSONArray("audios")
     }
 
     /**

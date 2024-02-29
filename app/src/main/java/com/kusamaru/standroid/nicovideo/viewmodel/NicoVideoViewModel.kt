@@ -77,6 +77,9 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
     /** ニコ動APIまとめ */
     val nicoVideoHTML = NicoVideoHTML()
 
+    /** 新API。こっち使うようにした方がいいかも */
+    val nicoVideoWatchAPI = NicoVideoWatchAPI()
+
     /** キャッシュまとめ */
     val nicoVideoCache = NicoVideoCache(context)
 
@@ -225,6 +228,9 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
 
     /** コメント一覧を自動で展開しない設定かどうか */
     val isAutoCommentListShowOff = prefSetting.getBoolean("setting_nicovideo_jc_comment_auto_show_off", true)
+
+    /** domand鯖での再生に使う */
+    var domandCookie: String? = null
 
     init {
 
@@ -393,17 +399,26 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         viewModelScope.launch(errorHandler) {
             // smileサーバーの動画は多分最初の視聴ページHTML取得のときに?eco=1をつけないと低画質リクエストできない
             val eco = if (smileServerLowRequest) "1" else ""
-            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
-            // 失敗したら落とす
-            if (!response.isSuccessful) {
-                showToast("${getString(R.string.error)}\n${response.code}")
+//            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
+//            // 失敗したら落とす
+//            if (!response.isSuccessful) {
+//                showToast("${getString(R.string.error)}\n${response.code}")
+//                return@launch
+//            }
+//            nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
+//            val jsonObject = withContext(Dispatchers.Default) {
+//                // println("response: ${response.body?.string()}")
+//                nicoVideoHTML.parseJSON(response.body?.string())
+//            }
+            // APIサーバーからデータ拾うよ
+            val response = nicoVideoWatchAPI.getVideoDataV3(videoId, userSession)
+            if (response == null) {
+                showToast("${getString(R.string.error)}\n")
                 return@launch
             }
-            nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
-            val jsonObject = withContext(Dispatchers.Default) {
-                // println("response: ${response.body?.string()}")
-                nicoVideoHTML.parseJSON(response.body?.string())
-            }
+            val jsonObject = response.first
+            val nicosIdCookie = response.second
+
             nicoVideoJSON.postValue(jsonObject)
             // 動画説明文
             nicoVideoDescriptionLiveData.postValue(jsonObject.getJSONObject("video").getString("description"))
@@ -414,80 +429,162 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
             // タグLiveData
             tagListLiveData.postValue(nicoVideoHTML.parseTagDataList(jsonObject))
 
-            // 公式アニメは暗号化されてて見れないので落とす。最近プレ垢限定でアニメ配信してるんだっけ？
-            if (nicoVideoHTML.isEncryption(jsonObject.toString())) {
-                showToast(context.getString(R.string.encryption_video_not_play))
-                // FragmentにおいたLiveDataのオブザーバーへActivity落とせってメッセージを送る
-                messageLiveData.postValue(context.getString(R.string.encryption_video_not_play))
-                return@launch
-            } else {
-                // 再生可能
-                var videoQuality = videoQualityId
-                var audioQuality = audioQualityId
-                // 画質を指定している場合はモバイルデータ接続で最低画質の設定は無視
-                if (videoQuality == null && audioQuality == null) {
-                    // モバイルデータ接続のときは強制的に低画質にする か エコノミー時は低画質
-                    if ((prefSetting.getBoolean("setting_nicovideo_low_quality", false) && isConnectionMobileDataInternet(context)) || smileServerLowRequest) {
-                        val videoQualityList = nicoVideoHTML.parseVideoQualityDMC(jsonObject)
-                        val audioQualityList = nicoVideoHTML.parseAudioQualityDMC(jsonObject)
-                        videoQuality = videoQualityList.getJSONObject(videoQualityList.length() - 1).getString("id")
-                        audioQuality = audioQualityList.getJSONObject(audioQualityList.length() - 1).getString("id")
+            when {
+                nicoVideoHTML.isDomandOnly(jsonObject) -> { // domand
+                    // 公式アニメは暗号化されてて見れないので落とす
+                    if (nicoVideoHTML.isEncryption(jsonObject.toString())) {
+                        showToast(context.getString(R.string.encryption_video_not_play))
+                        // FragmentにおいたLiveDataのオブザーバーへActivity落とせってメッセージを送る
+                        messageLiveData.postValue(context.getString(R.string.encryption_video_not_play))
+                        return@launch
+                    } else {
+                        // 再生可能
+                        var videoQuality = videoQualityId
+                        var audioQuality = audioQualityId
+                        // 画質を指定している場合はモバイルデータ接続で最低画質の設定は無視
+                        if (videoQuality == null && audioQuality == null) {
+                            // モバイルデータ接続のときは強制的に低画質にする か エコノミー時は低画質
+                            if ((prefSetting.getBoolean("setting_nicovideo_low_quality", false) && isConnectionMobileDataInternet(context)) || smileServerLowRequest) {
+                                val videoQualityList = nicoVideoHTML.parseVideoQualityDomand(jsonObject)
+                                val audioQualityList = nicoVideoHTML.parseAudioQualityDomand(jsonObject)
+                                videoQuality = videoQualityList.getJSONObject(videoQualityList.length() - 1).getString("id")
+                                audioQuality = audioQualityList.getJSONObject(audioQualityList.length() - 1).getString("id")
+                            }
+                            if (videoQuality != null) {
+                                // 画質通知
+                                showSnackBar("${getString(R.string.quality)}：$videoQuality")
+                            }
+                        }
+                        // https://nvapi.nicovideo.jp/v1/watch のレスポンス
+                        val sessionAPIResponse = nicoVideoHTML.getSessionAPIDomand(jsonObject, videoQuality, audioQuality, nicosIdCookie, userSession)
+                        if (sessionAPIResponse != null) {
+                            // Domand用のクッキーを確保
+                            domandCookie = sessionAPIResponse.second.find { it.contains("domand_bid") }
+                            sessionAPIJSON = sessionAPIResponse.first
+                            // 動画URL
+                            contentUrl.postValue(nicoVideoHTML.parseContentURIDomand(sessionAPIJSON))
+                            // 選択中の画質、音質控える
+                            currentVideoQuality = videoQuality
+                            currentAudioQuality = audioQuality
+                        }
                     }
-                    if (videoQuality != null) {
-                        // 画質通知
-                        showSnackBar("${getString(R.string.quality)}：$videoQuality")
+
+                    // 画質一覧をLiveDataへ送信
+                    setQualityListDomand(jsonObject.getJSONObject("media").getJSONObject("domand").getJSONArray("videos"))
+                    // データクラスへ詰める
+                    nicoVideoData.postValue(nicoVideoHTML.createNicoVideoData(jsonObject, isOfflinePlay.value ?: false))
+                    // データベースへ書き込む
+                    insertDB()
+
+                    // コメント取得など
+                    if (isGetComment) {
+                        val commentJSON = async {
+                            nicoVideoHTML.getComment(userSession, jsonObject)
+                        }
+                        rawCommentList = withContext(Dispatchers.Default) {
+                            ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON.await()?.body?.string()!!, videoId))
+                        }
+                        // フィルターで3ds消したりする
+                        commentFilter(true)
+                    }
+                    // 関連動画
+                    launch { getRecommend(jsonObject) }
+                    // ニコるくん
+                    if (nicoVideoHTML.isPremium(jsonObject)) {
+                        launch {
+                            // threadId取得
+                            val threadId = nicoVideoHTML.getThreadId(jsonObject)
+                            if (threadId != null) {
+                                nicoruAPI = NicoruAPI(
+                                    userSession = userSession,
+                                    threadId = threadId,
+                                    isPremium = nicoVideoHTML.isPremium(jsonObject),
+                                    userId = nicoVideoHTML.getUserId(jsonObject)
+                                )
+                                nicoruAPI?.init()
+                            }
+                        }
                     }
                 }
-                // https://api.dmc.nico/api/sessions のレスポンス
-                val sessionAPIResponse = nicoVideoHTML.getSessionAPI(jsonObject, videoQuality, audioQuality)
-                if (sessionAPIResponse != null) {
-                    sessionAPIJSON = sessionAPIResponse
-                    // 動画URL
-                    contentUrl.postValue(nicoVideoHTML.parseContentURI(sessionAPIJSON))
-                    // ハートビート処理。これしないと切られる。
-                    nicoVideoHTML.startHeartBeat(sessionAPIJSON)
-                    // 選択中の画質、音質控える
-                    currentVideoQuality = nicoVideoHTML.getCurrentVideoQuality(sessionAPIJSON)
-                    currentAudioQuality = nicoVideoHTML.getCurrentAudioQuality(sessionAPIJSON)
+                else -> { // dmc
+                    // 公式アニメは暗号化されてて見れないので落とす。最近プレ垢限定でアニメ配信してるんだっけ？
+                    if (nicoVideoHTML.isEncryption(jsonObject.toString())) {
+                        println("encrypted")
+                        showToast(context.getString(R.string.encryption_video_not_play))
+                        // FragmentにおいたLiveDataのオブザーバーへActivity落とせってメッセージを送る
+                        messageLiveData.postValue(context.getString(R.string.encryption_video_not_play))
+                        return@launch
+                    } else {
+                        // 再生可能
+                        var videoQuality = videoQualityId
+                        var audioQuality = audioQualityId
+                        // 画質を指定している場合はモバイルデータ接続で最低画質の設定は無視
+                        if (videoQuality == null && audioQuality == null) {
+                            // モバイルデータ接続のときは強制的に低画質にする か エコノミー時は低画質
+                            if ((prefSetting.getBoolean("setting_nicovideo_low_quality", false) && isConnectionMobileDataInternet(context)) || smileServerLowRequest) {
+                                val videoQualityList = nicoVideoHTML.parseVideoQualityDMC(jsonObject)
+                                val audioQualityList = nicoVideoHTML.parseAudioQualityDMC(jsonObject)
+                                videoQuality = videoQualityList.getJSONObject(videoQualityList.length() - 1).getString("id")
+                                audioQuality = audioQualityList.getJSONObject(audioQualityList.length() - 1).getString("id")
+                            }
+                            if (videoQuality != null) {
+                                // 画質通知
+                                showSnackBar("${getString(R.string.quality)}：$videoQuality")
+                            }
+                        }
+                        // https://api.dmc.nico/api/sessions のレスポンス
+                        val sessionAPIResponse = nicoVideoHTML.getSessionAPIDMC(jsonObject, videoQuality, audioQuality)
+                        if (sessionAPIResponse != null) {
+                            sessionAPIJSON = sessionAPIResponse
+                            // 動画URL
+                            contentUrl.postValue(nicoVideoHTML.parseContentURI(sessionAPIJSON))
+                            // ハートビート処理。これしないと切られる。
+                            nicoVideoHTML.startHeartBeat(sessionAPIJSON)
+                            // 選択中の画質、音質控える
+                            currentVideoQuality = nicoVideoHTML.getCurrentVideoQuality(sessionAPIJSON)
+                            currentAudioQuality = nicoVideoHTML.getCurrentAudioQuality(sessionAPIJSON)
+                        }
+                    }
+
+                    // 画質一覧をLiveDataへ送信
+                    setQualityListDMC(nicoVideoHTML.parseVideoQualityDMC(jsonObject))
+                    // データクラスへ詰める
+                    nicoVideoData.postValue(nicoVideoHTML.createNicoVideoData(jsonObject, isOfflinePlay.value ?: false))
+                    // データベースへ書き込む
+                    insertDB()
+
+                    // コメント取得など
+                    if (isGetComment) {
+                        val commentJSON = async {
+                            nicoVideoHTML.getComment(userSession, jsonObject)
+                        }
+                        rawCommentList = withContext(Dispatchers.Default) {
+                            ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON.await()?.body?.string()!!, videoId))
+                        }
+                        // フィルターで3ds消したりする
+                        commentFilter(true)
+                    }
+                    // 関連動画
+                    launch { getRecommend(jsonObject) }
+                    // ニコるくん
+                    if (nicoVideoHTML.isPremium(jsonObject)) {
+                        launch {
+                            // threadId取得
+                            val threadId = nicoVideoHTML.getThreadId(jsonObject)
+                            if (threadId != null) {
+                                nicoruAPI = NicoruAPI(
+                                    userSession = userSession,
+                                    threadId = threadId,
+                                    isPremium = nicoVideoHTML.isPremium(jsonObject),
+                                    userId = nicoVideoHTML.getUserId(jsonObject)
+                                )
+                                nicoruAPI?.init()
+                            }
+                        }
+                    }
                 }
             }
 
-            // 画質一覧をLiveDataへ送信
-            setQualityList(nicoVideoHTML.parseVideoQualityDMC(jsonObject))
-            // データクラスへ詰める
-            nicoVideoData.postValue(nicoVideoHTML.createNicoVideoData(jsonObject, isOfflinePlay.value ?: false))
-            // データベースへ書き込む
-            insertDB()
-
-            // コメント取得など
-            if (isGetComment) {
-                val commentJSON = async {
-                    nicoVideoHTML.getComment(userSession, jsonObject)
-                }
-                rawCommentList = withContext(Dispatchers.Default) {
-                    ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON.await()?.body?.string()!!, videoId))
-                }
-                // フィルターで3ds消したりする
-                commentFilter(true)
-            }
-            // 関連動画
-            launch { getRecommend(jsonObject) }
-            // ニコるくん
-            if (nicoVideoHTML.isPremium(jsonObject)) {
-                launch {
-                    // threadId取得
-                    val threadId = nicoVideoHTML.getThreadId(jsonObject)
-                    if (threadId != null) {
-                        nicoruAPI = NicoruAPI(
-                            userSession = userSession,
-                            threadId = threadId,
-                            isPremium = nicoVideoHTML.isPremium(jsonObject),
-                            userId = nicoVideoHTML.getUserId(jsonObject)
-                        )
-                        nicoruAPI?.init()
-                    }
-                }
-            }
             // シリーズが設定されていればシリーズ情報を返す
             seriesDataLiveData.postValue(nicoVideoHTML.getSeriesData(jsonObject))
             // シリーズのJSON解析してデータクラスにする
@@ -496,7 +593,29 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
     }
 
     /** 画質一覧をLiveDataへ入れる */
-    private fun setQualityList(parseVideoQualityDMC: JSONArray) {
+    private fun setQualityListDomand(parseVideoQualityDomand: JSONArray) {
+        val qualityDataList = arrayListOf<QualityData>()
+        repeat(parseVideoQualityDomand.length()) { index ->
+            val qualityJSONObject = parseVideoQualityDomand.getJSONObject(index)
+            val id = qualityJSONObject.getString("id")
+            val isAvailable = qualityJSONObject.getBoolean("isAvailable")
+            val label = qualityJSONObject.getString("label")
+            val isSelected = id == currentVideoQuality
+            qualityDataList.add(
+                QualityData(
+                    title = label,
+                    id = id,
+                    isSelected = isSelected,
+                    isAvailable = isAvailable
+                )
+            )
+        }
+        // 送信
+        qualityDataListLiveData.postValue(qualityDataList)
+    }
+
+    /** 画質一覧をLiveDataへ入れる */
+    private fun setQualityListDMC(parseVideoQualityDMC: JSONArray) {
         val qualityDataList = arrayListOf<QualityData>()
         repeat(parseVideoQualityDMC.length()) { index ->
             val qualityJSONObject = parseVideoQualityDMC.getJSONObject(index)
