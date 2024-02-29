@@ -28,8 +28,10 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.video.VideoListener
 import com.kusamaru.standroid.CommentCanvas
 import com.kusamaru.standroid.CommentJSONParse
@@ -363,6 +365,7 @@ class NicoVideoPlayService : Service() {
         GlobalScope.launch(errorHandler) {
             // 動画URL
             var contentUrl = ""
+            var domandCookie: String? = null
 
             // ログインしないならそもそもuserSessionの値を空にすれば！？
             val userSession = if (isLoginMode(this@NicoVideoPlayService)) {
@@ -383,19 +386,39 @@ class NicoVideoPlayService : Service() {
                 }
                 return@launch
             }
-            // https://api.dmc.nico/api/sessions のレスポンス
-            val sessionAPIResponse = if (startVideoQuality != null && startAudioQuality != null) {
-                // 画質指定あり
-                nicoVideoHTML.getSessionAPI(jsonObject, startVideoQuality!!, startAudioQuality!!)
-            } else {
-                // なし。おまかせ？
-                nicoVideoHTML.getSessionAPI(jsonObject)
-            }
-            if (sessionAPIResponse != null) {
-                // 動画URL
-                contentUrl = nicoVideoHTML.parseContentURI(sessionAPIResponse)
-                // ハートビート処理。これしないと切られる。
-                nicoVideoHTML.startHeartBeat(sessionAPIResponse)
+
+            when {
+                nicoVideoHTML.isDomandOnly(jsonObject) -> { // domand
+                    // https://nvapi.nicovideo.jp/v1/watch のレスポンス
+                    val sessionAPIResponse = if (startVideoQuality != null && startAudioQuality != null) {
+                        // 画質指定あり
+                        nicoVideoHTML.getSessionAPIDomand(jsonObject, startVideoQuality!!, startAudioQuality!!, null, userSession)
+                    } else {
+                        // なし。おまかせ？
+                        nicoVideoHTML.getSessionAPIDomand(jsonObject, null, null, null, userSession)
+                    }
+                    if (sessionAPIResponse != null) {
+                        // 動画URL
+                        contentUrl = nicoVideoHTML.parseContentURIDomand(sessionAPIResponse.first)
+                        domandCookie = sessionAPIResponse.second.find { it.contains("domand_bid") }
+                    }
+                }
+                else -> { // dmc
+                    // https://api.dmc.nico/api/sessions のレスポンス
+                    val sessionAPIResponse = if (startVideoQuality != null && startAudioQuality != null) {
+                        // 画質指定あり
+                        nicoVideoHTML.getSessionAPIDMC(jsonObject, startVideoQuality!!, startAudioQuality!!)
+                    } else {
+                        // なし。おまかせ？
+                        nicoVideoHTML.getSessionAPIDMC(jsonObject)
+                    }
+                    if (sessionAPIResponse != null) {
+                        // 動画URL
+                        contentUrl = nicoVideoHTML.parseContentURI(sessionAPIResponse)
+                        // ハートビート処理。これしないと切られる。
+                        nicoVideoHTML.startHeartBeat(sessionAPIResponse)
+                    }
+                }
             }
 
             // コメント取得
@@ -410,7 +433,7 @@ class NicoVideoPlayService : Service() {
             currentVideoTitle = jsonObject.getJSONObject("video").getString("title")
             withContext(Dispatchers.Main) {
                 // ExoPlayer
-                playExoPlayer(false, contentUrl, nicoHistory)
+                playExoPlayer(false, contentUrl, nicoHistory, domandCookie)
                 if (isPopupPlay()) {
                     // プレイヤーにセット
                     setPlayerUI(currentVideoId, currentVideoTitle)
@@ -496,7 +519,7 @@ class NicoVideoPlayService : Service() {
                     currentVideoCommentList = ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON, videoId))
                     withContext(Dispatchers.Main) {
                         // ExoPlayer
-                        playExoPlayer(true, contentUrl, "")
+                        playExoPlayer(true, contentUrl, "", null)
                         if (isPopupPlay()) {
                             // プレイヤーにセット
                             setPlayerUI(currentVideoId, currentVideoTitle)
@@ -515,7 +538,7 @@ class NicoVideoPlayService : Service() {
     }
 
     /** 動画再生 */
-    private fun playExoPlayer(isCache: Boolean, contentUrl: String, nicoHistory: String) {
+    private fun playExoPlayer(isCache: Boolean, contentUrl: String, nicoHistory: String, domandCookie: String?) {
         // キャッシュ再生と分ける
         if (isCache) {
             // キャッシュ再生
@@ -525,9 +548,21 @@ class NicoVideoPlayService : Service() {
         } else {
             // SmileサーバーはCookieつけないと見れないため
             val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
-            dataSourceFactory.defaultRequestProperties.set("Cookie", nicoHistory)
-            val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(contentUrl.toUri()))
-            exoPlayer.setMediaSource(videoSource)
+            when {
+                domandCookie != null -> {
+                    dataSourceFactory.defaultRequestProperties.set("Cookie", domandCookie)
+                    println(domandCookie)
+                    val videoSource = HlsMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(MediaItem.Builder()
+                            .setUri(contentUrl.toUri()).setMimeType(MimeTypes.APPLICATION_M3U8).build())
+                    exoPlayer.setMediaSource(videoSource)
+                }
+                else -> {
+                    dataSourceFactory.defaultRequestProperties.set("Cookie", nicoHistory)
+                    val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(contentUrl.toUri()))
+                    exoPlayer.setMediaSource(videoSource)
+                }
+            }
         }
         exoPlayer.prepare()
         // シーク

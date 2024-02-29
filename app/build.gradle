@@ -20,7 +20,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 33
         versionCode 112
-        versionName "15.6.9"
+        versionName "15.6.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -136,6 +136,7 @@ dependencies {
     implementation "androidx.preference:preference:1.1.1"
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
     // Material Design
     implementation 'com.google.android.material:material:1.5.0-alpha03'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

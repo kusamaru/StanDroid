@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -34,8 +35,10 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.video.VideoListener
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
@@ -210,6 +213,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             // 動画再生
             viewModel.contentUrl.observe(viewLifecycleOwner) { contentUrl ->
                 val oldPosition = exoPlayer.currentPosition
+
                 playExoPlayer(contentUrl)
                 // 画質変更時は途中から再生。動画IDが一致してないとだめ
                 if (oldPosition > 0 && exoPlayer.currentMediaItem?.mediaId == viewModel.playingVideoId.value) {
@@ -382,11 +386,24 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             }
             // それ以外：インターネットで取得
             else -> {
-                // SmileサーバーはCookieつけないと見れないため
+                // CookieないとDomandサーバーが403返してくる
                 val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
-                dataSourceFactory.defaultRequestProperties.set("Cookie", viewModel.nicoHistory)
-                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
-                exoPlayer.setMediaSource(videoSource)
+                when {
+                    contentUrl.contains("domand") -> { // domandならhlsな再生
+                        viewModel.domandCookie?.let {
+                            dataSourceFactory.defaultRequestProperties.set("Cookie", it)
+                        }
+                        val videoSource = HlsMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(MediaItem.Builder()
+                                .setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).setMimeType(MimeTypes.APPLICATION_M3U8).build())
+                        exoPlayer.setMediaSource(videoSource)
+                    }
+                    else -> { // いつもの
+                        val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
+                        exoPlayer.setMediaSource(videoSource)
+                    }
+                }
             }
         }
         // 準備と再生

@@ -209,7 +209,16 @@ class NicoVideoCache(val context: Context?) {
     /**
      * 動画をダウンロードする[DownloadPocket]インスタンスを返す
      * */
-    suspend fun getVideoDownloader(tmpFileFolder: File, videoIdFolder: File, videoId: String, url: String, userSession: String, nicoHistory: String, splitCount: Int) = withContext(Dispatchers.IO) {
+    suspend fun getVideoDownloader(
+        tmpFileFolder: File,
+        videoIdFolder: File,
+        videoId: String,
+        url: String,
+        userSession: String,
+        nicoHistory: String,
+        splitCount: Int,
+        domandCookie: String? = null,
+    ) = withContext(Dispatchers.IO) {
         // 動画mp4ファイル作成
         val resultVideoFile = File("${videoIdFolder.path}/${videoId}.mp4")
         // ヘッダー
@@ -218,6 +227,9 @@ class NicoVideoCache(val context: Context?) {
             Pair("Cookie", "user_session=$userSession"),
             Pair("Cookie", nicoHistory),
         )
+        domandCookie?.let {
+            headers.add(Pair("Cookie", it))
+        }
         // 並列ダウンロードするやつ
         return@withContext DownloadPocket(
             url = url,

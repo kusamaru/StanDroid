@@ -152,16 +152,31 @@ class GetCacheService : Service() {
             }
             val nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
             val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
+            var contentUrl = ""
+            var domandCookie: String? = null
             if (!nicoVideoHTML.isEncryption(jsonObject.toString())) {
-                // DMCサーバーならハートビート（視聴継続メッセージ送信）をしないといけないので
-                var contentUrl = ""
-                // https://api.dmc.nico/api/sessions のレスポンス
-                val sessionAPIJSONObject = nicoVideoHTML.getSessionAPI(jsonObject)
-                if (sessionAPIJSONObject != null) {
-                    // 動画URL
-                    contentUrl = nicoVideoHTML.parseContentURI(sessionAPIJSONObject)
-                    // ハートビート処理
-                    nicoVideoHTML.startHeartBeat(sessionAPIJSONObject)
+                when {
+                    nicoVideoHTML.isDomandOnly(jsonObject) -> { // domand
+                        showToast("Videos on Domand currently cannot be cached.")
+                        nicoVideoHTML.destroy()
+                        return@launch
+//                        val sessionAPIJSONObject = nicoVideoHTML.getSessionAPIDomand(jsonObject)
+//                        if (sessionAPIJSONObject != null) {
+//                            contentUrl = nicoVideoHTML.parseContentURIDomand(sessionAPIJSONObject.first)
+//                            domandCookie = sessionAPIJSONObject.second.find { it.contains("domand_bid") }
+//                        }
+                    }
+                    else -> { // dmc
+                        // DMCサーバーならハートビート（視聴継続メッセージ送信）をしないといけないので
+                        // https://api.dmc.nico/api/sessions のレスポンス
+                        val sessionAPIJSONObject = nicoVideoHTML.getSessionAPIDMC(jsonObject)
+                        if (sessionAPIJSONObject != null) {
+                            // 動画URL
+                            contentUrl = nicoVideoHTML.parseContentURI(sessionAPIJSONObject)
+                            // ハートビート処理
+                            nicoVideoHTML.startHeartBeat(sessionAPIJSONObject)
+                        }
+                    }
                 }
                 /**
                  * キャッシュ取得

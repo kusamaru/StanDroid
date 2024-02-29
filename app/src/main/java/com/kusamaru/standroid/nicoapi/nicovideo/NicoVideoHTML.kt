@@ -241,14 +241,8 @@ class NicoVideoHTML {
             url(url)
             post(requestBody)
 //            addHeader("Content-Type", "application/json")
-//            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
+            addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("Cookie", "user_session=$userSession;")
-//            if (nicosIdCookie != null) {
-//                addHeader("Cookie", nicosIdCookie)
-//            }
-//            addHeader("Accept", "*/*")
-//            addHeader("Accept_encoding", "br")
-//            addHeader("Sec-Fetch-Dest", "empty")
             addHeader("X-Frontend-Id", "6")
             addHeader("X-Frontend-Version", "0")
             addHeader("X-Request-With", "https://www.nicovideo.jp")
