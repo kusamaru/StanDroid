@@ -78,7 +78,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
     val nicoVideoHTML = NicoVideoHTML()
 
     /** 新API。こっち使うようにした方がいいかも */
-    val nicoVideoWatchAPI = NicoVideoWatchAPI()
+    // val nicoVideoWatchAPI = NicoVideoWatchAPI()
 
     /** キャッシュまとめ */
     val nicoVideoCache = NicoVideoCache(context)
@@ -399,25 +399,27 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         viewModelScope.launch(errorHandler) {
             // smileサーバーの動画は多分最初の視聴ページHTML取得のときに?eco=1をつけないと低画質リクエストできない
             val eco = if (smileServerLowRequest) "1" else ""
-//            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
-//            // 失敗したら落とす
-//            if (!response.isSuccessful) {
-//                showToast("${getString(R.string.error)}\n${response.code}")
-//                return@launch
-//            }
-//            nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
-//            val jsonObject = withContext(Dispatchers.Default) {
-//                // println("response: ${response.body?.string()}")
-//                nicoVideoHTML.parseJSON(response.body?.string())
-//            }
-            // APIサーバーからデータ拾うよ
-            val response = nicoVideoWatchAPI.getVideoDataV3(videoId, userSession)
-            if (response == null) {
-                showToast("${getString(R.string.error)}\n")
+            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
+            // 失敗したら落とす
+            if (!response.isSuccessful) {
+                showToast("${getString(R.string.error)}\n${response.code}")
                 return@launch
             }
-            val jsonObject = response.first
-            val nicosIdCookie = response.second
+            nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
+            val jsonObject = withContext(Dispatchers.Default) {
+                // println("response: ${response.body?.string()}")
+                nicoVideoHTML.parseJSON(response.body?.string())
+            }
+
+            // APIサーバーからデータ拾うよ
+//            val response = nicoVideoWatchAPI.getVideoDataV3(videoId, userSession)
+//            if (response == null) {
+//                showToast("${getString(R.string.error)}\n")
+//                return@launch
+//            }
+//            val jsonObject = response.first
+//            val nicosIdCookie = response.second
+            val nicosIdCookie = null
 
             nicoVideoJSON.postValue(jsonObject)
             // 動画説明文

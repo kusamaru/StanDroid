@@ -31,6 +31,7 @@ class NicoVideoWatchAPI {
      * @param userSession いるかわからん。
      * @return
      */
+    @Deprecated("動画によっては400(HARMFUL_VIDEO)が帰ってくる。HTMLスクレイピングした方がいい")
     suspend fun getVideoDataV3(
         videoId: String,
         userSession: String? = null,
@@ -45,8 +46,9 @@ class NicoVideoWatchAPI {
             url(url)
             get()
             if (userSession != null) {
-                addHeader("Cookie", "user_session=$userSession;")
+                addHeader("Cookie", "user_session=$userSession")
             }
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
             // header("X-Frontend-Id", "192")
             // header("X-Frontend-Version", "0")
         }.build()
@@ -57,7 +59,7 @@ class NicoVideoWatchAPI {
             }
             val body = response.body?.string()
             val json = JSONObject(body)
-            Pair(json.getJSONObject("data"), cookie)
+             Pair(json.getJSONObject("data"), cookie)
         } else {
             null
         }
