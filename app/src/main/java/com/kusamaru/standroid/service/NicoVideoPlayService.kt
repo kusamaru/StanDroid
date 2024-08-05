@@ -373,7 +373,7 @@ class NicoVideoPlayService : Service() {
             } else {
                 ""
             }
-            val response = nicoVideoHTML.getHTML(videoId, userSession, "")
+            val response = nicoVideoHTML.getJSON(videoId, userSession)
             val nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
             val responseString = response.body?.string()
             val jsonObject = nicoVideoHTML.parseJSON(responseString)

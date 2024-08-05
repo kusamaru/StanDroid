@@ -99,7 +99,7 @@ class NicoVideoListMenuBottomFragment : BottomSheetDialogFragment() {
                 // 無い時はインターネットから取得
                 withContext(Dispatchers.IO) {
                     // データ取得
-                    val response = nicoVideoHTML.getHTML(videoId, userSession)
+                    val response = nicoVideoHTML.getJSON(videoId, userSession)
                     if (!response.isSuccessful) {
                         // 失敗時
                         showToast("${getString(R.string.error)}\n${response.code}")

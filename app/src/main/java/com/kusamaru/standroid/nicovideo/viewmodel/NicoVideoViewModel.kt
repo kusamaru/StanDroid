@@ -77,7 +77,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
     /** ニコ動APIまとめ */
     val nicoVideoHTML = NicoVideoHTML()
 
-    /** 新API。こっち使うようにした方がいいかも */
+    /** Watch API V3用 */
     // val nicoVideoWatchAPI = NicoVideoWatchAPI()
 
     /** キャッシュまとめ */
@@ -397,9 +397,8 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         }
         // HTML取得
         viewModelScope.launch(errorHandler) {
-            // smileサーバーの動画は多分最初の視聴ページHTML取得のときに?eco=1をつけないと低画質リクエストできない
-            val eco = if (smileServerLowRequest) "1" else ""
-            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
+            // jsonを取得する(動画ページのクエリにresponseType=jsonを付加)
+            val response = nicoVideoHTML.getJSON(videoId, userSession)
             // 失敗したら落とす
             if (!response.isSuccessful) {
                 showToast("${getString(R.string.error)}\n${response.code}")
@@ -410,8 +409,9 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
                 // println("response: ${response.body?.string()}")
                 nicoVideoHTML.parseJSON(response.body?.string())
             }
+            val nicosIdCookie = null
 
-            // APIサーバーからデータ拾うよ
+            // APIサーバーからデータ拾う
 //            val response = nicoVideoWatchAPI.getVideoDataV3(videoId, userSession)
 //            if (response == null) {
 //                showToast("${getString(R.string.error)}\n")
@@ -419,7 +419,6 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
 //            }
 //            val jsonObject = response.first
 //            val nicosIdCookie = response.second
-            val nicosIdCookie = null
 
             nicoVideoJSON.postValue(jsonObject)
             // 動画説明文
@@ -1003,7 +1002,7 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         viewModelScope.launch(Dispatchers.Default + errorHandler) {
             val videoId = playingVideoId.value ?: return@launch
             // 動画HTML取得
-            val response = nicoVideoHTML.getHTML(videoId, userSession)
+            val response = nicoVideoHTML.getJSON(videoId, userSession)
             if (response.isSuccessful) {
                 // 動画情報更新
                 val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())

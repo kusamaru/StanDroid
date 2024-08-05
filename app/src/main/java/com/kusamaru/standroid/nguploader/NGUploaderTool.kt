@@ -141,10 +141,10 @@ class NGUploaderTool(val context: Context) {
     suspend fun addNGUploaderIdFromVideoId(videoId: String) = withContext(Dispatchers.Default) {
         // 動画情報取得
         val nicoVideoHTML = NicoVideoHTML()
-        nicoVideoHTML.getHTML(videoId, userSession).let { response ->
+        nicoVideoHTML.getJSON(videoId, userSession).let { response ->
             if (response.isSuccessful) {
                 // JSONパース
-                val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
+                val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())!!
                 // ユーザーID取る
                 val userData = nicoVideoHTML.parseUserData(jsonObject)
                 if (userData != null) {

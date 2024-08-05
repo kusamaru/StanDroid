@@ -38,9 +38,23 @@ class NicoVideoHTML {
      * HTML取得
      * @param eco 「１」を入れるとエコノミー
      * */
+    @Deprecated("もう動かない。代わりにgetJSON()使ってください。時間あるときに削除する")
     suspend fun getHTML(videoId: String, userSession: String, eco: String = "") = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
             url("https://www.nicovideo.jp/watch/$videoId?eco=$eco")
+            header("Cookie", "user_session=$userSession")
+            header("User-Agent", "Stan-Droid;@kusamaru_jp")
+            get()
+        }.build()
+        okHttpClient.newCall(request).execute()
+    }
+
+    /**
+     * JSONで動画情報を拾う
+     * */
+    suspend fun getJSON(videoId: String, userSession: String) = withContext(Dispatchers.IO) {
+        val request = Request.Builder().apply {
+            url("https://www.nicovideo.jp/watch/$videoId?responseType=json")
             header("Cookie", "user_session=$userSession")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
@@ -114,12 +128,12 @@ class NicoVideoHTML {
     }
 
     /**
-     * js-initial-watch-dataからdata-api-dataのJSONを取る関数
+     * responseType=jsonで帰ってきたjsonを加工する
      * */
-    fun parseJSON(html: String?): JSONObject {
-        val document = Jsoup.parse(html)
-        val json = document.getElementById("js-initial-watch-data").attr("data-api-data")
-        return JSONObject(json)
+    fun parseJSON(json: String?): JSONObject {
+        return json?.let {
+            JSONObject(it).getJSONObject("data").getJSONObject("response")
+        }!! // TODO: 絶対アカン
     }
 
     /**

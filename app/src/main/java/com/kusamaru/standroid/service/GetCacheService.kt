@@ -157,14 +157,17 @@ class GetCacheService : Service() {
             if (!nicoVideoHTML.isEncryption(jsonObject.toString())) {
                 when {
                     nicoVideoHTML.isDomandOnly(jsonObject) -> { // domand
-                        showToast("Videos on Domand currently cannot be cached.")
-                        nicoVideoHTML.destroy()
-                        return@launch
-//                        val sessionAPIJSONObject = nicoVideoHTML.getSessionAPIDomand(jsonObject)
-//                        if (sessionAPIJSONObject != null) {
-//                            contentUrl = nicoVideoHTML.parseContentURIDomand(sessionAPIJSONObject.first)
-//                            domandCookie = sessionAPIJSONObject.second.find { it.contains("domand_bid") }
-//                        }
+//                        showToast("Videos on Domand currently cannot be cached.")
+//                        nicoVideoHTML.destroy()
+//                        return@launch
+                        val sessionAPIJSONObject = nicoVideoHTML.getSessionAPIDomand(jsonObject, null, null, null, userSession)
+                        if (sessionAPIJSONObject == null) {
+                            showToast("Unexpected Error.")
+                            nicoVideoHTML.destroy()
+                            return@launch
+                        }
+                        contentUrl = nicoVideoHTML.parseContentURIDomand(sessionAPIJSONObject.first)
+                        domandCookie = sessionAPIJSONObject.second.find { it.contains("domand_bid") }
                     }
                     else -> { // dmc
                         // DMCサーバーならハートビート（視聴継続メッセージ送信）をしないといけないので
