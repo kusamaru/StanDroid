@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.tool
 
+import com.kusamaru.standroid.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -18,16 +19,18 @@ object OkHttpClientSingleton {
     /**
      * これをすべてのリクエストで使う共通のOkHttpClient
      * */
-    val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+    val okHttpClient = OkHttpClient.Builder().apply {
+        connectTimeout(20, TimeUnit.SECONDS)
+        writeTimeout(30, TimeUnit.SECONDS)
+        readTimeout(30, TimeUnit.SECONDS)
         // ログを出力させる設定
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
+        if (BuildConfig.DEBUG) {
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        }
         // .addNetworkInterceptor(FixJsonContentTypeInterceptor())
-        .build()
+    }.build()
 }
 
 class FixJsonContentTypeInterceptor: Interceptor {

@@ -2,7 +2,11 @@ package com.kusamaru.standroid.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,9 +17,7 @@ import com.kusamaru.standroid.room.init.NGDBInit
 import com.kusamaru.standroid.tool.DarkModeSupport
 import com.kusamaru.standroid.tool.LanguageTool
 import com.kusamaru.standroid.databinding.ActivityNgListBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * NG一覧Activity
@@ -45,6 +47,14 @@ class NGListActivity : AppCompatActivity() {
             adapter = ngListRecyclerViewAdapter
             val itemDecoration = DividerItemDecoration(this@NGListActivity, DividerItemDecoration.VERTICAL)
             addItemDecoration(itemDecoration)
+        }
+
+        // FAB
+        viewBinding.fabAdd.setOnClickListener {
+            when (viewBinding.activityNgBottomNav.selectedItemId) {
+                R.id.ng_menu_user -> {}
+                R.id.ng_menu_comment -> addNGComment()
+            }
         }
 
         // BottomNavigation
@@ -88,6 +98,39 @@ class NGListActivity : AppCompatActivity() {
             // リスト更新
             ngListRecyclerViewAdapter.notifyDataSetChanged()
         }
+    }
+
+    // NGコメントを追加する
+    fun addNGComment() {
+        val layout = LayoutInflater.from(this@NGListActivity).inflate(R.layout.dialog_add_ng_comment, null)
+        val text = layout.findViewById<AppCompatEditText>(R.id.dialog_add_ng_comment_edit_text)
+        val dialog = AlertDialog.Builder(this@NGListActivity)
+            .setTitle(getString(R.string.add_ng_comment_dialog_title))
+            .setView(layout)
+            .setPositiveButton(getString(R.string.add)) { dialog, _ ->
+                text.text?.let {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val ngdbEntity = NGDBEntity(
+                            type = "comment",
+                            value = it.toString(),
+                            description = ""
+                        )
+                        NGDBInit.getInstance(this@NGListActivity).ngDBDAO().insert(ngdbEntity)
+                    }
+                    loadNGComment()
+                    Toast.makeText(this@NGListActivity, getString(R.string.add_ng_comment_message), Toast.LENGTH_LONG)
+                         .show()
+                }
+            }
+            .setNegativeButton("Dismiss") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        dialog.show()
+    }
+
+    // 必要性出てきたらやる
+    fun addNGUser() {
     }
 
     /**

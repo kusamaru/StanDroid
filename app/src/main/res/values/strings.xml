@@ -515,4 +515,7 @@ Sorry to trouble you, but please update the video information.\n
     <string name="setting_ng_score_limit_title">Set NG Score</string>
     <string name="setting_deprecated_clipbord_get_id">[Deprecated] Allows ID to be retrieved from the clipboard</string>
     <string name="setting_deprecated_clipbord_get_id_description">May be a security risk.</string>
+    <string name="add_ng_comment_dialog_title">Add NG Comment</string>
+    <string name="add_ng_comment_dialog_message">Comment</string>
+    <string name="setting_add_ng">Add NG</string>
 </resources>

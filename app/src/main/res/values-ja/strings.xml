@@ -515,4 +515,7 @@
     <string name="setting_ng_score_limit_title">NGスコアの設定</string>
     <string name="setting_deprecated_clipbord_get_id">【非推奨】クリップボードからIDを取得する機能を有効化する</string>
     <string name="setting_deprecated_clipbord_get_id_description">セキュリティ的によろしくない可能性があります。ご利用は計画的に</string>
+    <string name="add_ng_comment_dialog_title">NGコメントの追加</string>
+    <string name="add_ng_comment_dialog_message">コメント</string>
+    <string name="setting_add_ng">NGを追加</string>
 </resources>

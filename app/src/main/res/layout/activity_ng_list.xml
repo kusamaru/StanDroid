@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activity.NGListActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.NGListActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:ignore="UselessParent">
+
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_ng_list_recycler_view"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="32px"
+            android:layout_marginBottom="32px"
+            android:clickable="true"
+            android:contentDescription="@string/setting_add_ng"
+            app:backgroundTint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_baseline_add_24" />
+
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/activity_ng_bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/ng_activity_menu" />
+        android:id="@+id/activity_ng_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/ng_activity_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </LinearLayout>
