@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kusamaru.standroid.nicoapi.nicorepo.NicoRepoDataClass
 import com.kusamaru.standroid.nicovideo.adapter.NicoRepoAdapter
 import com.kusamaru.standroid.nicovideo.viewmodel.factory.NicoRepoViewModelFactory
@@ -15,7 +16,7 @@ import com.kusamaru.standroid.databinding.FragmentNicovideoNicorepoBinding
 
 /**
  * ニコレポFragment
- *　
+ *
  * userId |String | ユーザーIDを入れるとそのユーザーのニコレポを取りに行きます。ない場合は自分のニコレポを取りに行きます
  * --- にんい ---
  * show_video   | Boolean   | 初期状態から動画のチェックを入れたい場合は使ってください
@@ -34,6 +35,10 @@ class NicoVideoNicoRepoFragment : Fragment() {
 
     /** findViewById駆逐 */
     private val viewBinding by lazy { FragmentNicovideoNicorepoBinding.inflate(layoutInflater) }
+
+    /** スクロール位置を保持 */
+    var position = 0
+    var yPos = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return viewBinding.root
@@ -90,8 +95,26 @@ class NicoVideoNicoRepoFragment : Fragment() {
     private fun initRecyclerView() {
         viewBinding.fragmentNicovideoNicorepoRecyclerview.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context)
+            val linearLayoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
             adapter = nicoRepoAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val visibleItemCount = recyclerView.childCount
+                    val totalItemCount = linearLayoutManager.itemCount
+                    val firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
+                    //最後までスクロールしたときの処理
+                    if (firstVisibleItem + visibleItemCount == totalItemCount && nicoRepoViewModel.loadingLiveData.value == false && !nicoRepoViewModel.isEnd) {
+                        // 次のページ検索する
+                        nicoRepoViewModel.getNicoRepo()
+                        // スクロール位置保持
+                        position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        yPos = getChildAt(0).top
+                    }
+                }
+            })
         }
     }
 

@@ -32,7 +32,7 @@ class NicoVideoQualityBottomFragment : BottomSheetDialogFragment() {
         // ViewModelでデータ受け取る
         val viewModel by viewModels<NicoVideoViewModel>({ requireParentFragment() })
         // 画質JSONパース
-        val audioQualityJSONArray = viewModel.nicoVideoHTML.parseAudioQualityDMC(viewModel.nicoVideoJSON.value!!)
+        val audioQualityJSONArray = viewModel.nicoVideoHTML.parseAudioQualityDomand(viewModel.nicoVideoJSON.value!!)
         // 音声は一番いいやつ？
         val audioId = audioQualityJSONArray.getJSONObject(0).getString("id")
 

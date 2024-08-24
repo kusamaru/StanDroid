@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import com.kusamaru.standroid.nicoapi.nicorepo.NicoRepoAPIX
 import com.kusamaru.standroid.nicoapi.nicorepo.NicoRepoDataClass
 import com.kusamaru.standroid.R
+import com.kusamaru.standroid.nicoapi.nicofeed.NicoFeedAPI
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,6 +51,12 @@ class NicoRepoViewModel(application: Application, val userId: String? = null) : 
     /** 生放送を一覧に表示する場合はtrue */
     var isShowLive = true
 
+    /** 更新用のカーソル */
+    var nextCursor: String? = null
+
+    /** 終わり */
+    var isEnd = false
+
     init {
         getNicoRepo()
     }
@@ -65,8 +72,10 @@ class NicoRepoViewModel(application: Application, val userId: String? = null) : 
         viewModelScope.launch(errorHandler + Dispatchers.IO) {
             // API叩く
             loadingLiveData.postValue(true)
-            val nicoRepoAPI = NicoRepoAPIX()
-            val response = nicoRepoAPI.getNicoRepoResponse(userSession, userId)
+//            val nicoRepoAPI = NicoRepoAPIX()
+//            val response = nicoRepoAPI.getNicoRepoResponse(userSession, userId)
+            val nicoFeedAPI = NicoFeedAPI()
+            val response = nicoFeedAPI.getNicoFeedResponse(userSession, nextCursor)
             // 失敗時
             if (!response.isSuccessful) {
                 withContext(Dispatchers.Main) {
@@ -74,7 +83,13 @@ class NicoRepoViewModel(application: Application, val userId: String? = null) : 
                 }
             }
             loadingLiveData.postValue(false)
-            nicoRepoDataListRaw = nicoRepoAPI.parseNicoRepoResponse(response.body?.string())
+            val parsedData = nicoFeedAPI.parseNicoFeedResponse(response.body?.string())
+            nicoRepoDataListRaw.addAll(parsedData.first)
+            if (parsedData.second != null) {
+                nextCursor = parsedData.second
+            } else {
+                isEnd = true
+            }
             // フィルター適用とLiveData送信
             filterAndPostLiveData()
         }

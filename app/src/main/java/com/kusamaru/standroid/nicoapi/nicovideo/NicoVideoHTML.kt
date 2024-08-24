@@ -225,18 +225,32 @@ class NicoVideoHTML {
         val clientObject = jsonObject.getJSONObject("client")
 
         val postAudioQualityJSONArray = if (audioQualityId != null) JSONArray().put(audioQualityId) else domandDataObject.getJSONArray("audios")
-        val postVideoQualityJSONArray = if (videoQualityId != null) JSONArray().put(videoQualityId) else domandDataObject.getJSONArray("videos")
+        val postVideoQualityJSONArray = domandDataObject.getJSONArray("videos")
 
         // isAvailableな最高音質で行く
         val audioFormat = audioQualityId ?: postAudioQualityJSONArray.findInObject { it.getBoolean("isAvailable") }?.getString("id")
         // val audioFormat = audioQualityId ?: postAudioQualityJSONArray.getJSONObject(0)?.getString("id")
-        val videoIdsList = JSONArray()
+        var videoIdsList = JSONArray()
+
         for (i in 0 until postVideoQualityJSONArray.length()) {
             val obj = postVideoQualityJSONArray.getJSONObject(i)
-            if (!obj.getBoolean("isAvailable")) { continue } // !isAvailableなら無視
+            if (!obj.getBoolean("isAvailable")) {
+                continue
+            } // !isAvailableなら無視
+            val id = obj.getString("id")
+            if (id == videoQualityId) {
+                // videoQualityIdがnot-nullならそれだけ詰めて送る
+                videoIdsList = JSONArray().put(
+                    JSONArray().apply {
+                        put(id)
+                        put(audioFormat)
+                    }
+                )
+                break
+            }
             videoIdsList.put(
                 JSONArray().apply {
-                    put(obj.getString("id"))
+                    put(id)
                     put(audioFormat)
                 }
             )
