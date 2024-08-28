@@ -26,8 +26,10 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.video.VideoListener
 import io.github.takusan23.droppopalert.DropPopAlert
 import io.github.takusan23.droppopalert.toDropPopAlert
@@ -325,10 +327,13 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
             }
             // それ以外：インターネットで取得
             else -> {
-                // SmileサーバーはCookieつけないと見れないため
                 val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
-                dataSourceFactory.defaultRequestProperties.set("Cookie", viewModel.nicoHistory)
-                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
+                // domandに対応
+                viewModel.domandCookie?.let {
+                    dataSourceFactory.defaultRequestProperties.set("Cookie", it)
+                }
+                val videoSource = HlsMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).setMimeType(MimeTypes.APPLICATION_M3U8).build())
                 exoPlayer.setMediaSource(videoSource)
             }
         }
