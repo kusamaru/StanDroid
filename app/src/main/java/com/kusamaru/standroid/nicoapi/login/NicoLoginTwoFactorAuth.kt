@@ -1,11 +1,14 @@
 package com.kusamaru.standroid.nicoapi.login
 
 import android.os.Build
+import com.kusamaru.standroid.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import org.jsoup.Jsoup
 
 /**
@@ -24,13 +27,19 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
     private val loginCookie = nicoLoginDataClass.twoFactorCookie!!
 
     /** 二段階認証のWebページへのURL */
-    private val twoFactorAuthAPIURL = nicoLoginDataClass.twoFactorURL!!
+    private val twoFactorAuthAPIURL = nicoLoginDataClass.twoFactorURL!!.replace("%3D", "=").replace("%26", "&")
 
     /** リダイレクトを禁止にした[OkHttpClient] */
     private val okHttpClient = OkHttpClient.Builder().apply {
         // リダイレクトを禁止する
         followRedirects(false)
         followSslRedirects(false)
+        // Debugビルドならログを出す
+        if (BuildConfig.DEBUG) {
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        }
     }.build()
 
 
@@ -46,10 +55,10 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
      * 二個目は[isTrustDevice]がtrueの場合は次回から二段階認証をスキップできる値が入っています。この値をログイン時のCookieに詰めることで省略ができます。
      * */
     suspend fun twoFactorAuth(otp: String, isTrustDevice: Boolean) = withContext(Dispatchers.Default) {
-        // 二段階認証のAPIを取得しに行く
-        val twoFactorAuthAPIURL = getTwoFactorAPIURL()
+        // 二段階認証のAPIを取得しに行く なんかこの行なくても動いた
+        // val mfaUrl = getTwoFactorAPIURL()
         // 認証コードを入れてAPIを叩く
-        val (finalAPIURL, trustDeviceToken) = postOneTimePassword(twoFactorAuthAPIURL, otp, isTrustDevice)
+        val (finalAPIURL, trustDeviceToken) = postOneTimePassword(twoFactorAuthAPIURL, twoFactorAuthAPIURL, otp, isTrustDevice)
         // ラスト、ユーザーセッションを取得する
         val userSession = getUserSession(finalAPIURL!!)
         return@withContext Pair(userSession, trustDeviceToken)
@@ -61,6 +70,8 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
      * @return 二段階認証APIのURL
      * */
     private suspend fun getTwoFactorAPIURL() = withContext(Dispatchers.Default) {
+
+        println(twoFactorAuthAPIURL)
         val request = Request.Builder().apply {
             url(twoFactorAuthAPIURL)
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
@@ -68,12 +79,12 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
             get()
         }.build()
         val response = okHttpClient.newCall(request).execute()
-        val responseString = response.body?.string()
+        // val responseString = response.body?.string()
         // HTML内からURLを探す
-        val document = Jsoup.parse(responseString)
-        val path = document.getElementsByTag("form")[0].attr("action")
+//        val document = Jsoup.parse(responseString)
+//        val path = document.getElementsByTag("form")[0].attr("action")
         // 二段階認証をするAPIのURLを返す
-        "https://account.nicovideo.jp$path"
+        response.request.url
     }
 
     /**
@@ -81,25 +92,32 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
      * 成功するとステータスコードが302になる。
      * @param otp 認証コード。メールで届いてるはず
      * @param twoFactorAuthAPIURL [getTwoFactorAPIURL]の戻り値
+     * @param refererUrl リファラに指定するURL。どこ指したらいいんだこれ
      * @param isTrustDevice このデバイスを信頼する場合はtrue。信頼すると次回から二段階認証をスキップできる（クライアント側で対応必須）。せーのでほっぴんジャンプ♪
      * @return Pair<String,String>を返します。
      * 一個目は最後に叩くAPIのURLです。
      * 二個目は[isTrustDevice]がtrue(このデバイスを信頼する場合)なら、mfa_trusted_device_tokenの値を入れてます。無いならnullです
      * */
-    private suspend fun postOneTimePassword(twoFactorAuthAPIURL: String, otp: String, isTrustDevice: Boolean) = withContext(Dispatchers.Default) {
+    private suspend fun postOneTimePassword(mfaUrl: String, refererUrl: String, otp: String, isTrustDevice: Boolean) = withContext(Dispatchers.Default) {
         val formData = FormBody.Builder().apply {
             add("otp", otp) // メールで送られてきた認証コード
             add("loginBtn", "ログイン")
             add("is_mfa_trusted_device", isTrustDevice.toString()) // これ true だとレスポンスSet-Cookieになんか信用してます的な内容が入る。これをログイン時のCookieにくっつけることでパスできる
-            add("device_name", "たちみどろいど（${Build.MODEL}）") // デバイス名
+            add("device_name", "Stan-Droid（${Build.MODEL}）") // デバイス名
         }.build()
         val request = Request.Builder().apply {
             url(twoFactorAuthAPIURL)
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             addHeader("Cookie", loginCookie)
+            addHeader("Referer", refererUrl)
+            addHeader("Origin", "https://account.nicovideo.jp")
+            addHeader("Upgrade-Insecure-Requests", "1")
+            addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
             post(formData)
         }.build()
         val response = okHttpClient.newCall(request).execute()
+        println(response)
+        println(response.headers)
         // デバイスを信頼している場合
         val trustDeviceToken = if (isTrustDevice) {
             response.headers.filter { pair -> pair.second.contains("mfa_trusted_device_token") }[0].second.split(";")[0]
@@ -124,7 +142,7 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
             get()
         }.build()
         val response = okHttpClient.newCall(request).execute()
-        response.headers.filter { pair -> pair.second.contains("user_session") }[1].second.split(";")[0].replace("user_session=", "")
+        response.headers.filter { pair -> pair.second.contains("user_session") }[2].second.split(";")[0].replace("user_session=", "")
     }
 
 }

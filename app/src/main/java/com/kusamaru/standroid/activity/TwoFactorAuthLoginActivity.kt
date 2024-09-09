@@ -55,6 +55,7 @@ class TwoFactorAuthLoginActivity : AppCompatActivity() {
 
             // 例外
             val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+                throwable.printStackTrace()
                 runOnUiThread {
                     Toast.makeText(this, "${getString(R.string.error)}\n${throwable}", Toast.LENGTH_SHORT).show()
                 }

@@ -3,8 +3,10 @@ package com.kusamaru.standroid.nicoapi.login
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.compose.ui.text.toLowerCase
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.kusamaru.standroid.BuildConfig
 import com.kusamaru.standroid.activity.TwoFactorAuthLoginActivity
 import com.kusamaru.standroid.R
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +16,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.*
 
 /**
  * ニコニコにログインする関数。
@@ -134,6 +138,11 @@ object NicoLogin {
         val okHttpClient = OkHttpClient().newBuilder().apply {
             followRedirects(false)
             followSslRedirects(false)
+            if (BuildConfig.DEBUG) {
+                addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                })
+            }
         }.build()
         val response = okHttpClient.newCall(request).execute()
         // 成功時
@@ -175,7 +184,8 @@ object NicoLogin {
         var nicosid = ""
         responseHeaders?.forEach {
             // Set-Cookie に入ってる mfa_session と nicosid を控える
-            if (it.first == "Set-Cookie") {
+            // レスポンスのSet-Cookieが小文字になってたせいで動かなくなったっぽい。なぜ……
+            if (it.first.lowercase() == "set-cookie") {
                 if (it.second.contains("mfa_session")) {
                     mfaSession = it.second.split(";")[0]
                 }
