@@ -64,18 +64,20 @@ class TwoFactorAuthLoginActivity : AppCompatActivity() {
             // 二段階認証開始
             lifecycleScope.launch(Dispatchers.Main + errorHandler) {
                 val nicoLoginTwoFactorAuth = NicoLoginTwoFactorAuth(loginData)
-                val (userSession, trustDeviceToken) = nicoLoginTwoFactorAuth.twoFactorAuth(keyVisualArts, isTrustDevice)
-
-                // 保存
-                PreferenceManager.getDefaultSharedPreferences(this@TwoFactorAuthLoginActivity).edit {
-                    putString("user_session", userSession)
-                    // デバイスを信頼している場合は次回からスキップできる値を保存
-                    putString("trust_device_token", trustDeviceToken)
-                    // もしログイン無しで利用するが有効の場合は無効にする
-                    putBoolean("setting_no_login", false)
+                nicoLoginTwoFactorAuth.twoFactorAuth(keyVisualArts, isTrustDevice)?.let { (userSession, trustDeviceToken) ->
+                    // 保存
+                    PreferenceManager.getDefaultSharedPreferences(this@TwoFactorAuthLoginActivity).edit {
+                        putString("user_session", userSession)
+                        // デバイスを信頼している場合は次回からスキップできる値を保存
+                        putString("trust_device_token", trustDeviceToken)
+                        // もしログイン無しで利用するが有効の場合は無効にする
+                        putBoolean("setting_no_login", false)
+                    }
+                    // ログインできたよ！
+                    Toast.makeText(this@TwoFactorAuthLoginActivity, getString(R.string.successful), Toast.LENGTH_SHORT).show()
+                    finish()
                 }
-                // ログインできたよ！
-                Toast.makeText(this@TwoFactorAuthLoginActivity, getString(R.string.successful), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@TwoFactorAuthLoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
                 finish()
             }
 

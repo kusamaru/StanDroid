@@ -5,8 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.AppBarLayout
 import io.github.takusan23.searchpreferencefragment.SearchPreferenceChildFragment
 import io.github.takusan23.searchpreferencefragment.SearchPreferenceFragment
@@ -127,6 +130,20 @@ class SettingsFragment : SearchPreferenceFragment() {
                 "setting_cache_folder_path" -> {
                     val nicoVideoCache = NicoVideoCache(requireContext())
                     preference.summary = nicoVideoCache.getCacheFolderPath()
+                }
+                "dev_remove_login_cache" -> {
+                    val prefSetting = PreferenceManager.getDefaultSharedPreferences(context)
+                    prefSetting.edit {
+                        remove("mail")
+                        remove("password")
+                        remove("user_session")
+                        remove("trust_device_token")
+                        remove("setting_no_login")
+                    }
+
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        Toast.makeText(context, "ログイン情報を初期化しました", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

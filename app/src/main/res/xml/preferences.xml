@@ -518,6 +518,13 @@
             android:defaultValue="false"
             android:key="dev_setting_comment_canvas_text_rect"
             android:title="テキストに枠を付けて検証する" />
+
+        <Preference
+            android:icon="@drawable/ic_outline_block_24px"
+            android:key="dev_remove_login_cache"
+            android:summary="念の為、完了後にアプリケーションを再起動してください"
+            android:title="ログイン関連のキャッシュを初期化する" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -60,7 +60,10 @@ class NicoLoginTwoFactorAuth(private val nicoLoginDataClass: NicoLoginDataClass)
         // 認証コードを入れてAPIを叩く
         val (finalAPIURL, trustDeviceToken) = postOneTimePassword(twoFactorAuthAPIURL, twoFactorAuthAPIURL, otp, isTrustDevice)
         // ラスト、ユーザーセッションを取得する
-        val userSession = getUserSession(finalAPIURL!!)
+        if (finalAPIURL == null) {
+            return@withContext null
+        }
+        val userSession = getUserSession(finalAPIURL)
         return@withContext Pair(userSession, trustDeviceToken)
     }
 
