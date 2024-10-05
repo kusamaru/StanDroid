@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import com.kusamaru.standroid.BuildConfig
 import com.kusamaru.standroid.activity.TwoFactorAuthLoginActivity
 import com.kusamaru.standroid.R
+import com.kusamaru.standroid.tool.encodeToForm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
@@ -17,6 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
+import java.nio.charset.Charset
 import java.util.*
 
 /**
@@ -125,7 +127,8 @@ object NicoLogin {
      * */
     suspend fun nicoLoginCoroutine(mail: String, pass: String, trustDeviceToken: String? = null): NicoLoginDataClass? = withContext(Dispatchers.Default) {
         val url = "https://account.nicovideo.jp/login/redirector"
-        val postData = "mail_tel=$mail&password=$pass"
+        val escapedPass = encodeToForm(pass)
+        val postData = "mail_tel=$mail&password=$escapedPass"
         val request = Request.Builder().apply {
             url(url)
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
