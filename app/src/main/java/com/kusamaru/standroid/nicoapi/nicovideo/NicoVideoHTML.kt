@@ -603,6 +603,7 @@ class NicoVideoHTML {
 
         companion object {
             fun fromInt(value: Int) = CommentForkType.values().first { it._i == value }
+            fun fromString(str: String) = CommentForkType.values().first() { it.str == str }
         }
     }
     /**
@@ -624,8 +625,10 @@ class NicoVideoHTML {
         val jsonObject = JSONObject(json)
         val threads = jsonObject.getJSONObject("data").getJSONArray("threads")
         for (i in 0 until threads.length()) {
-            val forkType = CommentForkType.fromInt(i)
+            // val forkType = CommentForkType.fromInt(i)
             val data = threads.getJSONObject(i)
+            val forkTypeStr = data.getString("fork")
+            val forkType = CommentForkType.fromString(forkTypeStr) // これでどうか
             val comments = data.getJSONArray("comments")
             for (j in 0 until comments.length()) {
                 val commentJSONParse = Json.decodeFromString<NvCommentJSONParse>(comments.getJSONObject(j).toString())

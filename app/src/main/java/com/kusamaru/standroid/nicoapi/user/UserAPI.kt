@@ -85,7 +85,7 @@ class UserAPI {
      * */
     suspend fun postUserFollow(userSession: String, userId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
-            url("https://public.api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
+            url("https://user-follow-api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
             header("Cookie", "user_session=$userSession")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "6") // これ必要。
@@ -104,7 +104,7 @@ class UserAPI {
      * */
     suspend fun postRemoveUserFollow(userSession: String, userId: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
-            url("https://public.api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
+            url("https://user-follow-api.nicovideo.jp/v1/user/followees/niconico-users/${userId}.json")
             header("Cookie", "user_session=$userSession")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
             header("x-frontend-id", "6") // これ必要。
