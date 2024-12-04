@@ -24,15 +24,15 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.video.VideoSize
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.common.MimeTypes
+import androidx.media3.common.VideoSize
 import com.kusamaru.standroid.CommentCanvas
 import com.kusamaru.standroid.CommentJSONParse
 import com.kusamaru.standroid.MainActivity
@@ -82,7 +82,7 @@ class NicoVideoPlayService : Service() {
     private lateinit var mediaSessionCompat: MediaSessionCompat
 
     // 再生するやつ
-    private lateinit var exoPlayer: SimpleExoPlayer
+    private lateinit var exoPlayer: ExoPlayer
 
     /** これらはポップアップ再生時のみ初期化されます。ので lateinit ではなくnull許容 */
     private var viewBinding: OverlayVideoPlayerLayoutBinding? = null
@@ -207,7 +207,7 @@ class NicoVideoPlayService : Service() {
 
     /** ExoPlayerを用意する */
     private fun initExoPlayer() {
-        exoPlayer = SimpleExoPlayer.Builder(this).build()
+        exoPlayer = ExoPlayer.Builder(this).build()
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)

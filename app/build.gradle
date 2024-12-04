@@ -119,9 +119,9 @@ dependencies {
     implementation "androidx.media:media:1.4.1"
     //GoogleCast
     implementation 'com.google.android.gms:play-services-cast-framework:18.1.0'
-    // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-hls:2.19.1'
+    // ExoPlayer改めMedia3
+    implementation 'androidx.media3:media3-exoplayer:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.1.1'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.19.1'
     // WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.4.0"

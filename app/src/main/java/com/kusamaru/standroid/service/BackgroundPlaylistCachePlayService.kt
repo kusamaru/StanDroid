@@ -20,9 +20,9 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.media.MediaBrowserServiceCompat
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.kusamaru.standroid.MainActivity
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.nicoapi.NicoVideoCache
@@ -58,7 +58,7 @@ class BackgroundPlaylistCachePlayService : MediaBrowserServiceCompat() {
     private val ROOT = "root"
 
     /** 音楽再生のExoPlayer */
-    lateinit var exoPlayer: SimpleExoPlayer
+    lateinit var exoPlayer: ExoPlayer
 
     /** MediaSession */
     lateinit var mediaSessionCompat: MediaSessionCompat
@@ -86,7 +86,7 @@ class BackgroundPlaylistCachePlayService : MediaBrowserServiceCompat() {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // ExoPlayer用意
-        exoPlayer = SimpleExoPlayer.Builder(this).build()
+        exoPlayer = ExoPlayer.Builder(this).build()
 
         // ブロードキャスト用意
         initBroadcast()

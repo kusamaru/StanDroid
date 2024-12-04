@@ -22,16 +22,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.video.VideoSize
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.common.MimeTypes
+import androidx.media3.common.VideoSize
 import io.github.takusan23.droppopalert.DropPopAlert
 import io.github.takusan23.droppopalert.toDropPopAlert
 import com.kusamaru.standroid.PlayerParentFrameLayout
@@ -75,7 +75,7 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
     private val nicovideoPlayerUIBinding by lazy { IncludeNicovideoPlayerBinding.inflate(layoutInflater) }
 
     /** そうですね、やっぱり僕は、王道を征く、ExoPlayerですか */
-    private val exoPlayer by lazy { SimpleExoPlayer.Builder(requireContext()).build() }
+    private val exoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
 
     /** シーク操作中かどうか */
     private var isTouchSeekBar = false

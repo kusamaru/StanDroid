@@ -33,16 +33,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.TransferListener
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.TransferListener
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -105,7 +104,7 @@ class CommentFragment : Fragment(), MainActivityPlayerFragmentInterface {
     var isNimadoMode = false
 
     // ExoPlayer
-    lateinit var exoPlayer: SimpleExoPlayer
+    lateinit var exoPlayer: ExoPlayer
 
     // GoogleCast使うか？
     lateinit var googleCast: GoogleCast
@@ -165,7 +164,7 @@ class CommentFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
         prefSetting = PreferenceManager.getDefaultSharedPreferences(context)
 
-        exoPlayer = SimpleExoPlayer.Builder(requireContext()).build()
+        exoPlayer = ExoPlayer.Builder(requireContext()).build()
 
         // アスペクト比なおす
         aspectRatioFix()
@@ -859,7 +858,7 @@ class CommentFragment : Fragment(), MainActivityPlayerFragmentInterface {
         // ExoPlayer作り直す
         val hlsAddress = viewModel.hlsAddressLiveData.value ?: return
         exoPlayer.release()
-        exoPlayer = SimpleExoPlayer.Builder(requireContext()).build()
+        exoPlayer = ExoPlayer.Builder(requireContext()).build()
 
         // ニコ生版ニコニコ実況の場合 と 映像を受信しないモードのとき は接続しないので即return
         if (viewModel.nicoLiveHTML.getNicoJKIdFromChannelId(viewModel.communityId) != null || viewModel.isNotReceiveLive.value == true) {

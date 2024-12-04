@@ -23,11 +23,10 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.google.android.material.button.MaterialButton
 import io.github.takusan23.droppopalert.DropPopAlert
 import io.github.takusan23.droppopalert.toDropPopAlert
@@ -67,7 +66,7 @@ class JCNicoLiveFragment : PlayerBaseFragment() {
     private val nicolivePlayerUIBinding by lazy { IncludeNicolivePlayerBinding.inflate(layoutInflater) }
 
     /** そうですね、やっぱり僕は、王道を征く、ExoPlayerですか */
-    private val exoPlayer by lazy { SimpleExoPlayer.Builder(requireContext()).build() }
+    private val exoPlayer by lazy { ExoPlayer.Builder(requireContext()).build() }
 
     /** 共有 */
     private val contentShare by lazy { ContentShareTool(requireContext()) }

@@ -19,7 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.exoplayer2.Player
+import androidx.media3.common.Player
 import com.google.android.material.snackbar.Snackbar
 import com.kusamaru.standroid.MainActivity
 import com.kusamaru.standroid.nicoapi.cache.CacheJSON

@@ -22,16 +22,15 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.TransferListener
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.DefaultDataSourceFactory
+import androidx.media3.datasource.TransferListener
 import com.kusamaru.standroid.CommentCanvas
 import com.kusamaru.standroid.CommentJSONParse
 import com.kusamaru.standroid.MainActivity
@@ -80,7 +79,7 @@ class NicoLivePlayService : Service() {
     val nicoLiveComment = NicoLiveComment()
 
     // 生放送再生するやつ
-    private lateinit var popupExoPlayer: SimpleExoPlayer
+    private lateinit var popupExoPlayer: ExoPlayer
 
     // View
     private var viewBinding: OverlayPlayerLayoutBinding? = null
@@ -293,7 +292,7 @@ class NicoLivePlayService : Service() {
     private fun initPlayer() {
         // ポップアップ再生、バッググラウンド再生　共にExoPlayer、MediaSessionの初期化を行う。
         // ExoPlayer初期化
-        popupExoPlayer = SimpleExoPlayer.Builder(this).build()
+        popupExoPlayer = ExoPlayer.Builder(this).build()
         val sourceFactory = DefaultDataSourceFactory(this, "Stan-Droid;@kusamaru_jp", object : TransferListener {
             override fun onTransferInitializing(source: DataSource, dataSpec: DataSpec, isNetwork: Boolean) {
 
