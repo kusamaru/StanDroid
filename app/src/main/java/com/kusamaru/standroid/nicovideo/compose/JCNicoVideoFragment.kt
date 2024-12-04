@@ -27,10 +27,11 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.video.VideoListener
+import com.google.android.exoplayer2.video.VideoSize
 import io.github.takusan23.droppopalert.DropPopAlert
 import io.github.takusan23.droppopalert.toDropPopAlert
 import com.kusamaru.standroid.PlayerParentFrameLayout
@@ -316,24 +317,28 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
 
     /** ExoPlayerで動画を再生する */
     private fun playExoPlayer(contentUrl: String) {
+        // nullチェック挟む
+        if (viewModel.playingVideoId.value == null) {
+            return
+        }
         // キャッシュ再生と分ける
         when {
             // キャッシュを優先的に利用する　もしくは　キャッシュ再生時
             viewModel.isOfflinePlay.value ?: false -> {
                 // キャッシュ再生
                 val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "Stan-Droid;@kusamaru_jp")
-                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
+                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value!!).build())
                 exoPlayer.setMediaSource(videoSource)
             }
             // それ以外：インターネットで取得
             else -> {
-                val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
+                val dataSourceFactory = DefaultHttpDataSource.Factory().setUserAgent("Stan-Droid;@kusamaru_jp")
                 // domandに対応
                 viewModel.domandCookie?.let {
-                    dataSourceFactory.defaultRequestProperties.set("Cookie", it)
+                    dataSourceFactory.setDefaultRequestProperties(mapOf("Cookie" to it))
                 }
                 val videoSource = HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).setMimeType(MimeTypes.APPLICATION_M3U8).build())
+                    .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value!!).setMimeType(MimeTypes.APPLICATION_M3U8).build())
                 exoPlayer.setMediaSource(videoSource)
             }
         }
@@ -347,7 +352,7 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
 
     /** ExoPlayerを初期化する */
     private fun initExoPlayer() {
-        exoPlayer.addListener(object : Player.EventListener {
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 // 動画時間をセットする
@@ -365,17 +370,17 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
             }
         })
         // 縦、横取得
-        exoPlayer.addVideoListener(object : VideoListener {
-            override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-                super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onVideoSizeChanged(videoSize: VideoSize) {
+                super.onVideoSizeChanged(videoSize)
                 // DMCのJSONからも幅とかは取れるけどキャッシュ再生でJSONがない場合をサポートしたいため
                 if (isAdded) { // コールバックなのでこの時点でもう無いかもしれない
                     viewModel.apply {
-                        videoHeight = height
-                        videoWidth = width
+                        videoHeight = videoSize.height
+                        videoWidth = videoSize.width
                     }
                     // アスペクト比調整
-                    setOnLayoutChangeAspectRatioFix(width, height)
+                    setOnLayoutChangeAspectRatioFix(videoSize.width, videoSize.height)
                 }
             }
         })

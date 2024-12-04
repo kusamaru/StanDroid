@@ -37,9 +37,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.video.VideoListener
+import com.google.android.exoplayer2.video.VideoSize
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -375,32 +375,39 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
     }
 
     private fun playExoPlayer(contentUrl: String) {
+        // nullチェック挟む
+        if (viewModel.playingVideoId.value == null) {
+            showToast("NicoVideoFragment:396 playingVideoID is null")
+            return
+        }
         // キャッシュ再生と分ける
         when {
             // キャッシュを優先的に利用する　もしくは　キャッシュ再生時
             viewModel.isOfflinePlay.value ?: false -> {
                 // キャッシュ再生
                 val dataSourceFactory = DefaultDataSourceFactory(requireContext(), "Stan-Droid;@kusamaru_jp")
-                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
+                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value!!).build())
                 exoPlayer.setMediaSource(videoSource)
             }
+
             // それ以外：インターネットで取得
             else -> {
                 // CookieないとDomandサーバーが403返してくる
-                val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
+                val dataSourceFactory = DefaultHttpDataSource.Factory().setUserAgent("Stan-Droid;@kusamaru_jp")
                 when {
                     contentUrl.contains("domand") -> { // domandならhlsな再生
                         viewModel.domandCookie?.let {
-                            dataSourceFactory.defaultRequestProperties.set("Cookie", it)
+                            dataSourceFactory.setDefaultRequestProperties(mapOf("Cookie" to it))
                         }
+
                         val videoSource = HlsMediaSource.Factory(dataSourceFactory)
                             .createMediaSource(MediaItem.Builder()
-                                .setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).setMimeType(MimeTypes.APPLICATION_M3U8).build())
+                                .setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value!!).setMimeType(MimeTypes.APPLICATION_M3U8).build())
                         exoPlayer.setMediaSource(videoSource)
                     }
                     else -> { // いつもの
                         val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                            .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value).build())
+                            .createMediaSource(MediaItem.Builder().setUri(contentUrl.toUri()).setMediaId(viewModel.playingVideoId.value!!).build())
                         exoPlayer.setMediaSource(videoSource)
                     }
                 }
@@ -428,7 +435,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
     /** ExoPlayerを初期化する */
     private fun initExoPlayer() {
-        exoPlayer.addListener(object : Player.EventListener {
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 // 再生
@@ -449,12 +456,12 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
         })
         // 縦、横取得
-        exoPlayer.addVideoListener(object : VideoListener {
-            override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-                super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onVideoSizeChanged(videoSize: VideoSize) {
+                super.onVideoSizeChanged(videoSize)
                 // DMCのJSONからも幅とかは取れるけどキャッシュ再生でJSONがない場合をサポートしたいため
                 if (isAdded) { // コールバックなのでこの時点でもう無いかもしれない
-                    aspectRatioFix(width, height)
+                    aspectRatioFix(videoSize.width, videoSize.height)
                 }
             }
         })

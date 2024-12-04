@@ -25,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.material.button.MaterialButton
@@ -579,7 +580,7 @@ class JCNicoLiveFragment : PlayerBaseFragment() {
         exoPlayer.playWhenReady = true
         // ミニプレイヤーから通常画面へ遷移
         var isFirst = true
-        exoPlayer.addListener(object : Player.EventListener {
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
 
@@ -607,8 +608,8 @@ class JCNicoLiveFragment : PlayerBaseFragment() {
         })
 
         // もしエラー出たら
-        exoPlayer.addListener(object : Player.EventListener {
-            override fun onPlayerError(error: ExoPlaybackException) {
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
                 error.printStackTrace()
                 println("生放送の再生が止まりました。")

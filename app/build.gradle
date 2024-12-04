@@ -120,9 +120,9 @@ dependencies {
     //GoogleCast
     implementation 'com.google.android.gms:play-services-cast-framework:18.1.0'
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.12.0'
-    implementation 'com.google.android.exoplayer:exoplayer-hls:2.12.0'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.12.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.19.1'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.19.1'
     // WebSocket
     implementation "org.java-websocket:Java-WebSocket:1.4.0"
     // HTML Parser

@@ -207,7 +207,7 @@ class BackgroundPlaylistCachePlayService : MediaBrowserServiceCompat() {
         }
 
         // ExoPlayerの再生状態が更新されたときも通知を更新する
-        exoPlayer.addListener(object : Player.EventListener {
+        exoPlayer.addListener(object : Player.Listener {
 
             // playWhenReadyが切り替わったら呼ばれる
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {

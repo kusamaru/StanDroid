@@ -24,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -318,8 +319,8 @@ class NicoLivePlayService : Service() {
         //再生
         popupExoPlayer.playWhenReady = true
         // エラーのとき
-        popupExoPlayer.addListener(object : Player.EventListener {
-            override fun onPlayerError(error: ExoPlaybackException) {
+        popupExoPlayer.addListener(object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
                 error.printStackTrace()
                 println("生放送の再生が止まりました。")

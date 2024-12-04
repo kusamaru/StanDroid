@@ -35,6 +35,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -909,9 +910,9 @@ class CommentFragment : Fragment(), MainActivityPlayerFragmentInterface {
             //再生
             exoPlayer.playWhenReady = true
 
-            exoPlayer.addListener(object : Player.EventListener {
+            exoPlayer.addListener(object : Player.Listener {
 
-                override fun onPlayerError(error: ExoPlaybackException) {
+                override fun onPlayerError(error: PlaybackException) {
                     super.onPlayerError(error)
                     error.printStackTrace()
                     println("生放送の再生が止まりました。")

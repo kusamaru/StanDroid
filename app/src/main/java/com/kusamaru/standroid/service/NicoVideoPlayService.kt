@@ -30,9 +30,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.MimeTypes
-import com.google.android.exoplayer2.video.VideoListener
+import com.google.android.exoplayer2.video.VideoSize
 import com.kusamaru.standroid.CommentCanvas
 import com.kusamaru.standroid.CommentJSONParse
 import com.kusamaru.standroid.MainActivity
@@ -208,7 +208,7 @@ class NicoVideoPlayService : Service() {
     /** ExoPlayerを用意する */
     private fun initExoPlayer() {
         exoPlayer = SimpleExoPlayer.Builder(this).build()
-        exoPlayer.addListener(object : Player.EventListener {
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 super.onPlaybackStateChanged(state)
                 // ポップアップのみ
@@ -257,10 +257,12 @@ class NicoVideoPlayService : Service() {
 
         })
         // アスペクトひ
-        exoPlayer.addVideoListener(object : VideoListener {
-            override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-                super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onVideoSizeChanged(videoSize: VideoSize) {
+                super.onVideoSizeChanged(videoSize)
                 viewBinding?.apply {
+                    val width = videoSize.width
+                    val height = videoSize.height
                     // アスペクト比が4:3か16:9か
                     // 4:3 = 1.333... 16:9 = 1.777..
                     val calc = width.toFloat() / height.toFloat()
@@ -547,10 +549,10 @@ class NicoVideoPlayService : Service() {
             exoPlayer.setMediaSource(videoSource)
         } else {
             // SmileサーバーはCookieつけないと見れないため
-            val dataSourceFactory = DefaultHttpDataSourceFactory("Stan-Droid;@kusamaru_jp", null)
+            val dataSourceFactory = DefaultHttpDataSource.Factory().setUserAgent("Stan-Droid;@kusamaru_jp")
             when {
                 domandCookie != null -> {
-                    dataSourceFactory.defaultRequestProperties.set("Cookie", domandCookie)
+                    dataSourceFactory.setDefaultRequestProperties(mapOf("Cookie" to domandCookie))
                     println(domandCookie)
                     val videoSource = HlsMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(MediaItem.Builder()
@@ -558,7 +560,7 @@ class NicoVideoPlayService : Service() {
                     exoPlayer.setMediaSource(videoSource)
                 }
                 else -> {
-                    dataSourceFactory.defaultRequestProperties.set("Cookie", nicoHistory)
+                    dataSourceFactory.setDefaultRequestProperties(mapOf("Cookie" to nicoHistory))
                     val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(contentUrl.toUri()))
                     exoPlayer.setMediaSource(videoSource)
                 }
