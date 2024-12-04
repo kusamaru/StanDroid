@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nicolive.compose
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,6 +44,7 @@ class JCNicoLiveInfoFragment : Fragment() {
     /** ViewModel */
     private val viewModel by viewModels<NicoLiveViewModel>({ requireParentFragment() })
 
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ComposeView(requireContext()).apply {
             setContent {

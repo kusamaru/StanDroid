@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nicovideo.compose
 
+import android.annotation.SuppressLint
 import android.text.format.DateUtils
 import android.widget.TextView
 import androidx.compose.foundation.Image
@@ -501,6 +502,7 @@ fun NicoVideoSeriesCard(
 /**
  * 連続再生一覧。BottomFragmentでも良かった？
  * */
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NicoVideoPlayList(
     isShowList: Boolean,

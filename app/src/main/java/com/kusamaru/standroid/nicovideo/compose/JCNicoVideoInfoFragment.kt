@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nicovideo.compose
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -48,6 +49,7 @@ class JCNicoVideoInfoFragment : Fragment() {
     /** Preference */
     private val prefSetting by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @ExperimentalMaterialApi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ComposeView(requireContext()).apply {

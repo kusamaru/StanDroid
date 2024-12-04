@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.setting.dbclear.compose
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
  * データベース削除設定画面
  * @param onBackClick 戻るボタン押したときに呼ばれる
  * */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DatabaseClearSettingScreen(onBackClick: () -> Unit) {
     val context = LocalContext.current

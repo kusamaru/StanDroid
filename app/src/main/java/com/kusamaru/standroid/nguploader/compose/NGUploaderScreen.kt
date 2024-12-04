@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nguploader.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
  *
  * @param viewModel ViewModel
  * */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NGUploaderScreen(viewModel: NGUploaderViewModel) {
     // NG投稿者一覧

@@ -61,9 +61,9 @@ class NicoHistoryViewModel(application: Application) : AndroidViewModel(applicat
                     set(Calendar.MINUTE, 0)
                     set(Calendar.SECOND, 0)
                 }
-                val from = calender.time.time / 1000L
+                val from: Long = calender.time.time / 1000L
                 // まで
-                val to = System.currentTimeMillis() / 1000L
+                val to: Long = System.currentTimeMillis() / 1000L
                 // 範囲に入ってるか
                 filteredList = filteredList.filter { it.unixTime in from..to }
             }
