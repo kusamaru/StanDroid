@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.nguploader.NGUploaderTool
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoRankingHTML
+import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoRankingHTMLV2
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import kotlinx.coroutines.*
 
@@ -45,7 +46,7 @@ class NicoVideoRankingViewModel(application: Application) : AndroidViewModel(app
             showToast("${context.getString(R.string.error)}\n${throwable}")
         }
         viewModelScope.launch(errorHandler + coroutineJob + Dispatchers.Default) {
-            val nicoVideoRankingHTML = NicoVideoRankingHTML()
+            val nicoVideoRankingHTML = NicoVideoRankingHTMLV2()
             val response = nicoVideoRankingHTML.getRankingHTML(genre, time, tag)
             if (!response.isSuccessful) {
                 showToast("${context.getString(R.string.error)}\n${response.code}")

@@ -19,6 +19,7 @@ import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
 import com.kusamaru.standroid.nicovideo.viewmodel.NicoVideoRankingViewModel
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.FragmentDevNicovideoRankingBinding
+import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoRankingHTMLV2
 import kotlinx.coroutines.Job
 
 /**
@@ -38,24 +39,31 @@ class NicoVideoRankingFragment : Fragment() {
 
     /** ランキングのジャンル一覧。[NicoVideoRankingHTML.NICOVIDEO_RANKING_GENRE] のURL一覧と一致している */
     private val RANKING_GENRE = arrayListOf(
-        "全ジャンル",
-        "話題",
-        "エンターテインメント",
-        "ラジオ",
-        "音楽・サウンド",
-        "ダンス",
-        "動物",
-        "自然",
+        "総合",
+        // "話題",
+        "ゲーム",
+        "アニメ",
+        "ボカロ",
+        "音声合成実況・解説・劇場",
+        "エンタメ",
+        "音楽",
+        "歌ってみた",
+        "踊ってみた",
+        "演奏してみた",
+        "解説・講座",
         "料理",
         "旅行・アウトドア",
+        "自然",
         "乗り物",
-        "スポーツ",
-        "社会・政治・時事",
         "技術・工作",
-        "解説・講座",
-        "アニメ",
-        "ゲーム",
-        "その他"
+        "社会・政治・時事",
+        "MMD",
+        "VTuber",
+        "ラジオ",
+        "スポーツ",
+        "動物",
+        "その他",
+        "例のソレ"
     )
 
     /** ランキングの集計時間。基本いじらない。[NicoVideoRankingHTML.NICOVIDEO_RANKING_TIME] の配列の中身と一致している。 */
@@ -152,9 +160,9 @@ class NicoVideoRankingFragment : Fragment() {
             putString("nicovideo_ranking_time", viewBinding.fragmentNicovideoRankingTimeTextView.text.toString())
         }
         // ジャンル
-        val genre = NicoVideoRankingHTML.NICOVIDEO_RANKING_GENRE[rankingGenrePos]
+        val genre = NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_GENRE[rankingGenrePos]
         // 集計期間
-        val time = NicoVideoRankingHTML.NICOVIDEO_RANKING_TIME[rankingTimePos]
+        val time = NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_TIME[rankingTimePos]
         // ランキング更新
         viewModel.loadRanking(genre, time, tag)
     }

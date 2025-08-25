@@ -6,13 +6,11 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
@@ -30,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.LoadControl
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -40,6 +37,7 @@ import androidx.media3.datasource.DefaultDataSourceFactory
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.VideoSize
+import androidx.media3.common.util.UnstableApi
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -65,7 +63,7 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.math.roundToInt
 
-/**
+@UnstableApi /**
  * 開発中のニコ動クライアント（？）
  *
  * id           |   動画ID。必須
@@ -227,9 +225,9 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
         viewModel.commentList.observe(viewLifecycleOwner) { commentList ->
             // ついでに動画の再生時間を取得する。非同期
             viewModel.playerDurationMs.observe(viewLifecycleOwner, object : Observer<Long> {
-                override fun onChanged(t: Long?) {
-                    if (t != null && t > 0) {
-                        viewBinding.fragmentNicovideoCommentCanvas.initCommentList(commentList, t)
+                override fun onChanged(value: Long) {
+                    if (value > 0) {
+                        viewBinding.fragmentNicovideoCommentCanvas.initCommentList(commentList, value)
                         // 一回取得したらコールバック無効化。SAM変換をするとthisの指すものが変わってしまう
                         viewModel.playerDurationMs.removeObserver(this)
                     }
