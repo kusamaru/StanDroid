@@ -17,6 +17,7 @@ import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.FragmentNicovideoSearchBinding
 import com.kusamaru.standroid.nguploader.bottomfragment.NGUploaderBottomFragment
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoSearchHTML
+import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoSearchHTMLV2
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.nicovideo.adapter.AllShowDropDownMenuAdapter
 import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
@@ -221,7 +222,7 @@ class NicoVideoSearchFragment : Fragment() {
         // ポップアップメニュー
         val menu = PopupMenu(requireContext(), viewBinding.fragmentNicovideoSearchSortChip)
         // 並び替え
-        NicoVideoSearchHTML.NICOVIDEO_SEARCH_ORDER.forEach { name -> menu.menu.add(name) }
+        NicoVideoSearchHTMLV2.NICOVIDEO_SEARCH_ORDER.forEach { name -> menu.menu.add(name) }
         viewBinding.fragmentNicovideoSearchSortChip.setOnClickListener {
             // メニュー展開
             menu.show()

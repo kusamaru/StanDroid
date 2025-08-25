@@ -11,6 +11,7 @@ import androidx.preference.PreferenceManager
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.nguploader.NGUploaderTool
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoSearchHTML
+import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoSearchHTMLV2
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.room.entity.SearchHistoryDBEntity
 import com.kusamaru.standroid.room.init.SearchHistoryDBInit
@@ -33,7 +34,7 @@ class NicoVideoSearchViewModel(application: Application) : AndroidViewModel(appl
     private val userSession = prefSetting.getString("user_session", "") ?: ""
 
     /** ニコ動検索とスクレイピング */
-    private val searchHTML = NicoVideoSearchHTML()
+    private val searchHTML = NicoVideoSearchHTMLV2()
 
     /** 検索履歴DBのDAO */
     private val searchHistoryDAO = SearchHistoryDBInit.getInstance(context).searchHistoryDAO()
@@ -87,7 +88,7 @@ class NicoVideoSearchViewModel(application: Application) : AndroidViewModel(appl
      * @param isTagSearch タグ検索の場合はtrue。キーワード検索ならfalse
      * @param sortName 並び順。入れられる文字は[NicoVideoSearchHTML.NICOVIDEO_SEARCH_ORDER]の配列を参照
      * */
-    fun search(searchText: String, page: Int = 1, isTagSearch: Boolean = true, sortName: String = NicoVideoSearchHTML.NICOVIDEO_SEARCH_ORDER[0]) {
+    fun search(searchText: String, page: Int = 1, isTagSearch: Boolean = true, sortName: String = NicoVideoSearchHTMLV2.NICOVIDEO_SEARCH_ORDER[0]) {
 
         if (searchText.isEmpty()) return
 

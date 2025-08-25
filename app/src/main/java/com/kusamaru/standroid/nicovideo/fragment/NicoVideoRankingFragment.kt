@@ -34,13 +34,12 @@ class NicoVideoRankingFragment : Fragment() {
     lateinit var launch: Job
 
     // メニュー選んだ位置
-    var rankingGenrePos = 0
-    var rankingTimePos = 0
+    private var rankingGenrePos = 0
+    private var rankingTimePos = 0
 
     /** ランキングのジャンル一覧。[NicoVideoRankingHTML.NICOVIDEO_RANKING_GENRE] のURL一覧と一致している */
     private val RANKING_GENRE = arrayListOf(
         "総合",
-        // "話題",
         "ゲーム",
         "アニメ",
         "ボカロ",
@@ -160,8 +159,17 @@ class NicoVideoRankingFragment : Fragment() {
             putString("nicovideo_ranking_time", viewBinding.fragmentNicovideoRankingTimeTextView.text.toString())
         }
         // ジャンル
+        if (rankingGenrePos >= NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_GENRE.size || rankingGenrePos < 0) {
+            // 境界チェック
+            rankingGenrePos = 0
+        }
+
         val genre = NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_GENRE[rankingGenrePos]
         // 集計期間
+        if (rankingTimePos >= NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_TIME.size || rankingTimePos < 0) {
+            // 境界チェック
+            rankingTimePos = 0
+        }
         val time = NicoVideoRankingHTMLV2.NICOVIDEO_RANKING_TIME[rankingTimePos]
         // ランキング更新
         viewModel.loadRanking(genre, time, tag)
