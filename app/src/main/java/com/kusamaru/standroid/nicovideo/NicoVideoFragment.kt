@@ -458,7 +458,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
             override fun onVideoSizeChanged(videoSize: VideoSize) {
                 super.onVideoSizeChanged(videoSize)
                 // DMCのJSONからも幅とかは取れるけどキャッシュ再生でJSONがない場合をサポートしたいため
-                if (isAdded) { // コールバックなのでこの時点でもう無いかもしれない
+                if (isAdded && videoSize.width != 0 && videoSize.height != 0) { // コールバックなのでこの時点でもう無いかもしれない
                     aspectRatioFix(videoSize.width, videoSize.height)
                 }
             }
