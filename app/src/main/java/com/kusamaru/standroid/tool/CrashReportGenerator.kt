@@ -42,8 +42,9 @@ object CrashReportGenerator {
             // ファイルに書き込む
             File(crashReportFolder, "crash_$crashReportDate.txt").apply {
                 createNewFile()
+                val exceptionType = e::class.java.name
                 val crashReport = e.stackTrace.joinToString(separator = "\n")
-                writeText(crashReport)
+                writeText(exceptionType + "\n\n" + crashReport)
             }
             // Androidのクラッシュダイアログを表示
             defaultUncaughtExceptionHandler?.uncaughtException(t, e)
