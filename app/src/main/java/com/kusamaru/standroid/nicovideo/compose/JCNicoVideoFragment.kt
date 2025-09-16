@@ -406,7 +406,8 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
             val playerHeight = fragmentPlayerFrameLayout.height
             val playerWidth = fragmentPlayerFrameLayout.width
             // サイズが違うときのみ
-            if (prevHeight != playerHeight) {
+            // ゼロチェックを挟まないとゼロ除算で落ちるときがある
+            if (prevHeight != playerHeight && playerWidth != 0 && playerHeight != 0) {
                 prevHeight = playerHeight
                 val calcWidth = viewModel.nicoVideoHTML.calcVideoWidthDisplaySize(videoWidth, videoHeight, playerHeight).roundToInt()
                 if (calcWidth > fragmentPlayerFrameLayout.width) {
