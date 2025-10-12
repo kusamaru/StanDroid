@@ -808,9 +808,11 @@ class NicoVideoPlayService : Service() {
             seekTimer.cancel()
             seekTimer = Timer()
             seekTimer.schedule(timerTask {
-                if (exoPlayer.isPlaying) {
-                    setProgress()
-                    initDrawComment()
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (exoPlayer.isPlaying) {
+                        setProgress()
+                        initDrawComment()
+                    }
                 }
             }, 100, 100)
         }
