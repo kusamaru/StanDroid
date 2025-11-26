@@ -8,9 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kusamaru.standroid.compose.TabPadding
 import com.kusamaru.standroid.R
+import kotlin.math.roundToInt
 
 /**
  * メニューのタブの部分だけ
@@ -70,6 +72,44 @@ fun NicoVideoMenuTab(
             tabIcon = painterResource(id = R.drawable.ic_volume_up_24px),
             selectedIndex = selectedIndex,
             tabClick = { tabClick(5) }
+        )
+        TabPadding(
+            index = 6,
+            tabName = stringResource(id = R.string.playback_speed),
+            tabIcon = painterResource(id = R.drawable.ic_play_arrow_24px),
+            selectedIndex = selectedIndex,
+            tabClick = { tabClick(6) }
+        )
+    }
+}
+
+/**
+ * 再生速度を変更するやつ
+ *
+ * @param currentSpeed 現在の速度 speedListに含まれている前提
+ * @param speedList 再生速度のリスト
+ * @param onSpeedChange 再生速度を変えた時に呼ばれる
+ */
+@Composable
+fun NicoVideoPlaySpeedMenu(
+    speeds: List<Float> = listOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f),
+    currentSpeed: Float,
+    onSpeedChange: (Float) -> Unit,
+) {
+    val currentIndex = speeds.indexOfFirst { it == currentSpeed }.coerceAtLeast(0)
+
+    Column(modifier = Modifier.padding(10.dp)) {
+        Text(
+            text = "再生速度: x$currentSpeed"
+        )
+        Slider(
+            value = currentIndex.toFloat(),
+            onValueChange = {
+                val nearestIndex = it.roundToInt().coerceIn(0, speeds.lastIndex)
+                onSpeedChange(speeds[nearestIndex])
+            },
+            valueRange = 0f..speeds.lastIndex.toFloat(),
+            steps = speeds.size - 2
         )
     }
 }

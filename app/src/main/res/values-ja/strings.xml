@@ -518,4 +518,5 @@
     <string name="add_ng_comment_dialog_title">NGコメントの追加</string>
     <string name="add_ng_comment_dialog_message">コメント</string>
     <string name="setting_add_ng">NGを追加</string>
+    <string name="playback_speed">再生速度</string>
 </resources>

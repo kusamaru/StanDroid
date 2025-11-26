@@ -341,6 +341,12 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
                 prefSetting.edit { putBoolean("nicovideo_repeat_on", false) }
             }
         }
+        // 再生速度が変わったとき
+        viewModel.playbackSpeedControlLiveData.observe(viewLifecycleOwner) { speed ->
+            exoPlayer.setPlaybackSpeed(speed)
+            // コメントの流れる速度にも反映させたい
+            viewBinding.fragmentNicovideoCommentCanvas.changePlaybackSpeed(speed)
+        }
     }
 
     /** UIに反映させる */

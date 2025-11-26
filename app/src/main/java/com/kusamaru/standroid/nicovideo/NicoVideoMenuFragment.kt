@@ -145,8 +145,8 @@ class NicoVideoMenuFragment : Fragment() {
         // かんたんコメント消す
         initKantanCommentHideSwitch()
 
-        // コテハン一覧Activityボタン初期化
-        initKotehanButton()
+        // 再生速度コントロール
+        initPlaybackSpeedSlider()
 
         // コメント流さないモード
         initCommentCanvasVisibleSwitch()
@@ -463,6 +463,34 @@ class NicoVideoMenuFragment : Fragment() {
         })
         viewBinding.fragmentNicovideoMenuVolumeSeek.progress = (requireNicoVideoFragment().exoPlayer.volume * 10).toInt()
     }
+
+    // 再生速度コントロール
+    private fun initPlaybackSpeedSlider() {
+        viewBinding.fragmentNicovideoMenuPlaybackSpeedSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val progressValue = if (progress >= 7) {
+                     2.0f // progress.toFloat() * 0.25f + 0.25f = 2.0f
+                } else {
+                    progress.toFloat() * 0.25f // 0.25刻みで0.25~1.5まで
+                }
+                // requireNicoVideoFragment().exoPlayer.setPlaybackSpeed(progressValue)
+                viewModel.playbackSpeedControlLiveData.postValue(progressValue)
+                viewBinding.fragmentNicovideoMenuPlaybackSpeedText.text = progressValue.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
+        val playbackSpeed = requireNicoVideoFragment().exoPlayer.playbackParameters.speed
+        viewBinding.fragmentNicovideoMenuPlaybackSpeedSeek.progress = (playbackSpeed * 4).toInt()
+        viewBinding.fragmentNicovideoMenuPlaybackSpeedText.text = playbackSpeed.toString()
+    }
+
 
     private fun showToast(message: String?) {
         Handler(Looper.getMainLooper()).post {

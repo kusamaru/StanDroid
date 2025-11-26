@@ -202,6 +202,9 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
     /** 音量調整をLiveData経由で行う。1fまで */
     val volumeControlLiveData = MutableLiveData<Float>()
 
+    /** 再生速度の制御に使う。< 0.0fらしい */
+    val playbackSpeedControlLiveData = MutableLiveData<Float>()
+
     /** [isNotPlayVideoMode]がtrueのときにコルーチンを使うのでそれ */
     private val notVideoPlayModeCoroutineContext = Job()
 

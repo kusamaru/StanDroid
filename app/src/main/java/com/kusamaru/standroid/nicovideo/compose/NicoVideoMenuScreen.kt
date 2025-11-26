@@ -35,7 +35,6 @@ import com.kusamaru.standroid.R
 import com.kusamaru.standroid.service.startCacheService
 import kotlinx.coroutines.launch
 
-
 /**
  * メニュー画面のUI。長いからまとめた。
  *
@@ -250,6 +249,13 @@ fun NicoVideoMenuScreen(parentFragment: Fragment) {
                     VolumeMenu(
                         volume = volume.value,
                         volumeChange = { viewModel.volumeControlLiveData.postValue(it) }
+                    )
+                }
+                6 -> {
+                    val speed = viewModel.playbackSpeedControlLiveData.observeAsState(initial = 1f)
+                    NicoVideoPlaySpeedMenu(
+                        currentSpeed = speed.value,
+                        onSpeedChange = { viewModel.playbackSpeedControlLiveData.postValue(it) }
                     )
                 }
             }

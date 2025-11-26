@@ -313,6 +313,11 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
         viewModel.volumeControlLiveData.observe(viewLifecycleOwner) { volume ->
             exoPlayer.volume = volume
         }
+        // 再生速度変更
+        viewModel.playbackSpeedControlLiveData.observe(viewLifecycleOwner) { speed ->
+            exoPlayer.setPlaybackSpeed(speed)
+            nicovideoPlayerUIBinding.includeNicovideoPlayerCommentCanvas.changePlaybackSpeed(speed)
+        }
     }
 
     /** ExoPlayerで動画を再生する */

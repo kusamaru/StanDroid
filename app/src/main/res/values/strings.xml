@@ -518,4 +518,5 @@ Sorry to trouble you, but please update the video information.\n
     <string name="add_ng_comment_dialog_title">Add NG Comment</string>
     <string name="add_ng_comment_dialog_message">Comment</string>
     <string name="setting_add_ng">Add NG</string>
+    <string name="playback_speed">Playback Speed</string>
 </resources>

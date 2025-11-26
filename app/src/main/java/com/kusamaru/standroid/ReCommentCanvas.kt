@@ -97,7 +97,13 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
     private var tmpPosition = 0L
 
     /** コメント表示時間 */
-    private val commentDrawTime = prefSetting.getString("setting_comment_canvas_show_time", "5")?.toInt() ?: 5
+    private val _initialCommentDrawTime = prefSetting.getString("setting_comment_canvas_show_time", "5")?.toInt() ?: 5
+
+    /** 再生速度の補正が乗った後のコメント表示時間。都合上floatになる */
+    private var commentDrawTime = _initialCommentDrawTime.toFloat()
+
+    /** 現在の再生速度 */
+    private var playbackSpeed = 1.0f
 
     /** 1秒で何回画面を更新するか。多分60FPSがデフォ */
     private val fps by lazy {
@@ -153,8 +159,10 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
             if (isPlaying) {
                 // 画面外のコメントは描画しない
                 for (reDrawCommentData in drawNakaCommentList.toList()
-                    .filter { reDrawCommentData -> reDrawCommentData?.rect?.right ?: 0 > -reDrawCommentData.measure }) {
-                    if (reDrawCommentData != null && reDrawCommentData.rect != null) {
+                    .filter { reDrawCommentData ->
+                        (reDrawCommentData.rect?.right ?: 0) > -reDrawCommentData.measure
+                    }) {
+                    if (reDrawCommentData.rect != null) {
                         reDrawCommentData.rect.left -= reDrawCommentData.commentUpdateMsMoveSize
                         reDrawCommentData.rect.right -= reDrawCommentData.commentUpdateMsMoveSize
                         // なお画面外は消す
@@ -287,6 +295,17 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
     }
 
     /**
+     * 再生速度を変えたときに呼びます。
+     * @param speed 再生速度。0.0fより大きくあれ
+     */
+    fun changePlaybackSpeed(speed: Float) {
+        playbackSpeed = speed
+        commentDrawTime = _initialCommentDrawTime * (1f / playbackSpeed)
+        // seekComment()を呼び出してコメントを再描画する
+        seekComment()
+    }
+
+    /**
      * コメントシークした時に描画できるように
      * */
     fun seekComment() {
@@ -294,8 +313,9 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
             drawNakaCommentList.clear()
             drawUeCommentList.clear()
             drawShitaCommentList.clear()
+
             // コメント表示時間さかのぼって描画
-            repeat(commentDrawTime) { sec ->
+            repeat(commentDrawTime.roundToInt()) { sec ->
                 val currentPosSec = currentPos / 1000
                 val drawList = rawCommentList.filter { commentJSONParse ->
                     (commentJSONParse.vpos.toLong() / 100L) == (currentPosSec - sec)
@@ -317,7 +337,7 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
                         // 1秒で動かす大きさ
                         val moveSize = (widthMinusCommentMeasure / commentDrawTime)
                         // コメント登録。
-                        drawComment(commentJSON, currentPos + (sec * 1000), (sec * moveSize))
+                        drawComment(commentJSON, currentPos + (sec * 1000), (sec * moveSize).roundToInt())
                     }
                 }
             }
@@ -361,7 +381,7 @@ class ReCommentCanvas(ctx: Context, attributeSet: AttributeSet?) : View(ctx, att
 
         // 上コメ
         for (reDrawCommentData in drawUeCommentList.toList()) {
-            if (reDrawCommentData != null && reDrawCommentData.rect != null) {
+            if (reDrawCommentData.rect != null) {
                 setCommandPaint(reDrawCommentData.colorCode, reDrawCommentData.fontSize)
                 canvas.drawText(
                     reDrawCommentData.comment,
