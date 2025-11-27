@@ -86,10 +86,11 @@ class NicoVideoMenuFragment : Fragment() {
 
         // そもそもキャッシュ取得できない（アニメ公式はhls形式でAES-128で暗号化されてるので取れない）動画はキャッシュボタン非表示
         if (::jsonObject.isInitialized) {
-            if (NicoVideoHTML().isEncryption(jsonObject.toString())) {
+            // TODO: キャッシュ関係は段階的に廃止する
+            // if (NicoVideoHTML().isEncryption(jsonObject.toString())) {
                 viewBinding.fragmentNicovideoMenuGetCacheButton.visibility = View.GONE
                 viewBinding.fragmentNicovideoMenuGetCacheEcoButton.visibility = View.GONE
-            }
+            // }
         }
 
         // ログインしないモード用
@@ -272,10 +273,12 @@ class NicoVideoMenuFragment : Fragment() {
                 Configuration.ORIENTATION_PORTRAIT -> {
                     //縦画面
                     activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    viewModel.forcedRotationState = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 }
                 Configuration.ORIENTATION_LANDSCAPE -> {
                     //横画面
                     activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    viewModel.forcedRotationState = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 }
             }
         }

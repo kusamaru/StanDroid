@@ -590,7 +590,21 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
     /** フルスクリーン解除 */
     private fun setCloseFullScreen() {
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        // ここでrequestedOrientationを普通に書き換えると、縦横強制回転からフルスクリーン移行→解除をしたときに縦画面に戻ってしまう。
+        // 解決するためにNicoVideoViewModelにフラグを置いてそれを見るようにする。
+        // NicoVideoMenuFragment:268~の実装からわかるように、LiveDataにActivityInfo.SCREEN_ORIENTATION_LANDSCAPEが入ってたら横画面強制になってるはず。
+        // requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        when (viewModel.forcedRotationState) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> {
+                // 横画面を強制したいのでLandscapeにしてみる
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+            else -> {
+                // それ以外の場合は端末の指定に従う(？)
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            }
+        }
+
         viewModel.isFullScreenMode = false
         viewBinding.fragmentNicovideoControlInclude.playerControlFullscreen.setImageDrawable(requireContext().getDrawable(R.drawable.ic_fullscreen_black_24dp))
         // コメント一覧表示

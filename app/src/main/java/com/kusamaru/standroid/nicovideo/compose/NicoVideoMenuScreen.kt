@@ -91,10 +91,12 @@ fun NicoVideoMenuScreen(parentFragment: Fragment) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 //縦画面
                 parentFragment.requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                viewModel.forcedRotationState = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
                 //横画面
                 parentFragment.requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                viewModel.forcedRotationState = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             }
         }
     }

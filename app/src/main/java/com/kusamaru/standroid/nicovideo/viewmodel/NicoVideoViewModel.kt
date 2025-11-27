@@ -1,6 +1,7 @@
 package com.kusamaru.standroid.nicovideo.viewmodel
 
 import android.app.Application
+import android.content.pm.ActivityInfo
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -204,6 +205,12 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
 
     /** 再生速度の制御に使う。< 0.0fらしい */
     val playbackSpeedControlLiveData = MutableLiveData<Float>()
+
+    /**
+     * 強制画面回転のStateを保持する。
+     * ActivityInfo.SCREEN_ORIENTATION_LANDSCAPEとかを入れて使う
+     * */
+    var forcedRotationState = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
     /** [isNotPlayVideoMode]がtrueのときにコルーチンを使うのでそれ */
     private val notVideoPlayModeCoroutineContext = Job()

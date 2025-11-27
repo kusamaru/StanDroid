@@ -100,7 +100,7 @@ fun NicoVideoPlaySpeedMenu(
 
     Column(modifier = Modifier.padding(10.dp)) {
         Text(
-            text = "再生速度: x$currentSpeed"
+            text = "{$currentSpeed}"
         )
         Slider(
             value = currentIndex.toFloat(),

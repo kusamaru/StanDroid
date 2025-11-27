@@ -617,7 +617,7 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
         lifecycleScope.launch {
             viewModel.isFullScreenMode = false
             // コメント / 動画情報Fragmentを表示にする
-            toDefaultScreen()
+            toDefaultScreen(viewModel.forcedRotationState)
         }
     }
 

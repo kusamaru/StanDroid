@@ -508,6 +508,12 @@
             android:icon="@drawable/ic_policy_black"
             android:title="実験的" />
 
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="false"-->
+<!--            android:key="dev_setting_strict_fullscreen"-->
+<!--            android:summary="動画の再生中、"-->
+<!--            android:title="全画面表示を強制する" />-->
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="dev_setting_save_crash_report"

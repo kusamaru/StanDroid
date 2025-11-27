@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat
 class SettingsFragment : SearchPreferenceFragment() {
 
     /** プライバシーポリシー */
-    private val PRIVACY_POLICY_URL = "https://github.com/takusan23/TatimiDroid/blob/master/privacy_policy.md"
+    private val PRIVACY_POLICY_URL = "https://github.com/kusamaru/StanDroid/blob/main/privacy_policy.md"
 
     /** データベースバックアップで使う */
     private val roomDBExporter = RoomDBExporter(this)

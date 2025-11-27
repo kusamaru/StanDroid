@@ -441,6 +441,7 @@ class PlayerParentFrameLayout(context: Context, attributeSet: AttributeSet) : Fr
         // コールバックを送信
         fullscreenListenerList.forEach { function -> function.invoke(isFullScreenMode) }
         playerView?.doOnPreDraw {
+            println("toFullScreen called!")
             playerView?.updateLayoutParams<LinearLayout.LayoutParams> {
                 // 幅を治す
                 width = DisplaySizeTool.getDisplayWidth(context)
@@ -464,17 +465,20 @@ class PlayerParentFrameLayout(context: Context, attributeSet: AttributeSet) : Fr
         isFullScreenMode = false
         // コールバックを送信
         fullscreenListenerList.forEach { function -> function.invoke(isFullScreenMode) }
-        playerView!!.updateLayoutParams<LinearLayout.LayoutParams> {
-            // 幅を治す
-            width = defaultPlayerWidth
-            height = (width / 16) * 9
-            // 横画面時はプレイヤーを真ん中にしたい。ので上方向のマージンを設定して真ん中にする
-            if (isLandScape()) {
-                val maxTopMargin = (DisplaySizeTool.getDisplayHeight(context) - height) / 2
-                topMargin = maxTopMargin
+        playerView?.doOnPreDraw {
+            println("toDefaultScreen called!")
+            playerView?.updateLayoutParams<LinearLayout.LayoutParams> {
+                // 幅を治す
+                width = defaultPlayerWidth
+                height = (width / 16) * 9
+                // 横画面時はプレイヤーを真ん中にしたい。ので上方向のマージンを設定して真ん中にする
+                if (isLandScape()) {
+                    val maxTopMargin = (DisplaySizeTool.getDisplayHeight(context) - height) / 2
+                    topMargin = maxTopMargin
+                }
+                // 引数の関数を呼ぶ
+                callback?.invoke()
             }
-            // 引数の関数を呼ぶ
-            callback?.invoke()
         }
     }
 
@@ -508,7 +512,7 @@ class PlayerParentFrameLayout(context: Context, attributeSet: AttributeSet) : Fr
         isMoveAnimating = true
 
         /** 開始時の進行度。途中で指を離した場合はそこからアニメーションを始める */
-        val startProgress = (playerViewParentViewGroup!!.translationY + miniPlayerHeight) / parentViewGroupHeight
+        val startProgress = ((playerViewParentViewGroup?.translationY ?: 0.0f) + miniPlayerHeight) / parentViewGroupHeight
 
         /** 第一引数から第２引数までの値を払い出してくれるやつ。 */
         ValueAnimator.ofFloat(startProgress, 1f).apply {

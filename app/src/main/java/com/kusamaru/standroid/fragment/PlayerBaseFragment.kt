@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.core.view.doOnLayout
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -232,7 +233,7 @@ open class PlayerBaseFragment : Fragment(), MainActivityPlayerFragmentInterface 
      * コルーチンになりました。これでサイズ変更が完了するまで一時停止されます
      * */
     suspend fun toFullScreen() = suspendCoroutine<Unit> { suspend ->
-        viewBinding.root.doOnNextLayout {
+        viewBinding.root.doOnLayout {
             // 横画面にする。SENSOR版なので右に倒しても左に倒してもおｋだよ？
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             // ステータスバー隠す
@@ -248,14 +249,28 @@ open class PlayerBaseFragment : Fragment(), MainActivityPlayerFragmentInterface 
      * ステータスバーを表示、画面はユーザーの設定に従います
      *
      * コルーチンになりました。これでサイズ変更が完了するまで一時停止されます
+     *
+     * @param forcedRotationState [ActivityInfo]を渡す。NicoVideoViewModel.forcedRotationState渡す感じで
      * */
-    suspend fun toDefaultScreen() = suspendCoroutine<Unit> { suspend ->
-        // 既定値へ戻す
-        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        // ステータスバー表示
-        SystemBarVisibility.showSystemBar(requireActivity().window)
-        // BottomSheet側も全画面を無効にする
-        playerFrameLayout.toDefaultScreen { suspend.resume(Unit) }
+    suspend fun toDefaultScreen(forcedRotationState: Int = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) = suspendCoroutine<Unit> { suspend ->
+        viewBinding.root.doOnLayout {
+            // requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            // forcedRotationStateで場合分け。LANDSCAPEを維持したい感じならそのようにする
+            when (forcedRotationState) {
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE -> {
+                    // 横画面を強制したいのでLandscapeにしてみる
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                }
+                else -> {
+                    // それ以外の場合は端末の指定に従う(？)
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                }
+            }
+            // ステータスバー表示
+            SystemBarVisibility.showSystemBar(requireActivity().window)
+            // BottomSheet側も全画面を無効にする
+            playerFrameLayout.toDefaultScreen { suspend.resume(Unit) }
+        }
     }
 
     /** 終了時 */
