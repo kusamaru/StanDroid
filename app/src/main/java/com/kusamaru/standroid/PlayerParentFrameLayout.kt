@@ -441,7 +441,7 @@ class PlayerParentFrameLayout(context: Context, attributeSet: AttributeSet) : Fr
         // コールバックを送信
         fullscreenListenerList.forEach { function -> function.invoke(isFullScreenMode) }
         playerView?.doOnPreDraw {
-            println("toFullScreen called!")
+            // println("toFullScreen called!")
             playerView?.updateLayoutParams<LinearLayout.LayoutParams> {
                 // 幅を治す
                 width = DisplaySizeTool.getDisplayWidth(context)
@@ -466,7 +466,7 @@ class PlayerParentFrameLayout(context: Context, attributeSet: AttributeSet) : Fr
         // コールバックを送信
         fullscreenListenerList.forEach { function -> function.invoke(isFullScreenMode) }
         playerView?.doOnPreDraw {
-            println("toDefaultScreen called!")
+            // println("toDefaultScreen called!")
             playerView?.updateLayoutParams<LinearLayout.LayoutParams> {
                 // 幅を治す
                 width = defaultPlayerWidth
