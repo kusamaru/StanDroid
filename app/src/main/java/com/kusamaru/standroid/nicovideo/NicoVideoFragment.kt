@@ -61,6 +61,7 @@ import com.kusamaru.standroid.tool.*
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.*
+import kotlin.lazy
 import kotlin.math.roundToInt
 
 @UnstableApi /**
@@ -76,7 +77,7 @@ import kotlin.math.roundToInt
  * */
 class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
-    lateinit var prefSetting: SharedPreferences
+    private val prefSetting by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
     lateinit var darkModeSupport: DarkModeSupport
 
     // ViewPager
@@ -102,7 +103,7 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
         // 強制的にインターネットを利用して取得
         val useInternet = arguments?.getBoolean("internet") ?: false
         // 全画面で開始
-        val isStartFullScreen = arguments?.getBoolean("fullscreen") ?: false
+        val isStartFullScreen = arguments?.getBoolean("fullscreen") == true || prefSetting.getBoolean("dev_setting_default_fullscreen", false)
         // 連続再生
         val videoList = arguments?.getSerializable("video_list") as? ArrayList<NicoVideoData>
         // 開始位置
@@ -136,8 +137,6 @@ class NicoVideoFragment : Fragment(), MainActivityPlayerFragmentInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prefSetting = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
         // ふぉんと
         font = CustomFont(context)
         // CommentCanvasにも適用するかどうか

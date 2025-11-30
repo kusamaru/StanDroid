@@ -97,7 +97,7 @@ class JCNicoVideoFragment : PlayerBaseFragment() {
         // 強制的にインターネットを利用して取得
         val useInternet = arguments?.getBoolean("internet") ?: false
         // 全画面で開始
-        val isStartFullScreen = arguments?.getBoolean("fullscreen") ?: false
+        val isStartFullScreen = arguments?.getBoolean("fullscreen") == true || prefSetting.getBoolean("dev_setting_default_fullscreen", false)
         // 連続再生
         val videoList = arguments?.getSerializable("video_list") as? ArrayList<NicoVideoData>
         // 開始位置
