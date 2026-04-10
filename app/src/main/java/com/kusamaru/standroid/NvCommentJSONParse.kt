@@ -29,6 +29,7 @@ data class NvCommentJSONParse(
     val nicoruId: String?, // とりあえず決め打ちStringにしたけどこれ何？
     val source: String,
     val isMyPost: Boolean,
+    val isFeatured: Boolean, // これマジで何？？？
 )
 
 /**
