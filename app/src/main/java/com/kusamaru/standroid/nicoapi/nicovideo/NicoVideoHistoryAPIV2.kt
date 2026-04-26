@@ -12,25 +12,40 @@ import java.text.SimpleDateFormat
 /**
  * 履歴取得API
  * */
-class NicoVideoHistoryAPI {
+class NicoVideoHistoryAPIV2 {
 
     /** シングルトンなOkHttpClient */
     private val okHttpClient = OkHttpClientSingleton.okHttpClient
 
+    /** cursorを握る */
+    private var nextCursor: String? = null
+
     /**
      * 履歴を取得する。
      * @param userSession ユーザーセッション
+     * @param needNext cursorの続きを読むならtrue cursorが存在しない場合は無視されます
      * @return Response
      * */
-    suspend fun getHistory(userSession: String) = withContext(Dispatchers.IO) {
-        val request = Request.Builder().apply {
-            url("https://nvapi.nicovideo.jp/v2/users/me/watch/history?selectContentType=long&limit=100") // 最大200件？
-            header("Cookie", "user_session=${userSession}")
-            header("x-frontend-id", "3")
-            header("User-Agent", "Stan-Droid;@kusamaru_jp")
-            get()
-        }.build()
-        okHttpClient.newCall(request).execute()
+    suspend fun getHistory(userSession: String, needNext: Boolean) = withContext(Dispatchers.IO) {
+        if (nextCursor != null && needNext) {
+            val request = Request.Builder().apply {
+                url("https://nvapi.nicovideo.jp/v2/users/me/watch/history?selectContentType=long&limit=20&cursor=$nextCursor")
+                header("Cookie", "user_session=${userSession}")
+                header("x-frontend-id", "3")
+                header("User-Agent", "Stan-Droid;@kusamaru_jp")
+                get()
+            }.build()
+            okHttpClient.newCall(request).execute()
+        } else {
+            val request = Request.Builder().apply {
+                url("https://nvapi.nicovideo.jp/v2/users/me/watch/history?selectContentType=long&limit=20")
+                header("Cookie", "user_session=${userSession}")
+                header("x-frontend-id", "3")
+                header("User-Agent", "Stan-Droid;@kusamaru_jp")
+                get()
+            }.build()
+            okHttpClient.newCall(request).execute()
+        }
     }
 
     /**
@@ -41,7 +56,11 @@ class NicoVideoHistoryAPI {
     suspend fun parseHistoryJSONParse(json: String?) = withContext(Dispatchers.Default) {
         val list = arrayListOf<NicoVideoData>()
         val jsonObject = JSONObject(json)
-        val items = jsonObject.getJSONObject("data").getJSONArray("items")
+
+        val data = jsonObject.getJSONObject("data")
+        nextCursor = data.getString("nextCursor")
+
+        val items = data.getJSONArray("items")
         for (i in 0 until items.length()) {
             val video = items.getJSONObject(i).getJSONObject("video")
             val title = video.getString("title")

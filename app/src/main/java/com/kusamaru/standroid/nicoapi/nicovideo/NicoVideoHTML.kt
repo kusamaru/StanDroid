@@ -599,7 +599,8 @@ class NicoVideoHTML {
     enum class CommentForkType(val _i: Int, val str: String, val typeId: Int) {
         OWNER(0, "owner", 1),
         MAIN(1, "main", 0),
-        EASY(2, "easy", 2);
+        EASY(2, "easy", 2),
+        AI(3, "ai", 3); // AIコメント
 
         companion object {
             fun fromInt(value: Int) = CommentForkType.values().first { it._i == value }
@@ -932,6 +933,7 @@ class NicoVideoHTML {
      * @return [NicoTagItemData]の配列
      * */
     fun parseTagDataList(jsonObject: JSONObject): ArrayList<NicoTagItemData> {
+        println(jsonObject.getJSONObject("tag").getJSONArray("items"))
         val tagDataClass = arrayListOf<NicoTagItemData>()
         val tagArray = jsonObject.getJSONObject("tag").getJSONArray("items")
         for (i in 0 until tagArray.length()) {
