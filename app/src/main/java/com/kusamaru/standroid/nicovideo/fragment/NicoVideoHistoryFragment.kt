@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kusamaru.standroid.MainActivity
 import com.kusamaru.standroid.nicoapi.login.NicoLogin
@@ -18,6 +19,7 @@ import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoHistoryAPI
 import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.FragmentNicovideoHistoryBinding
+import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoHistoryAPIV2
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +36,9 @@ class NicoVideoHistoryFragment : Fragment() {
 
     // API
     var userSession = ""
-    val nicoVideoHistoryAPI = NicoVideoHistoryAPI()
+    val nicoVideoHistoryAPI = NicoVideoHistoryAPIV2()
+    var isLoading = false
+
 
     /** findViewById駆逐 */
     private val viewBinding by lazy { FragmentNicovideoHistoryBinding.inflate(layoutInflater) }
@@ -79,7 +83,7 @@ class NicoVideoHistoryFragment : Fragment() {
             showToast("${getString(R.string.error)}\n${throwable}")
         }
         lifecycleScope.launch(errorHandler) {
-            val response = nicoVideoHistoryAPI.getHistory(userSession)
+            val response = nicoVideoHistoryAPI.getHistory(userSession, false)
             when {
                 response.isSuccessful -> {
                     withContext(Dispatchers.Default) {
@@ -109,6 +113,42 @@ class NicoVideoHistoryFragment : Fragment() {
         }
     }
 
+    private fun getHistoryNext() {
+        isLoading = true
+        val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            showToast("${getString(R.string.error)}\n${throwable}")
+        }
+        lifecycleScope.launch(errorHandler) {
+            val response = nicoVideoHistoryAPI.getHistory(userSession, true)
+            when {
+                response.isSuccessful -> {
+                    withContext(Dispatchers.Default) {
+                        nicoVideoHistoryAPI.parseHistoryJSONParse(response.body?.toString()).forEach {
+                            recyclerViewList.add(it)
+                        }
+                    }
+                    nicoVideoListAdapter.notifyDataSetChanged()
+                }
+                response.code == 401 -> {
+                    // ログイン切れ。再ログイン勧める
+                    Snackbar.make(viewBinding.fragmentNicovideoHistoryRecyclerView, R.string.login_disable_message, Snackbar.LENGTH_INDEFINITE).apply {
+                        anchorView = (activity as MainActivity).viewBinding.mainActivityBottomNavigationView
+                        setAction(R.string.login) {
+                            // ログインする
+                            lifecycleScope.launch {
+                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                getHistory()
+                            }
+                        }
+                        show()
+                    }
+                }
+                else -> showToast("${getString(R.string.error)}\n${response.code}")
+            }
+        }
+        isLoading = false
+    }
+
     // RecyclerView初期化
     fun initRecyclerView() {
         viewBinding.fragmentNicovideoHistoryRecyclerView.apply {
@@ -116,6 +156,23 @@ class NicoVideoHistoryFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             nicoVideoListAdapter = NicoVideoListAdapter(recyclerViewList)
             adapter = nicoVideoListAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    if (dy <= 0) return
+
+                    val totalItemCount = layoutManager?.itemCount ?: 0
+                    val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+
+                    val threshold = 5
+
+                    if (!isLoading && nicoVideoHistoryAPI.nextCursor != null && lastVisibleItemPosition + threshold >= totalItemCount) {
+                        getHistoryNext()
+                    }
+                }
+            })
         }
     }
 

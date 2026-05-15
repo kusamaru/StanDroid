@@ -18,7 +18,7 @@ class NicoVideoHistoryAPIV2 {
     private val okHttpClient = OkHttpClientSingleton.okHttpClient
 
     /** cursorを握る */
-    private var nextCursor: String? = null
+    var nextCursor: String? = null
 
     /**
      * 履歴を取得する。
