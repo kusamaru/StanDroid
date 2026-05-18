@@ -80,10 +80,15 @@ class NicoVideoHistoryFragment : Fragment() {
         viewBinding.fragmentNicovideoHistorySwipeToRefresh.isRefreshing = true
         // エラー時
         val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            println({throwable})
             showToast("${getString(R.string.error)}\n${throwable}")
         }
         lifecycleScope.launch(errorHandler) {
             val response = nicoVideoHistoryAPI.getHistory(userSession, false)
+            if (response == null) {
+                showToast("${getString(R.string.end_scroll)}")
+                return@launch
+            }
             when {
                 response.isSuccessful -> {
                     withContext(Dispatchers.Default) {
@@ -116,18 +121,25 @@ class NicoVideoHistoryFragment : Fragment() {
     private fun getHistoryNext() {
         isLoading = true
         val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            println(throwable)
             showToast("${getString(R.string.error)}\n${throwable}")
         }
         lifecycleScope.launch(errorHandler) {
             val response = nicoVideoHistoryAPI.getHistory(userSession, true)
+            if (response == null || response.code == 400) {
+                showToast("${getString(R.string.end_scroll)}")
+                return@launch
+            }
+
             when {
                 response.isSuccessful -> {
                     withContext(Dispatchers.Default) {
-                        nicoVideoHistoryAPI.parseHistoryJSONParse(response.body?.toString()).forEach {
+                        nicoVideoHistoryAPI.parseHistoryJSONParse(response.body?.string()).forEach {
                             recyclerViewList.add(it)
                         }
                     }
                     nicoVideoListAdapter.notifyDataSetChanged()
+                    isLoading = false
                 }
                 response.code == 401 -> {
                     // ログイン切れ。再ログイン勧める
@@ -142,11 +154,14 @@ class NicoVideoHistoryFragment : Fragment() {
                         }
                         show()
                     }
+                    isLoading = false
                 }
-                else -> showToast("${getString(R.string.error)}\n${response.code}")
+                else -> {
+                    showToast("${getString(R.string.error)}\n${response.code}")
+                    isLoading = false
+                }
             }
         }
-        isLoading = false
     }
 
     // RecyclerView初期化
@@ -161,7 +176,7 @@ class NicoVideoHistoryFragment : Fragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                    if (dy <= 0) return
+                    if (dy <= 0 || isLoading) return
 
                     val totalItemCount = layoutManager?.itemCount ?: 0
                     val lastVisibleItemPosition = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
@@ -169,6 +184,7 @@ class NicoVideoHistoryFragment : Fragment() {
                     val threshold = 5
 
                     if (!isLoading && nicoVideoHistoryAPI.nextCursor != null && lastVisibleItemPosition + threshold >= totalItemCount) {
+                        isLoading = true
                         getHistoryNext()
                     }
                 }

@@ -18,7 +18,7 @@ class NicoVideoHistoryAPIV2 {
     private val okHttpClient = OkHttpClientSingleton.okHttpClient
 
     /** cursorを握る */
-    var nextCursor: String? = null
+    var nextCursor: String? = ""
 
     /**
      * 履歴を取得する。
@@ -27,9 +27,14 @@ class NicoVideoHistoryAPIV2 {
      * @return Response
      * */
     suspend fun getHistory(userSession: String, needNext: Boolean) = withContext(Dispatchers.IO) {
-        if (nextCursor != null && needNext) {
+        if (nextCursor == null) {
+            // 終わりだよ終わり
+            return@withContext null
+        }
+
+        if (nextCursor != "" && needNext) {
             val request = Request.Builder().apply {
-                url("https://nvapi.nicovideo.jp/v2/users/me/watch/history?selectContentType=long&limit=20&cursor=$nextCursor")
+                url("https://nvapi.nicovideo.jp/v2/users/me/watch/history?selectContentType=long&limit=15&cursor=$nextCursor")
                 header("Cookie", "user_session=${userSession}")
                 header("x-frontend-id", "3")
                 header("User-Agent", "Stan-Droid;@kusamaru_jp")
