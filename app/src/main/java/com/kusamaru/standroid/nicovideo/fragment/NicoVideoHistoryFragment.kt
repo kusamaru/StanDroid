@@ -20,6 +20,7 @@ import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.FragmentNicovideoHistoryBinding
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoHistoryAPIV2
+import com.kusamaru.standroid.nicovideo.adapter.NicoVideoHistoryListAdapter
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,8 +32,8 @@ class NicoVideoHistoryFragment : Fragment() {
     lateinit var prefSetting: SharedPreferences
 
     // RecyclerView
-    val recyclerViewList = arrayListOf<NicoVideoData>()
-    lateinit var nicoVideoListAdapter: NicoVideoListAdapter
+    val recyclerViewList = linkedSetOf<NicoVideoData>()
+    lateinit var nicoVideoListAdapter: NicoVideoHistoryListAdapter
 
     // API
     var userSession = ""
@@ -169,7 +170,7 @@ class NicoVideoHistoryFragment : Fragment() {
         viewBinding.fragmentNicovideoHistoryRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            nicoVideoListAdapter = NicoVideoListAdapter(recyclerViewList)
+            nicoVideoListAdapter = NicoVideoHistoryListAdapter(recyclerViewList)
             adapter = nicoVideoListAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
