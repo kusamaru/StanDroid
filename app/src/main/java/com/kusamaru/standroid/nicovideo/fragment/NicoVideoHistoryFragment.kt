@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.LinkedHashSet
 
 /** ニコ動履歴Fragment */
 class NicoVideoHistoryFragment : Fragment() {
@@ -62,7 +63,7 @@ class NicoVideoHistoryFragment : Fragment() {
             getHistory()
         } else {
             // 画面回転
-            (savedInstanceState.getSerializable("list") as ArrayList<NicoVideoData>).forEach {
+            (savedInstanceState.getSerializable("list") as LinkedHashSet<NicoVideoData>).forEach {
                 recyclerViewList.add(it)
             }
             nicoVideoListAdapter.notifyDataSetChanged()
