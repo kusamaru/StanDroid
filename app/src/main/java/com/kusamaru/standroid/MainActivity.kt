@@ -30,6 +30,8 @@ import com.kusamaru.standroid.nicovideo.NicoVideoSelectFragment
 import com.kusamaru.standroid.nicovideo.compose.JCNicoVideoCommentOnlyFragment
 import com.kusamaru.standroid.nicovideo.compose.JCNicoVideoFragment
 import com.kusamaru.standroid.nicovideo.fragment.NicoVideoCacheFragment
+import com.kusamaru.standroid.service.NicoVideoPlayService
+import com.kusamaru.standroid.service.NicoVideoPlayServiceHandoff
 import com.kusamaru.standroid.service.startLivePlayService
 import com.kusamaru.standroid.service.startVideoPlayService
 import com.kusamaru.standroid.setting.SettingsFragment
@@ -189,6 +191,59 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        restoreBackgroundVideoPlayback()
+    }
+
+    private fun restoreBackgroundVideoPlayback() {
+        val handoffState = NicoVideoPlayServiceHandoff.state ?: return
+        NicoVideoPlayServiceHandoff.clear()
+        stopService(Intent(this, NicoVideoPlayService::class.java))
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.main_activity_fragment_layout)
+        val restoredToExistingFragment = when (currentFragment) {
+            is NicoVideoFragment -> restoreNicoVideoFragmentPlayback(
+                currentVideoId = currentFragment.viewModel.playingVideoId.value,
+                handoffVideoId = handoffState.videoId,
+                positionMs = handoffState.positionMs,
+                seek = { currentFragment.viewModel.playerSetSeekMs.value = it },
+                play = { currentFragment.viewModel.playerIsPlaying.value = true }
+            )
+            is JCNicoVideoFragment -> restoreNicoVideoFragmentPlayback(
+                currentVideoId = currentFragment.viewModel.playingVideoId.value,
+                handoffVideoId = handoffState.videoId,
+                positionMs = handoffState.positionMs,
+                seek = { currentFragment.viewModel.playerSetSeekMs.value = it },
+                play = { currentFragment.viewModel.playerIsPlaying.value = true }
+            )
+            else -> false
+        }
+
+        if (!restoredToExistingFragment) {
+            val startPos = (handoffState.positionMs / 1000L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            setNicovideoFragment(
+                videoId = handoffState.videoId,
+                isCache = handoffState.isCache,
+                _videoList = handoffState.playlist,
+                startPos = startPos
+            )
+        }
+    }
+
+    private fun restoreNicoVideoFragmentPlayback(
+        currentVideoId: String?,
+        handoffVideoId: String,
+        positionMs: Long,
+        seek: (Long) -> Unit,
+        play: () -> Unit
+    ): Boolean {
+        if (currentVideoId != handoffVideoId) return false
+        seek(positionMs)
+        play()
+        return true
     }
 
     /** クラッシュレポートを回収する */
@@ -556,6 +611,9 @@ class MainActivity : AppCompatActivity() {
                 // 動画
                 is NicoVideoFragment -> {
                     viewModel.nicoVideoData.value?.apply {
+                        if (isLeaveAppPopup || isLeaveAppBackground) {
+                            viewModel.playerIsPlaying.value = false
+                        }
                         when {
                             isLeaveAppPopup -> startVideoPlayService(context = context, mode = "popup", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
                             isLeaveAppBackground -> startVideoPlayService(context = context, mode = "background", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
@@ -564,6 +622,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 is JCNicoVideoFragment -> {
                     viewModel.nicoVideoData.value?.apply {
+                        if (isLeaveAppPopup || isLeaveAppBackground) {
+                            viewModel.playerIsPlaying.value = false
+                        }
                         when {
                             isLeaveAppPopup -> startVideoPlayService(context = context, mode = "popup", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
                             isLeaveAppBackground -> startVideoPlayService(context = context, mode = "background", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
