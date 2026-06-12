@@ -80,6 +80,9 @@ class NicoVideoPlayService : Service() {
     private lateinit var windowManager: WindowManager
     private lateinit var broadcastReceiver: BroadcastReceiver
     private lateinit var mediaSessionCompat: MediaSessionCompat
+    private var isBroadcastReceiverRegistered = false
+    private var isMediaSessionActive = false
+    private var playbackGeneration = 0
 
     // 再生するやつ
     private lateinit var exoPlayer: ExoPlayer
@@ -156,6 +159,9 @@ class NicoVideoPlayService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        playbackGeneration++
+        val generation = playbackGeneration
+        resetPlaybackStateForRestart()
         // 受け取り
         playMode = intent?.getStringExtra("mode") ?: "popup"
         val videoId = intent?.getStringExtra("video_id") ?: ""
@@ -166,6 +172,7 @@ class NicoVideoPlayService : Service() {
         startAudioQuality = intent?.getStringExtra("audio_quality")
 
         // 連続再生？
+        playlist.clear()
         if (intent?.getSerializableExtra("playlist") != null) {
             playlist.addAll(intent.getSerializableExtra("playlist") as ArrayList<NicoVideoData>)
         }
@@ -185,24 +192,56 @@ class NicoVideoPlayService : Service() {
             val playlistStartCanUseCache = playlist[currentPlaylistPos].isCache // キャッシュ再生が使えるか
             if (playlistStartCanUseCache) {
                 // キャッシュ再生
-                cachePlay(playlistStartId)
+                cachePlay(playlistStartId, generation)
             } else {
                 // データ取得など
-                coroutine(playlistStartId)
+                coroutine(playlistStartId, generation)
             }
         } else {
             // 通常
             if (isCache) {
                 // キャッシュ再生
-                cachePlay(videoId)
+                cachePlay(videoId, generation)
             } else {
                 // データ取得など
-                coroutine(videoId)
+                coroutine(videoId, generation)
             }
         }
 
         initBroadcast()
         return START_NOT_STICKY
+    }
+
+    /** Restart-safe cleanup before accepting a new playback intent. */
+    private fun resetPlaybackStateForRestart() {
+        if (::exoPlayer.isInitialized) {
+            exoPlayer.stop()
+            exoPlayer.clearMediaItems()
+            exoPlayer.release()
+        }
+        if (isMediaSessionActive) {
+            mediaSessionCompat.apply {
+                isActive = false
+                setPlaybackState(PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_NONE, 0L, 1F).build())
+                release()
+            }
+            isMediaSessionActive = false
+        }
+        if (viewBinding != null) {
+            windowManager.removeView(viewBinding!!.root)
+            viewBinding = null
+            commentCanvas = null
+        }
+        if (isBroadcastReceiverRegistered) {
+            unregisterReceiver(broadcastReceiver)
+            isBroadcastReceiverRegistered = false
+        }
+        seekTimer.cancel()
+        seekTimer = Timer()
+        rawVideoCommentList.clear()
+        currentVideoCommentList.clear()
+        drewedList.clear()
+        nicoVideoHTML.destroy()
     }
 
     /** ExoPlayerを用意する */
@@ -356,7 +395,7 @@ class NicoVideoPlayService : Service() {
      * インターネットから動画を取得して再生する
      * @param videoId 動画ID
      * */
-    private fun coroutine(videoId: String) {
+    private fun coroutine(videoId: String, generation: Int = playbackGeneration) {
         isCurrentVideoCache = false
         currentVideoId = videoId
 
@@ -433,7 +472,13 @@ class NicoVideoPlayService : Service() {
             }
             // タイトル
             currentVideoTitle = jsonObject.getJSONObject("video").getString("title")
+            if (generation != playbackGeneration) {
+                return@launch
+            }
             withContext(Dispatchers.Main) {
+                if (generation != playbackGeneration) {
+                    return@withContext
+                }
                 // ExoPlayer
                 playExoPlayer(false, contentUrl, nicoHistory, domandCookie)
                 if (isPopupPlay()) {
@@ -491,7 +536,7 @@ class NicoVideoPlayService : Service() {
      * キャッシュを利用して動画を再生
      * @param videoId 動画ID
      * */
-    private fun cachePlay(videoId: String) {
+    private fun cachePlay(videoId: String, generation: Int = playbackGeneration) {
         val nicoVideoCache = NicoVideoCache(this)
         isCurrentVideoCache = true
         currentVideoId = videoId
@@ -519,7 +564,13 @@ class NicoVideoPlayService : Service() {
                     // コメント取得
                     val commentJSON = nicoVideoCache.getCacheFolderVideoCommentText(videoId)
                     currentVideoCommentList = ArrayList(nicoVideoHTML.parseCommentJSON(commentJSON, videoId))
+                    if (generation != playbackGeneration) {
+                        return@launch
+                    }
                     withContext(Dispatchers.Main) {
+                        if (generation != playbackGeneration) {
+                            return@withContext
+                        }
                         // ExoPlayer
                         playExoPlayer(true, contentUrl, "", null)
                         if (isPopupPlay()) {
@@ -960,6 +1011,7 @@ class NicoVideoPlayService : Service() {
             isActive = true // これつけないとAlways On Displayで表示されない
             // 常に再生状態にしておく。これでAODで表示できる
             setPlaybackState(PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0L, 1F).build())
+            isMediaSessionActive = true
         }
     }
 
@@ -1033,17 +1085,22 @@ class NicoVideoPlayService : Service() {
             }
         }
         registerReceiver(broadcastReceiver, intentFilter)
+        isBroadcastReceiverRegistered = true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
-        if (::mediaSessionCompat.isInitialized) {
+        if (isBroadcastReceiverRegistered) {
+            unregisterReceiver(broadcastReceiver)
+            isBroadcastReceiverRegistered = false
+        }
+        if (isMediaSessionActive) {
             mediaSessionCompat.apply {
                 isActive = false
                 setPlaybackState(PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_NONE, 0L, 1F).build())
                 release()
             }
+            isMediaSessionActive = false
         }
         if (::exoPlayer.isInitialized) {
             exoPlayer.release()

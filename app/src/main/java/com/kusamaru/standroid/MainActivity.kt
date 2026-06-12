@@ -556,6 +556,9 @@ class MainActivity : AppCompatActivity() {
                 // 動画
                 is NicoVideoFragment -> {
                     viewModel.nicoVideoData.value?.apply {
+                        if (isLeaveAppPopup || isLeaveAppBackground) {
+                            viewModel.playerIsPlaying.value = false
+                        }
                         when {
                             isLeaveAppPopup -> startVideoPlayService(context = context, mode = "popup", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
                             isLeaveAppBackground -> startVideoPlayService(context = context, mode = "background", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
@@ -564,6 +567,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 is JCNicoVideoFragment -> {
                     viewModel.nicoVideoData.value?.apply {
+                        if (isLeaveAppPopup || isLeaveAppBackground) {
+                            viewModel.playerIsPlaying.value = false
+                        }
                         when {
                             isLeaveAppPopup -> startVideoPlayService(context = context, mode = "popup", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
                             isLeaveAppBackground -> startVideoPlayService(context = context, mode = "background", videoId = videoId, isCache = isCache, videoQuality = viewModel.currentVideoQuality, audioQuality = viewModel.currentAudioQuality, seek = viewModel.currentPosition)
