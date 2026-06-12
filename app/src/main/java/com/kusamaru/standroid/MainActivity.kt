@@ -30,6 +30,8 @@ import com.kusamaru.standroid.nicovideo.NicoVideoSelectFragment
 import com.kusamaru.standroid.nicovideo.compose.JCNicoVideoCommentOnlyFragment
 import com.kusamaru.standroid.nicovideo.compose.JCNicoVideoFragment
 import com.kusamaru.standroid.nicovideo.fragment.NicoVideoCacheFragment
+import com.kusamaru.standroid.service.NicoVideoPlayService
+import com.kusamaru.standroid.service.NicoVideoPlayServiceHandoff
 import com.kusamaru.standroid.service.startLivePlayService
 import com.kusamaru.standroid.service.startVideoPlayService
 import com.kusamaru.standroid.setting.SettingsFragment
@@ -189,6 +191,59 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        restoreBackgroundVideoPlayback()
+    }
+
+    private fun restoreBackgroundVideoPlayback() {
+        val handoffState = NicoVideoPlayServiceHandoff.state ?: return
+        NicoVideoPlayServiceHandoff.clear()
+        stopService(Intent(this, NicoVideoPlayService::class.java))
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.main_activity_fragment_layout)
+        val restoredToExistingFragment = when (currentFragment) {
+            is NicoVideoFragment -> restoreNicoVideoFragmentPlayback(
+                currentVideoId = currentFragment.viewModel.playingVideoId.value,
+                handoffVideoId = handoffState.videoId,
+                positionMs = handoffState.positionMs,
+                seek = { currentFragment.viewModel.playerSetSeekMs.value = it },
+                play = { currentFragment.viewModel.playerIsPlaying.value = true }
+            )
+            is JCNicoVideoFragment -> restoreNicoVideoFragmentPlayback(
+                currentVideoId = currentFragment.viewModel.playingVideoId.value,
+                handoffVideoId = handoffState.videoId,
+                positionMs = handoffState.positionMs,
+                seek = { currentFragment.viewModel.playerSetSeekMs.value = it },
+                play = { currentFragment.viewModel.playerIsPlaying.value = true }
+            )
+            else -> false
+        }
+
+        if (!restoredToExistingFragment) {
+            val startPos = (handoffState.positionMs / 1000L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            setNicovideoFragment(
+                videoId = handoffState.videoId,
+                isCache = handoffState.isCache,
+                _videoList = handoffState.playlist,
+                startPos = startPos
+            )
+        }
+    }
+
+    private fun restoreNicoVideoFragmentPlayback(
+        currentVideoId: String?,
+        handoffVideoId: String,
+        positionMs: Long,
+        seek: (Long) -> Unit,
+        play: () -> Unit
+    ): Boolean {
+        if (currentVideoId != handoffVideoId) return false
+        seek(positionMs)
+        play()
+        return true
     }
 
     /** クラッシュレポートを回収する */

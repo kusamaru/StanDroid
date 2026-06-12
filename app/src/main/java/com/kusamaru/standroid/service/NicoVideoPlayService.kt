@@ -56,6 +56,21 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.timerTask
 
+data class NicoVideoPlayServiceHandoffState(
+    val videoId: String,
+    val isCache: Boolean,
+    val positionMs: Long,
+    val playlist: ArrayList<NicoVideoData>?
+)
+
+object NicoVideoPlayServiceHandoff {
+    var state: NicoVideoPlayServiceHandoffState? = null
+
+    fun clear() {
+        state = null
+    }
+}
+
 /**
  * ニコ生をポップアップ、バックグラウンドで再生するやつ。
  * FragmentからServiceに移動させる
@@ -242,6 +257,7 @@ class NicoVideoPlayService : Service() {
         currentVideoCommentList.clear()
         drewedList.clear()
         nicoVideoHTML.destroy()
+        NicoVideoPlayServiceHandoff.clear()
     }
 
     /** ExoPlayerを用意する */
@@ -622,6 +638,10 @@ class NicoVideoPlayService : Service() {
         exoPlayer.seekTo(seekMs)
         // 自動再生
         exoPlayer.playWhenReady = true
+        updateBackgroundHandoffState(seekMs)
+        if (!isPopupPlay()) {
+            startBackgroundHandoffTimer()
+        }
         // MediaSession。通知もう一階出せばなんか表示されるようになった。Androidむずかちい
         showNotification(currentVideoTitle)
         initMediaSession()
@@ -938,8 +958,31 @@ class NicoVideoPlayService : Service() {
                 viewBinding?.overlayVideoControlInclude?.playerControlSeek?.progress = (exoPlayer.currentPosition / 1000L).toInt()
                 val formattedTime = DateUtils.formatElapsedTime(exoPlayer.currentPosition / 1000L)
                 viewBinding?.overlayVideoControlInclude?.playerControlCurrent?.text = formattedTime
+                updateBackgroundHandoffState(exoPlayer.currentPosition)
             }
         }
+    }
+
+    private fun startBackgroundHandoffTimer() {
+        seekTimer.cancel()
+        seekTimer = Timer()
+        seekTimer.schedule(timerTask {
+            Handler(Looper.getMainLooper()).post {
+                if (::exoPlayer.isInitialized && exoPlayer.isPlaying) {
+                    updateBackgroundHandoffState(exoPlayer.currentPosition)
+                }
+            }
+        }, 100, 1000)
+    }
+
+    private fun updateBackgroundHandoffState(positionMs: Long = if (::exoPlayer.isInitialized) exoPlayer.currentPosition else seekMs) {
+        if (playMode != "background" || currentVideoId.isEmpty()) return
+        NicoVideoPlayServiceHandoff.state = NicoVideoPlayServiceHandoffState(
+            videoId = currentVideoId,
+            isCache = isCurrentVideoCache,
+            positionMs = positionMs,
+            playlist = if (playlist.isEmpty()) null else ArrayList(playlist)
+        )
     }
 
     private fun getParams(width: Int): WindowManager.LayoutParams {
@@ -1110,6 +1153,7 @@ class NicoVideoPlayService : Service() {
         }
         seekTimer.cancel()
         nicoVideoHTML.destroy()
+        NicoVideoPlayServiceHandoff.clear()
     }
 
     /**
