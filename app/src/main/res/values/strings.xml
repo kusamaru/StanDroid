@@ -259,7 +259,7 @@
     <string name="background_playlist_play_channel">Cache continuous playback notification</string>
     <string name="filter_clear_message">Is it really okay to reset sort and sort conditions?</string>
     <string name="delete_ok">Delete</string>
-    <string name="login_disable_message">I have been logged out. Would you like to log in again?</string>
+    <string name="login_disable_message">You have been logged out. Would you like to log in again?</string>
     <string name="nicoru_ok">Nikotta Nicoru</string>
     <string name="nicoru_error">I\'m already nicoru</string>
     <string name="brower_launch">Open in browser (other application)</string>
