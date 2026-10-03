@@ -1,13 +1,9 @@
 package com.kusamaru.standroid.tool
 
-import com.kusamaru.standroid.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
-import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * OkHttp曰く、「OkHttpClient」を使いまわし、すべてのリクエストで同じOkHttpClientを使うと最高のパフォーマンスが出る
@@ -23,12 +19,7 @@ object OkHttpClientSingleton {
         connectTimeout(20, TimeUnit.SECONDS)
         writeTimeout(30, TimeUnit.SECONDS)
         readTimeout(30, TimeUnit.SECONDS)
-        // ログを出力させる設定
-        if (BuildConfig.DEBUG) {
-            addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-        }
+        // Authenticated requests carry session cookies and temporary keys; never log bodies/headers.
         // .addNetworkInterceptor(FixJsonContentTypeInterceptor())
     }.build()
 }

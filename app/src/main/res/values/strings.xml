@@ -519,4 +519,9 @@ Sorry to trouble you, but please update the video information.\n
     <string name="add_ng_comment_dialog_message">Comment</string>
     <string name="setting_add_ng">Add NG</string>
     <string name="playback_speed">Playback Speed</string>
+    <string name="web_login_description">Sign in with your email or phone number on the official Niconico page. Passwords and verification codes are entered there, not saved by this app.</string>
+    <string name="web_login_waiting">Complete sign-in on the official page, then confirm below if the window does not close automatically.</string>
+    <string name="web_login_confirm">Confirm sign-in</string>
+    <string name="web_login_failed">Could not verify sign-in. Please open Login in the app and try again.</string>
+    <string name="web_login_unsupported_page">This window supports Niconico email/phone sign-in and MFA only. External-provider sign-in is not supported.</string>
 </resources>

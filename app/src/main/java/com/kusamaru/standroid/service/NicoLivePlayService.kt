@@ -36,7 +36,7 @@ import com.kusamaru.standroid.CommentJSONParse
 import com.kusamaru.standroid.MainActivity
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.OverlayPlayerLayoutBinding
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicolive.NicoLiveComment
 import com.kusamaru.standroid.nicoapi.nicolive.NicoLiveHTML
 import com.kusamaru.standroid.nicoapi.nicolive.dataclass.CommentServerData
@@ -142,30 +142,44 @@ class NicoLivePlayService : Service() {
     }
 
     // データ取得
-    private fun coroutine() {
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    private fun coroutine(allowReLogin: Boolean = true) {
         // エラー時
         val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
             showToast("${getString(R.string.error)}\n${throwable}")
         }
-        GlobalScope.launch(errorHandler) {
+        serviceScope.launch(errorHandler) {
             // ニコ生視聴ページリクエスト
             val livePageResponse = nicoLiveHTML.getNicoLiveHTML(liveId, userSession, true)
             if (!livePageResponse.isSuccessful) {
                 // 失敗のときはService落とす
                 this@NicoLivePlayService.stopSelf()
                 showToast("${getString(R.string.error)}\n${livePageResponse.code}")
+                livePageResponse.close()
                 return@launch
             }
             if (!nicoLiveHTML.hasNiconicoID(livePageResponse)) {
+                livePageResponse.close()
+                if (!allowReLogin) {
+                    showToast(getString(R.string.login_error))
+                    stopSelf()
+                    return@launch
+                }
                 // niconicoIDがない場合（ログインが切れている場合）はログインする（この後の処理でユーザーセッションが必要）
-                NicoLogin.secureNicoLogin(this@NicoLivePlayService)
+                val session = NicoWebLogin.secureNicoLogin(this@NicoLivePlayService)
+                if (session == null) {
+                    stopSelf()
+                    return@launch
+                }
+                userSession = session
                 // 再度視聴ページリクエスト
-                coroutine()
+                coroutine(allowReLogin = false)
                 // コルーチン終了
                 return@launch
             }
             // HTMLからJSON取得する
-            val nicoLiveJSON = nicoLiveHTML.nicoLiveHTMLtoJSONObject(livePageResponse.body?.string())
+            val nicoLiveJSON = livePageResponse.use { nicoLiveHTML.nicoLiveHTMLtoJSONObject(it.body?.string()) }
 
             // コメント投稿の際に使う値を初期化する
             // 番組名取得など
@@ -733,6 +747,7 @@ class NicoLivePlayService : Service() {
     }
 
     override fun onDestroy() {
+        serviceScope.cancel()
         super.onDestroy()
         unregisterReceiver(broadcastReceiver)
         if (viewBinding != null) {

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kusamaru.standroid.MainActivity
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoHistoryAPI
 import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
@@ -108,7 +108,7 @@ class NicoVideoHistoryFragment : Fragment() {
                         setAction(R.string.login) {
                             // ログインする
                             lifecycleScope.launch {
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getHistory()
                             }
                         }
@@ -150,7 +150,7 @@ class NicoVideoHistoryFragment : Fragment() {
                         setAction(R.string.login) {
                             // ログインする
                             lifecycleScope.launch {
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getHistory()
                             }
                         }

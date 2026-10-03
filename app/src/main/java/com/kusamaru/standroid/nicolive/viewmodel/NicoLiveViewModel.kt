@@ -12,7 +12,7 @@ import com.kusamaru.standroid.CommentJSONParse
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.nicoapi.community.CommunityAPI
 import com.kusamaru.standroid.nicoapi.dataclass.QualityData
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicolive.*
 import com.kusamaru.standroid.nicoapi.nicolive.dataclass.*
 import com.kusamaru.standroid.nicoapi.user.UserData
@@ -877,7 +877,7 @@ ${getString(R.string.one_minute_statistics_comment_length)}：$commentLengthAver
                     return@withContext null
                 }
             }
-            val session = NicoLogin.secureNicoLogin(context)
+            val session = NicoWebLogin.secureNicoLogin(context)
             if (session == null) {
                 // Failed authentication or MFA opened: let the user finish it first.
                 messageLiveData.postValue("finish")

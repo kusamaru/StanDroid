@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.kusamaru.standroid.MainActivity
 import com.kusamaru.standroid.R
 import com.kusamaru.standroid.databinding.FragmentNicoliveCommunityBinding
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicolive.*
 import com.kusamaru.standroid.nicoapi.nicolive.dataclass.NicoLiveProgramData
 import com.kusamaru.standroid.nicoapi.nicorepo.NicoRepoAPIX
@@ -187,7 +187,7 @@ class CommunityListFragment : Fragment() {
                         showSnackBar(message = getString(R.string.login_disable_message), showTime = Snackbar.LENGTH_INDEFINITE, buttonText = getString(R.string.login)) {
                             lifecycleScope.launch {
                                 // 再ログイン+再取得
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getProgramDataFromNicoLiveTopPage(jsonObjectName)
                             }
                             return@showSnackBar
@@ -287,7 +287,7 @@ class CommunityListFragment : Fragment() {
                         showSnackBar(message = getString(R.string.login_disable_message), showTime = Snackbar.LENGTH_INDEFINITE, buttonText = getString(R.string.login)) {
                             lifecycleScope.launch {
                                 // 再ログイン+再取得
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getProgramDataFromNicorepo()
                             }
                             return@showSnackBar
