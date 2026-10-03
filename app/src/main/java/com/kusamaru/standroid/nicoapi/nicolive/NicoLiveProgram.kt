@@ -69,10 +69,16 @@ class NicoLiveProgram {
      * @param jsonObjectName JSONObjectの名前。フォロー中番組なら[FAVOURITE_PROGRAM]です。
      * */
     suspend fun parseJSON(html: String?, jsonObjectName: String) = withContext(Dispatchers.Default) {
+        require(!html.isNullOrBlank()) { "ニコ生の番組一覧を取得できませんでした" }
         // JSONっぽいのがあるので取り出す。すくれいぴんぐ
         val document = Jsoup.parse(html)
-        val json = document.getElementById("embedded-data").getElementsByAttribute("data-props")
-        val jsonString = json.attr("data-props")
+        val embedded = document.getElementById("embedded-data")
+        if (embedded == null) {
+            val data = document.getElementById("DAT-csr-data")
+                ?: error("ニコ生の番組一覧の形式を読み取れませんでした")
+            return@withContext parseCurrentProgramList(JSONObject(data.attr("data-value")), jsonObjectName)
+        }
+        val jsonString = embedded.attr("data-props")
         val jsonObject = JSONObject(jsonString)
         // JSON解析
         val programs = jsonObject.getJSONObject("view").getJSONObject(jsonObjectName).getJSONArray("programList")
@@ -103,4 +109,40 @@ class NicoLiveProgram {
         dataList
     }
 
+}
+
+/** New top-page data; keep the existing list UI and old-page parser. */
+internal fun parseCurrentProgramList(json: JSONObject, category: String): ArrayList<NicoLiveProgramData> {
+    val sectionName = when (category) {
+        NicoLiveProgram.FAVOURITE_PROGRAM -> "favoriteProgramListSectionState"
+        NicoLiveProgram.RECENT_JUST_BEFORE_BROADCAST_STATUS_PROGRAM -> "organizationProgramListSectionState"
+        NicoLiveProgram.POPULAR_BEFORE_OPEN_BROADCAST_STATUS_PROGRAM -> "popularBeforeOpenBroadcastStatusProgramListSectionState"
+        NicoLiveProgram.ROOKIE_PROGRAM -> "rookieProgramListSectionState"
+        else -> error("未対応の番組一覧: $category")
+    }
+    val section = json.getJSONObject("props").getJSONObject("view").getJSONObject(sectionName)
+    check(!section.getBoolean("hasError")) { "ニコ生の番組一覧の取得に失敗しました" }
+    val items = section.getJSONArray("items")
+    val programs = arrayListOf<NicoLiveProgramData>()
+    for (index in 0 until items.length()) {
+        val item = items.getJSONObject(index)
+        check(item.getString("type") == "seed") { "未対応の番組一覧項目: ${item.getString("type")}" }
+        val program = item.getJSONObject("value")
+        val provider = program.optJSONObject("socialGroup") ?: program.getJSONObject("supplier")
+        val id = program.getString("nicoliveProgramId")
+        require(id.matches(Regex("lv[0-9]+"))) { "番組IDを読み取れませんでした" }
+        // ponytail: list UI expects milliseconds; normalize other producers in a separate cleanup.
+        programs.add(NicoLiveProgramData(
+            title = program.getString("title"),
+            communityName = provider.getString("name"),
+            beginAt = Math.multiplyExact(program.getLong("beginTime"), 1000L).toString(),
+            endAt = Math.multiplyExact(program.getLong("endTime"), 1000L).toString(),
+            programId = id,
+            broadCaster = program.optJSONObject("supplier")?.getString("name") ?: "",
+            lifeCycle = program.getString("status"),
+            thum = program.getString("listingThumbnail"),
+            isOfficial = program.getString("providerType") == "official",
+        ))
+    }
+    return programs
 }

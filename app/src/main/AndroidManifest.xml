@@ -22,6 +22,11 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:name=".activity.NicoWebLoginActivity"
+            android:exported="false"
+            android:label="@string/login" />
+
+        <activity
             android:name=".activity.TwoFactorAuthLoginActivity"
             android:exported="true"
             android:label="@string/two_factor_auth" />

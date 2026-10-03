@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoMyListData
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoSPMyListAPI
 import com.kusamaru.standroid.R
@@ -44,9 +44,10 @@ class NicoVideoMyListViewModel(application: Application, val userId: String? = n
     /**
      * マイリスト一覧を取得する
      * */
-    fun getMyListList() {
+    fun getMyListList(allowReLogin: Boolean = true) {
         // エラー時
         val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            loadingLiveData.postValue(false)
             showToast("${context.getString(R.string.error)}\n${throwable}")
         }
         viewModelScope.launch(errorHandler + Dispatchers.IO) {
@@ -61,22 +62,34 @@ class NicoVideoMyListViewModel(application: Application, val userId: String? = n
             }
             // 再ログイン必須
             if (response.headers["x-niconico-id"] == null) {
+                response.close()
+                if (!allowReLogin) {
+                    loadingLiveData.postValue(false)
+                    showToast(getString(R.string.login_error))
+                    return@launch
+                }
                 // ログインする
-                val login = NicoLogin.secureNicoLogin(context)
+                val login = try {
+                    NicoWebLogin.secureNicoLogin(context)
+                } finally {
+                    loadingLiveData.postValue(false)
+                }
                 // ログインした
                 if (login != null) {
                     userSession = login
                     showToast(getString(R.string.re_login_successful))
                     // 再試行
-                    getMyListList()
-                    return@launch
+                    getMyListList(allowReLogin = false)
                 }
+                return@launch
             } else if (!response.isSuccessful) {
                 // 失敗時
                 showToast("${getString(R.string.error)}\n${response.code}")
+                response.close()
+                loadingLiveData.postValue(false)
                 return@launch
             }
-            val myListItems = spMyListAPI.parseMyListList(response.body?.string(), userId == null)
+            val myListItems = response.use { spMyListAPI.parseMyListList(it.body?.string(), userId == null) }
             // 並び替え
             if (prefSetting.getBoolean("setting_nicovideo_mylist_sort_itemcount", false)) {
                 myListItems.sortByDescending { myListData -> myListData.itemsCount }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import android.webkit.CookieManager
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
@@ -132,6 +133,9 @@ class SettingsFragment : SearchPreferenceFragment() {
                     preference.summary = nicoVideoCache.getCacheFolderPath()
                 }
                 "dev_remove_login_cache" -> {
+                    // Clear this app's WebView cookies too; system-browser cookies are untouched.
+                    val cookies = CookieManager.getInstance()
+                    cookies.removeAllCookies { cookies.flush() }
                     val prefSetting = PreferenceManager.getDefaultSharedPreferences(context)
                     prefSetting.edit {
                         remove("mail")

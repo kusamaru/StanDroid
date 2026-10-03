@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.kusamaru.standroid.MainActivity
-import com.kusamaru.standroid.nicoapi.login.NicoLogin
+import com.kusamaru.standroid.nicoapi.login.NicoWebLogin
 import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.nicoapi.nicovideo.NicoVideoHistoryAPI
 import com.kusamaru.standroid.nicovideo.adapter.NicoVideoListAdapter
@@ -103,12 +103,12 @@ class NicoVideoHistoryFragment : Fragment() {
                 }
                 response.code == 401 -> {
                     // ログイン切れ。再ログイン勧める
-                    Snackbar.make(viewBinding.fragmentNicovideoHistoryRecyclerView, R.string.login_disable_message, Snackbar.LENGTH_INDEFINITE).apply {
+                    Snackbar.make(viewBinding.fragmentNicovideoHistoryRecyclerView, R.string.login_disable_message, Snackbar.LENGTH_LONG).apply {
                         anchorView = (activity as MainActivity).viewBinding.mainActivityBottomNavigationView
                         setAction(R.string.login) {
                             // ログインする
                             lifecycleScope.launch {
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getHistory()
                             }
                         }
@@ -145,12 +145,12 @@ class NicoVideoHistoryFragment : Fragment() {
                 }
                 response.code == 401 -> {
                     // ログイン切れ。再ログイン勧める
-                    Snackbar.make(viewBinding.fragmentNicovideoHistoryRecyclerView, R.string.login_disable_message, Snackbar.LENGTH_INDEFINITE).apply {
+                    Snackbar.make(viewBinding.fragmentNicovideoHistoryRecyclerView, R.string.login_disable_message, Snackbar.LENGTH_LONG).apply {
                         anchorView = (activity as MainActivity).viewBinding.mainActivityBottomNavigationView
                         setAction(R.string.login) {
                             // ログインする
                             lifecycleScope.launch {
-                                userSession = NicoLogin.secureNicoLogin(context) ?: return@launch
+                                userSession = NicoWebLogin.secureNicoLogin(context) ?: return@launch
                                 getHistory()
                             }
                         }

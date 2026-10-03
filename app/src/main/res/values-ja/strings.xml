@@ -519,4 +519,9 @@
     <string name="add_ng_comment_dialog_message">コメント</string>
     <string name="setting_add_ng">NGを追加</string>
     <string name="playback_speed">再生速度</string>
+    <string name="web_login_description">公式ニコニコページでメールアドレス・電話番号によるログインを行います。パスワード・確認コードは公式ページへ入力し、このアプリには保存しません。</string>
+    <string name="web_login_waiting">公式ページで認証を完了してください。画面が自動で閉じない場合は下のボタンで確認できます。</string>
+    <string name="web_login_confirm">ログイン完了を確認</string>
+    <string name="web_login_failed">ログインを確認できませんでした。アプリのログイン画面から再度お試しください。</string>
+    <string name="web_login_unsupported_page">この画面はニコニコのメール・電話番号ログインとMFAに対応します。外部サービスによるログインは対象外です。</string>
 </resources>

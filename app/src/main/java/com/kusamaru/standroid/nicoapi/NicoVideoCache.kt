@@ -16,6 +16,7 @@ import com.kusamaru.standroid.nicovideo.bottomfragment.NicoVideoCacheFilterBotto
 import com.kusamaru.standroid.tool.DownloadPocket
 import com.kusamaru.standroid.tool.OkHttpClientSingleton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -466,30 +467,25 @@ class NicoVideoCache(val context: Context?) {
      * @param completeFun 終了時に呼ばれる高階関数。
      * */
     fun getReGetVideoInfoComment(videoId: String, userSession: String, context: Context?, completeFun: (() -> Unit)? = null) {
-        GlobalScope.launch {
+        val errorHandler = CoroutineExceptionHandler { _, error ->
+            showToast("${context?.getString(R.string.error)}\n$error")
+        }
+        GlobalScope.launch(errorHandler) {
             val nicoVideoHTML = NicoVideoHTML()
-            // 動画HTML取得
-            val response = nicoVideoHTML.getHTML(videoId, userSession)
-            if (response.isSuccessful) {
-                // 動画情報更新
-                val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
-                val videoIdFolder = File("${getCacheFolderPath()}/${videoId}")
-                saveVideoInfo(videoIdFolder, videoId, jsonObject.toString())
-                // コメント取得
-                val commentResponse = nicoVideoHTML.getComment(userSession, jsonObject)
+            // 正規化と検証が成功した情報だけ保存する
+            val jsonObject = nicoVideoHTML.getWatchData(videoId, userSession).first
+            val videoIdFolder = File("${getCacheFolderPath()}/${videoId}")
+            saveVideoInfo(videoIdFolder, videoId, jsonObject.toString())
+            // コメント取得
+            nicoVideoHTML.getComment(userSession, jsonObject).use { commentResponse ->
                 val commentString = commentResponse?.body?.string()
                 if (commentResponse?.isSuccessful == true && commentString != null) {
-                    // コメント更新
                     getCacheComment(videoIdFolder, videoId, jsonObject.toString(), userSession)
                     showToast(context?.getString(R.string.cache_update_ok) ?: "取得できたよ")
-                    if (completeFun != null) {
-                        completeFun()
-                    }
+                    completeFun?.invoke()
                 } else {
-                    showToast("${context?.getString(R.string.error)}\n${response.code}")
+                    showToast("${context?.getString(R.string.error)}\n${commentResponse?.code}")
                 }
-            } else {
-                showToast("${context?.getString(R.string.error)}\n${response?.code}")
             }
         }
     }

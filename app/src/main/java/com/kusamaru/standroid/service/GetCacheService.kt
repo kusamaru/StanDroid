@@ -140,18 +140,11 @@ class GetCacheService : Service() {
             currentCacheVideoId = videoId
             // エコノミーか
             val isEco1 = cacheList[position].second
-            val eco = if (isEco1) "1" else "0"
             // 進捗通知
             showNotification("${getString(R.string.loading)}：$currentCacheVideoId / ${getString(R.string.cache_get_list_size)}：${cacheList.size - cacheDLFinishedList.size}")
             // リクエスト
-            val response = nicoVideoHTML.getHTML(videoId, userSession, eco)
-            if (!response.isSuccessful) {
-                // 失敗時
-                showToast("${getString(R.string.error)} : $videoId\n${response.code}")
-                return@launch
-            }
-            val nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
-            val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
+            val (jsonObject, history) = nicoVideoHTML.getWatchData(videoId, userSession)
+            val nicoHistory = history ?: ""
             var contentUrl = ""
             var domandCookie: String? = null
             if (!nicoVideoHTML.isEncryption(jsonObject.toString())) {

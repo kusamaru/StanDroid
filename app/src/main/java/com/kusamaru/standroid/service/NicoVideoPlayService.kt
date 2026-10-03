@@ -430,10 +430,8 @@ class NicoVideoPlayService : Service() {
             } else {
                 ""
             }
-            val response = nicoVideoHTML.getJSON(videoId, userSession)
-            val nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
-            val responseString = response.body?.string()
-            val jsonObject = nicoVideoHTML.parseJSON(responseString)
+            val (jsonObject, history) = nicoVideoHTML.getWatchData(videoId, userSession)
+            val nicoHistory = history ?: ""
 
             // 公式アニメは暗号化されてて見れないので落とす
             if (nicoVideoHTML.isEncryption(jsonObject.toString())) {
