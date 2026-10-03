@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Cookie
 import okhttp3.FormBody
-import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -66,7 +65,7 @@ object NicoLogin {
         val pass = prefSetting.getString("password", "")
         // 二段階認証時以外ならnull。二段階認証時でもデバイスを信頼してない場合はnull。それ以外なら信頼されてるとして、二段階認証時をパスできる。
         val trustDeviceToken = prefSetting.getString("trust_device_token", null)
-        if (mail == null && pass == null) {
+        if (mail.isNullOrBlank() || pass.isNullOrEmpty()) {
             withContext(Dispatchers.Main) {
                 // メアド設定してね
                 Toast.makeText(context, R.string.mail_pass_error, Toast.LENGTH_SHORT).show()
@@ -74,7 +73,7 @@ object NicoLogin {
             return@withContext null
         }
         // ログインAPIを叩く
-        val nicoLoginResult = nicoLoginCoroutine(mail!!, pass!!, trustDeviceToken)
+        val nicoLoginResult = nicoLoginCoroutine(mail, pass, trustDeviceToken)
         if (nicoLoginResult != null) {
             if (!nicoLoginResult.isNeedTwoFactorAuth) {
                 // 二段階認証 が　未　設　定
@@ -152,17 +151,18 @@ object NicoLogin {
                 if (response.code == 302) {
                     val responseCookies = response.headers.values("Set-Cookie")
                         .mapNotNull { Cookie.parse(request.url, it) }
-                    val userSession = responseCookies.firstOrNull {
-                        it.name == "user_session" && it.value.isNotEmpty() && it.value != "deleted"
-                    }
+                    val userSession = findLoginCookie(response.headers, request.url, "user_session")
                     if (userSession != null) {
                         return@withContext NicoLoginDataClass(false, userSession = userSession.value)
                     }
                     // mfa_sessionがあったので二段階認証が必須
                     if (responseCookies.any { it.name == "mfa_session" }) {
                         // 設定されてる。二段階認証のためにCookieも取得する
-                        val loginCookie = getLoginCookie(response.headers)
-                        return@withContext NicoLoginDataClass(true, twoFactorURL = response.headers["Location"], twoFactorCookie = loginCookie)
+                        val location = response.headers["Location"]?.let { request.url.resolve(it) }
+                            ?: return@withContext null
+                        val loginCookie = responseCookies.filter { it.name == "mfa_session" || it.name == "nicosid" }
+                            .joinToString("; ") { "${it.name}=${it.value}" }
+                        return@withContext NicoLoginDataClass(true, twoFactorURL = location.toString(), twoFactorCookie = loginCookie)
                     }
                     // なかった
                     return@withContext null
@@ -175,27 +175,4 @@ object NicoLogin {
         }
     }
 
-    /**
-     * 二段階認証に必要なCookieを取得する関数
-     * @param responseHeaders [nicoLoginCoroutine]の内部で使ってるので。ログインのレスポンスヘッダー
-     * @return Cookie。mfa_session=なんとか;nicosid=なんとか
-     * */
-    private fun getLoginCookie(responseHeaders: Headers?): String {
-        // Set-Cookieを解析
-        var mfaSession = ""
-        var nicosid = ""
-        responseHeaders?.forEach {
-            // Set-Cookie に入ってる mfa_session と nicosid を控える
-            // レスポンスのSet-Cookieが小文字になってたせいで動かなくなったっぽい。なぜ……
-            if (it.first.lowercase() == "set-cookie") {
-                if (it.second.contains("mfa_session")) {
-                    mfaSession = it.second.split(";")[0]
-                }
-                if (it.second.contains("nicosid")) {
-                    nicosid = it.second.split(";")[0]
-                }
-            }
-        }
-        return "$mfaSession;$nicosid"
-    }
 }

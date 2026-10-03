@@ -13,6 +13,13 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+// Resolve only the JVM test JSON implementation here; leave app dependencies unchanged.
+repositories {
+    mavenCentral {
+        content { includeModule('com.vaadin.external.google', 'android-json') }
+    }
+}
+
 android {
     compileSdkVersion 33
     defaultConfig {
@@ -20,7 +27,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 33
         versionCode 112
-        versionName "15.7.5"
+        versionName "15.7.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -146,6 +153,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
+    // Use Android-compatible JSONObject on the JVM, including numeric getString coercion.
+    testImplementation 'com.vaadin.external.google:android-json:0.0.20131108.vaadin1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

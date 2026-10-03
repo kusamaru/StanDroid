@@ -407,18 +407,8 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         }
         // HTML取得
         viewModelScope.launch(errorHandler) {
-            // jsonを取得する(動画ページのクエリにresponseType=jsonを付加)
-            val response = nicoVideoHTML.getJSON(videoId, userSession)
-            // 失敗したら落とす
-            if (!response.isSuccessful) {
-                showToast("${getString(R.string.error)}\n${response.code}")
-                return@launch
-            }
-            nicoHistory = nicoVideoHTML.getNicoHistory(response) ?: ""
-            val jsonObject = withContext(Dispatchers.Default) {
-                // println("response: ${response.body?.string()}")
-                nicoVideoHTML.parseJSON(response.body?.string())
-            }
+            val (jsonObject, history) = nicoVideoHTML.getWatchData(videoId, userSession)
+            nicoHistory = history ?: ""
             val nicosIdCookie = null
 
             // APIサーバーからデータ拾う
@@ -1011,18 +1001,13 @@ class NicoVideoViewModel(application: Application, videoId: String? = null, isCa
         }
         viewModelScope.launch(Dispatchers.Default + errorHandler) {
             val videoId = playingVideoId.value ?: return@launch
-            // 動画HTML取得
-            val response = nicoVideoHTML.getJSON(videoId, userSession)
-            if (response.isSuccessful) {
-                // 動画情報更新
-                val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
+            try {
+                val jsonObject = nicoVideoHTML.getWatchData(videoId, userSession).first
                 val videoIdFolder = File("${nicoVideoCache.getCacheFolderPath()}/${videoId}")
                 nicoVideoCache.saveVideoInfo(videoIdFolder, videoId, jsonObject.toString())
-            } else {
-                showToast("${context?.getString(R.string.error)}\n${response.code}")
+            } finally {
+                cacheVideoJSONUpdateLiveData.postValue(false)
             }
-            // LiveData更新
-            cacheVideoJSONUpdateLiveData.postValue(false)
             // 再読み込み
             withContext(Dispatchers.Main) {
                 load(videoId, true, isEco, useInternet)

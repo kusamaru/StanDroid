@@ -141,17 +141,8 @@ class NGUploaderTool(val context: Context) {
     suspend fun addNGUploaderIdFromVideoId(videoId: String) = withContext(Dispatchers.Default) {
         // 動画情報取得
         val nicoVideoHTML = NicoVideoHTML()
-        nicoVideoHTML.getJSON(videoId, userSession).let { response ->
-            if (response.isSuccessful) {
-                // JSONパース
-                val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())!!
-                // ユーザーID取る
-                val userData = nicoVideoHTML.parseUserData(jsonObject)
-                if (userData != null) {
-                    addNGUploaderId(userData.userId)
-                }
-            }
-        }
+        val jsonObject = nicoVideoHTML.getWatchData(videoId, userSession).first
+        nicoVideoHTML.parseUserData(jsonObject)?.let { addNGUploaderId(it.userId) }
     }
 
     /**

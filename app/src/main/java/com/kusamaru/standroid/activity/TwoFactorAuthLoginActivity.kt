@@ -76,6 +76,7 @@ class TwoFactorAuthLoginActivity : AppCompatActivity() {
                     // ログインできたよ！
                     Toast.makeText(this@TwoFactorAuthLoginActivity, getString(R.string.successful), Toast.LENGTH_SHORT).show()
                     finish()
+                    return@launch
                 }
                 Toast.makeText(this@TwoFactorAuthLoginActivity, R.string.login_error, Toast.LENGTH_SHORT).show()
                 finish()

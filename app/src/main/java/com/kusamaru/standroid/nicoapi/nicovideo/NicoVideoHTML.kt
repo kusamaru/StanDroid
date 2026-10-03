@@ -62,6 +62,38 @@ class NicoVideoHTML {
         okHttpClient.newCall(request).execute()
     }
 
+    /** One acquisition path for playback and metadata updates; keeps nicohistory. */
+    suspend fun getWatchData(videoId: String, userSession: String): Pair<JSONObject, String?> = withContext(Dispatchers.IO) {
+        val (response, history) = getJSON(videoId, userSession).use { http ->
+            check(http.isSuccessful) { "動画情報の取得に失敗しました (${http.code})" }
+            Pair(NicoVideoWatchResponse.unwrap(http.body?.string()), getNicoHistory(http))
+        }
+        val v4 = NicoVideoWatchResponse.v4Data(response)
+        val lazy = if (v4 != null) {
+            val client = v4.getJSONObject("client")
+            val request = Request.Builder()
+                .url("https://nvapi.nicovideo.jp/v4/watch/lazy/${client.getString("watchId")}")
+                .header("User-Agent", "Stan-Droid;@kusamaru_jp")
+                .header("Cookie", "user_session=$userSession")
+                .header("X-Frontend-Id", "6")
+                .header("X-Frontend-Version", "0")
+                .header("X-Request-With", "https://www.nicovideo.jp")
+                .post(JSONObject()
+                    .put("actionTrackId", client.getString("watchTrackId"))
+                    .put("keyToken", v4.getJSONObject("lazy").getString("authKey"))
+                    .toString().toRequestBody("application/json".toMediaTypeOrNull()))
+                .build()
+            okHttpClient.newCall(request).execute().use { http ->
+                check(http.isSuccessful) { "動画の追加情報の取得に失敗しました (${http.code})" }
+                val root = JSONObject(requireNotNull(http.body?.string()))
+                val status = root.optJSONObject("meta")?.optInt("status", 200) ?: 200
+                check(status in 200..299) { "動画の追加情報の取得に失敗しました ($status)" }
+                root.getJSONObject("data")
+            }
+        } else null
+        Pair(NicoVideoWatchResponse.normalize(response, lazy), history)
+    }
+
     /**
      * js-initial-watch-dataのdata-api-dataのJSONをデータクラス（[NicoVideoData]）へ変換する。
      * なんとなくコルーチンです。
@@ -131,9 +163,7 @@ class NicoVideoHTML {
      * responseType=jsonで帰ってきたjsonを加工する
      * */
     fun parseJSON(json: String?): JSONObject {
-        return json?.let {
-            JSONObject(it).getJSONObject("data").getJSONObject("response")
-        }!! // TODO: 絶対アカン
+        return NicoVideoWatchResponse.normalize(NicoVideoWatchResponse.unwrap(json))
     }
 
     /**
@@ -939,7 +969,8 @@ class NicoVideoHTML {
         for (i in 0 until tagArray.length()) {
             val tagObject = tagArray.getJSONObject(i)
             val tagName = tagObject.getString("name")
-            val isNicopediaExists = tagObject.getBoolean("isNicodicArticleExists")
+            // ponytail: unknown article status hides its button; no per-tag network requests.
+            val isNicopediaExists = tagObject.optBoolean("isNicodicArticleExists", false)
             val isLocked = tagObject.getBoolean("isLocked")
             tagDataClass.add(
                 NicoTagItemData(

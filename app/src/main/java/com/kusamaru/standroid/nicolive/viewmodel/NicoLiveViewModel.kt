@@ -242,7 +242,7 @@ class NicoLiveViewModel(application: Application, val liveIdOrCommunityId: Strin
         // ニコ生
         viewModelScope.launch(errorHandler + Dispatchers.Default) {
             // 情報取得。UIスレッドではないのでLiveDataはpostValue()を使おう
-            val html = getNicoLiveHTML()
+            val html = getNicoLiveHTML() ?: return@launch
             val jsonObject = nicoLiveHTML.nicoLiveHTMLtoJSONObject(html)
             nicoLiveJSON.postValue(jsonObject)
             // 番組名取得など
@@ -860,30 +860,32 @@ ${getString(R.string.one_minute_statistics_comment_length)}：$commentLengthAver
 
     /** ニコ生放送ページのHTML取得。コルーチンです */
     private suspend fun getNicoLiveHTML(): String? = withContext(Dispatchers.Default) {
-        // ニコ生視聴ページリクエスト
-        val livePageResponse = nicoLiveHTML.getNicoLiveHTML(liveIdOrCommunityId, userSession, isLoginMode)
-        if (!livePageResponse.isSuccessful) {
-            // 失敗のときは落とす
-            messageLiveData.postValue("finish")
-            showToast("${getString(R.string.error)}\n${livePageResponse.code}")
-            null
-        }
-        // ログインモードで かつ ニコニコにログインできない場合は再ログインさせる
-        if (!nicoLiveHTML.hasNiconicoID(livePageResponse) && isLoginMode) {
-            // niconicoIDがない場合（ログインが切れている場合）はログインする（この後の処理でユーザーセッションが必要）
-            val tmp = NicoLogin.secureNicoLogin(context)
-            if (tmp != null) {
-                userSession = tmp
-            } else {
-                // ログイン失敗（二段階認証とか普通に失敗したとか）
+        // Retry only once, and return the page fetched with the new session.
+        for (attempt in 0..1) {
+            nicoLiveHTML.getNicoLiveHTML(liveIdOrCommunityId, userSession, isLoginMode).use { response ->
+                if (!response.isSuccessful) {
+                    messageLiveData.postValue("finish")
+                    showToast("${getString(R.string.error)}\n${response.code}")
+                    return@withContext null
+                }
+                if (!isLoginMode || nicoLiveHTML.hasNiconicoID(response)) {
+                    return@withContext response.body?.string()
+                }
+                if (attempt == 1) {
+                    messageLiveData.postValue("finish")
+                    showToast(getString(R.string.login_error))
+                    return@withContext null
+                }
+            }
+            val session = NicoLogin.secureNicoLogin(context)
+            if (session == null) {
+                // Failed authentication or MFA opened: let the user finish it first.
                 messageLiveData.postValue("finish")
+                return@withContext null
             }
-            // 視聴モードなら再度視聴ページリクエスト
-            if (isLoginMode) {
-                getNicoLiveHTML()
-            }
+            userSession = session
         }
-        livePageResponse.body?.string()
+        null
     }
 
     /**

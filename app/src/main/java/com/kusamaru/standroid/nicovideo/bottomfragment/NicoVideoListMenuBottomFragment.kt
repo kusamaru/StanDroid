@@ -99,13 +99,7 @@ class NicoVideoListMenuBottomFragment : BottomSheetDialogFragment() {
                 // 無い時はインターネットから取得
                 withContext(Dispatchers.IO) {
                     // データ取得
-                    val response = nicoVideoHTML.getJSON(videoId, userSession)
-                    if (!response.isSuccessful) {
-                        // 失敗時
-                        showToast("${getString(R.string.error)}\n${response.code}")
-                    }
-                    // ぱーさー
-                    val jsonObject = nicoVideoHTML.parseJSON(response.body?.string())
+                    val jsonObject = nicoVideoHTML.getWatchData(videoId, userSession).first
                     nicoVideoData = nicoVideoHTML.createNicoVideoData(jsonObject, isCache)
                 }
             }
@@ -150,7 +144,10 @@ class NicoVideoListMenuBottomFragment : BottomSheetDialogFragment() {
             viewBinding.bottomFragmentNicovideoListMenuNgUploaderTextView.setOnClickListener {
                 // NG投稿者として追加
                 val ngUploaderTool = NGUploaderTool(requireContext())
-                lifecycleScope.launch { ngUploaderTool.addNGUploaderIdFromVideoId(videoId) }
+                val errorHandler = CoroutineExceptionHandler { _, error ->
+                    showToast("${getString(R.string.error)}\n$error")
+                }
+                lifecycleScope.launch(errorHandler) { ngUploaderTool.addNGUploaderIdFromVideoId(videoId) }
             }
         } else {
             viewBinding.bottomFragmentNicovideoListMenuNgUploaderTextView.isVisible = false
