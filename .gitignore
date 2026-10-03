@@ -15,3 +15,10 @@
 /.idea/misc.xml
 /.idea/deploymentTargetDropDown.xml
 /.idea
+
+# Codex-generated working notes (keep product documentation tracked).
+/.codex-notes/
+/ISSUE_41_REVIEW.md
+/ISSUE_41_IMPLEMENTATION.md
+# Local Codex instructions for the working-note convention.
+/AGENTS.md
