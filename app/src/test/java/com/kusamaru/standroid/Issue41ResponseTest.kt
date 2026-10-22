@@ -130,6 +130,22 @@ class Issue41ResponseTest {
         reject { NicoVideoWatchResponse.normalize(wrap(v4().put("error", JSONObject())), lazy()) }
     }
 
+    @Test fun errorMessageIncludesReasonOnlyWhenReadable() {
+        val reason = """{"meta":{"status":400},"data":{"response":{"reason":"nvpcClientVersion is missing or does not match."}}}"""
+        assertEquals("動画情報の取得に失敗しました (400): nvpcClientVersion is missing or does not match.", NicoVideoWatchResponse.errorMessage(400, reason))
+        val plain = "動画情報の取得に失敗しました (400)"
+        assertEquals(plain, NicoVideoWatchResponse.errorMessage(400, null))
+        assertEquals(plain, NicoVideoWatchResponse.errorMessage(400, "<html></html>"))
+        assertEquals(plain, NicoVideoWatchResponse.errorMessage(400, """{"data":{"response":{}}}"""))
+        // meta.status が失敗の本文でも reason を添える
+        try {
+            NicoVideoWatchResponse.unwrap(reason)
+            fail("expected failure")
+        } catch (e: IllegalStateException) {
+            assertTrue(e.message!!.endsWith("does not match."))
+        }
+    }
+
     private fun live(section: String, items: String = "[]", hasError: Boolean = false): JSONObject =
         JSONObject("""{"props":{"view":{"$section":{"hasError":$hasError,"items":$items}}}}""")
 

@@ -54,7 +54,8 @@ class NicoVideoHTML {
      * */
     suspend fun getJSON(videoId: String, userSession: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
-            url("https://www.nicovideo.jp/watch/$videoId?responseType=json")
+            // nvpcClientVersion が無い・一致しないと400になる（公式Webのwatchページと同じ値）
+            url("https://www.nicovideo.jp/watch/$videoId?responseType=json&nvpcClientVersion=1")
             header("Cookie", "user_session=$userSession")
             header("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()
@@ -65,7 +66,9 @@ class NicoVideoHTML {
     /** One acquisition path for playback and metadata updates; keeps nicohistory. */
     suspend fun getWatchData(videoId: String, userSession: String): Pair<JSONObject, String?> = withContext(Dispatchers.IO) {
         val (response, history) = getJSON(videoId, userSession).use { http ->
-            check(http.isSuccessful) { "動画情報の取得に失敗しました (${http.code})" }
+            if (!http.isSuccessful) {
+                throw IllegalStateException(NicoVideoWatchResponse.errorMessage(http.code, http.body?.string()))
+            }
             Pair(NicoVideoWatchResponse.unwrap(http.body?.string()), getNicoHistory(http))
         }
         val v4 = NicoVideoWatchResponse.v4Data(response)

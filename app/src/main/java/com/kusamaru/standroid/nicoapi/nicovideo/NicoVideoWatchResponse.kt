@@ -8,8 +8,19 @@ internal object NicoVideoWatchResponse {
         require(!body.isNullOrBlank()) { "動画情報の応答が空です" }
         val root = JSONObject(body)
         val status = root.optJSONObject("meta")?.optInt("status", 200) ?: 200
-        check(status in 200..299) { "動画情報の取得に失敗しました ($status)" }
+        check(status in 200..299) { errorMessage(status, body) }
         return root.getJSONObject("data").getJSONObject("response")
+    }
+
+    /** 失敗時のメッセージ。本文に data.response.reason があれば添える。読み取れなければステータスのみ。 */
+    fun errorMessage(status: Int, body: String?): String {
+        val base = "動画情報の取得に失敗しました ($status)"
+        val reason = try {
+            JSONObject(body ?: return base).optJSONObject("data")?.optJSONObject("response")?.optString("reason")
+        } catch (e: Exception) {
+            null
+        }
+        return if (reason.isNullOrBlank()) base else "$base: $reason"
     }
 
     fun v4Data(response: JSONObject): JSONObject? = response.optJSONObject("\$watchV4")?.getJSONObject("data")
