@@ -115,6 +115,48 @@ class Issue41ResponseTest {
         reject { NicoVideoWatchResponse.normalize(wrap(v4()), extra) }
     }
 
+    // Shape observed from the v4 lazy API for a user series (values synthetic).
+    // RFC822 offset only because the JVM SimpleDateFormat rejects "+09:00"; Android is a device check.
+    private fun seriesItem(id: String) = """
+        {"type":"essential","id":"$id","title":"title $id","registeredAt":"2020-08-25T07:33:02+0900",
+         "count":{"view":10,"comment":2,"mylist":3,"like":4},"duration":685,
+         "thumbnail":{"url":"https://example.com/s","largeUrl":"https://example.com/l"},
+         "owner":{"type":"user","id":"1","name":"uploader"}}
+    """
+
+    private fun series(prev: String? = seriesItem("sm1"), next: String? = seriesItem("sm3")): JSONObject = JSONObject("""
+        {"id":157715,"title":"series","description":"d","thumbnailUrl":"https://example.com/series",
+         "video":{"prev":${prev ?: "null"},"next":${next ?: "null"},"first":${seriesItem("sm1")}}}
+    """)
+
+    @Test fun v4SeriesWorksWithExistingSeriesReaders() = runBlocking {
+        val source = lazy().put("series", series())
+        val before = source.toString()
+        val result = NicoVideoWatchResponse.normalize(wrap(v4()), source)
+        val reader = NicoVideoHTML()
+        val data = reader.getSeriesData(result)!!
+        assertEquals("157715", data.seriesId)
+        assertEquals("series", data.title)
+        val html = reader.getSeriesHTMLData(result)!!
+        assertEquals("sm1", html.prevVideoData!!.videoId)
+        assertEquals("sm3", html.nextVideoData!!.videoId)
+        assertEquals("sm1", html.firstVideoData!!.videoId)
+        assertEquals("10", html.nextVideoData!!.viewCount)
+        assertEquals(before, source.toString())
+    }
+
+    @Test fun v4SeriesEndsAreNullButIncompleteSeriesStillFails() = runBlocking {
+        val last = NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", series(next = null)))
+        assertNull(NicoVideoHTML().getSeriesHTMLData(last)!!.nextVideoData)
+        val noTitle = series().apply { remove("title") }
+        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", noTitle)) }
+        val noVideo = series().apply { remove("video") }
+        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", noVideo)) }
+        val badItem = series().apply { getJSONObject("video").getJSONObject("next").getJSONObject("count").remove("view") }
+        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", badItem)) }
+        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", "not-an-object")) }
+    }
+
     @Test fun incompleteOrEncryptedV4DoesNotReachConsumers() {
         val data = v4()
         data.getJSONObject("comment").getJSONObject("nvComment").remove("threadKey")

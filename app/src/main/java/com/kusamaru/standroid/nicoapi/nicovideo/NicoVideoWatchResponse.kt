@@ -1,5 +1,6 @@
 package com.kusamaru.standroid.nicoapi.nicovideo
 
+import org.json.JSONException
 import org.json.JSONObject
 
 /** Converts watch responses at the acquisition boundary, never saved/offline JSON. */
@@ -67,10 +68,35 @@ internal object NicoVideoWatchResponse {
             result.put("owner", JSONObject(owner.toString())
                 .put("iconUrl", owner.getJSONObject("icon").getString("url")))
         }
-        // ponytail: non-null V4 series has no verified schema yet; fail before overwriting a cache.
-        check(extra.isNull("series")) { "未対応のシリーズ形式です" }
-        result.put("series", JSONObject.NULL)
+        // The observed V4 lazy series (user series) has the same shape the legacy parsers read.
+        // A series that does not match fails before it overwrites a cache.
+        val series = extra.optJSONObject("series")
+        check(series != null || extra.isNull("series")) { "未対応のシリーズ形式です" }
+        result.put("series", if (series == null) JSONObject.NULL else validateSeries(series))
         return validate(result)
+    }
+
+    private fun validateSeries(series: JSONObject): JSONObject {
+        try {
+            series.getInt("id")
+            series.getString("title")
+            series.getString("thumbnailUrl")
+            val video = series.getJSONObject("video")
+            // prev/next/first are absent or null at the ends of a series.
+            for (key in listOf("prev", "next", "first")) {
+                val item = video.optJSONObject(key) ?: continue
+                item.getString("id")
+                item.getString("title")
+                item.getString("registeredAt")
+                item.getJSONObject("thumbnail").getString("largeUrl")
+                val counts = item.getJSONObject("count")
+                for (name in listOf("view", "comment", "mylist")) counts.getInt(name)
+                item.getInt("duration")
+            }
+        } catch (e: JSONException) {
+            throw IllegalStateException("未対応のシリーズ形式です", e)
+        }
+        return JSONObject(series.toString())
     }
 
     private fun normalizeThumbnail(thumbnail: JSONObject) {
