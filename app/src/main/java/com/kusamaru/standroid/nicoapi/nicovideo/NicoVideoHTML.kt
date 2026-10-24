@@ -72,7 +72,8 @@ class NicoVideoHTML {
             Pair(NicoVideoWatchResponse.unwrap(http.body?.string()), getNicoHistory(http))
         }
         val v4 = NicoVideoWatchResponse.v4Data(response)
-        val lazy = if (v4 != null) {
+        // 投稿者・シリーズ用。再生には不要なので失敗してもnullで続ける
+        val lazy = if (v4 != null) runCatching {
             val client = v4.getJSONObject("client")
             val request = Request.Builder()
                 .url("https://nvapi.nicovideo.jp/v4/watch/lazy/${client.getString("watchId")}")
@@ -93,7 +94,7 @@ class NicoVideoHTML {
                 check(status in 200..299) { "動画の追加情報の取得に失敗しました ($status)" }
                 root.getJSONObject("data")
             }
-        } else null
+        }.onFailure { println("lazy failed: $it") }.getOrNull() else null
         Pair(NicoVideoWatchResponse.normalize(response, lazy), history)
     }
 
@@ -1036,11 +1037,14 @@ class NicoVideoHTML {
      * */
     suspend fun getSeriesData(jsonObject: JSONObject): NicoVideoSeriesData? = withContext(Dispatchers.Default) {
         if (!jsonObject.isNull("series")) {
-            val seriesJSON = jsonObject.getJSONObject("series")
-            val title = seriesJSON.getString("title")
-            val seriesThumb = seriesJSON.getString("thumbnailUrl")
-            val seriesId = seriesJSON.getInt("id").toString()
-            NicoVideoSeriesData(title = title, seriesId = seriesId, itemsCount = -1, thumbUrl = seriesThumb)
+            // 想定外の形ならシリーズ無し扱い（再生は止めない）
+            runCatching {
+                val seriesJSON = jsonObject.getJSONObject("series")
+                val title = seriesJSON.getString("title")
+                val seriesThumb = seriesJSON.getString("thumbnailUrl")
+                val seriesId = seriesJSON.getInt("id").toString()
+                NicoVideoSeriesData(title = title, seriesId = seriesId, itemsCount = -1, thumbUrl = seriesThumb)
+            }.onFailure { println("series parse failed: $it") }.getOrNull()
         } else {
             null
         }
@@ -1055,17 +1059,22 @@ class NicoVideoHTML {
      * */
     suspend fun getSeriesHTMLData(jsonObject: JSONObject) = withContext(Dispatchers.Default) {
         return@withContext if (!jsonObject.isNull("series")) {
-            val seriesJSON = jsonObject.getJSONObject("series")
-            // シリーズのデータクラス
-            val seriesData = getSeriesData(jsonObject)!!
-            // 前後の動画のJSON
-            val seriesVideoJSON = seriesJSON.getJSONObject("video")
-            // 次の動画の情報
-            val nextVideoData = if (seriesVideoJSON.isNull("next")) null else parseSeriesVideoData(seriesVideoJSON.getJSONObject("next"))
-            // 前の動画の情報
-            val prevVideoData = if (seriesVideoJSON.isNull("prev")) null else parseSeriesVideoData(seriesVideoJSON.getJSONObject("prev"))
-            // 最初の動画
-            val firstVideoData = if (seriesVideoJSON.isNull("first")) null else parseSeriesVideoData(seriesVideoJSON.getJSONObject("first"))
+            // シリーズのデータクラス。想定外の形ならシリーズ無し扱い
+            val seriesData = getSeriesData(jsonObject) ?: return@withContext null
+            // 前後の動画のJSON。読めない動画はその項目だけ出さない
+            val seriesVideoJSON = jsonObject.getJSONObject("series").optJSONObject("video") ?: JSONObject()
+            suspend fun item(key: String) = seriesVideoJSON.optJSONObject(key)?.let { json ->
+                try {
+                    parseSeriesVideoData(json)
+                } catch (e: Exception) {
+                    println("series $key parse failed: $e")
+                    null
+                }
+            }
+            // 次の動画、前の動画、最初の動画
+            val nextVideoData = item("next")
+            val prevVideoData = item("prev")
+            val firstVideoData = item("first")
             // まとめてデータクラスへ
             NicoVideoHTMLSeriesData(seriesData, firstVideoData, nextVideoData, prevVideoData)
         } else {

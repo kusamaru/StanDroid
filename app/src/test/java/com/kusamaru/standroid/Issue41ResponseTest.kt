@@ -75,13 +75,14 @@ class Issue41ResponseTest {
         assertEquals(extraBefore, extra.toString())
     }
 
-    @Test fun viewerLikeAndPremiumArePreservedOnlyWhenProvided() {
+    @Test fun viewerLikeAndPremiumArePreservedWhenProvided() {
         val data = v4().put("viewer", JSONObject("""{"id":456,"isPremium":true}"""))
         val result = NicoVideoWatchResponse.normalize(wrap(data), lazy())
         assertTrue(NicoVideoHTML().isLiked(result))
-        assertTrue(result.getJSONObject("viewer").getBoolean("isPremium"))
-        data.getJSONObject("viewer").remove("isPremium")
-        reject { NicoVideoWatchResponse.normalize(wrap(data), lazy()) }
+        assertTrue(NicoVideoHTML().isPremium(result))
+        // isLikedByViewer が無くても止めない
+        data.getJSONObject("video").remove("isLikedByViewer")
+        assertFalse(NicoVideoHTML().isLiked(NicoVideoWatchResponse.normalize(wrap(data), lazy())))
     }
 
     @Test fun isoTimestampIsPreservedWithoutDateOrTimezoneConversion() {
@@ -98,21 +99,44 @@ class Issue41ResponseTest {
         assertTrue(NicoVideoHTML().isEncryption(result.toString()))
     }
 
-    @Test fun explicitAbsentOwnerIsDifferentFromMissingLazyData() {
-        val extra = lazy().put("owner", JSONObject.NULL)
-        assertNull(NicoVideoHTML().parseUserData(NicoVideoWatchResponse.normalize(wrap(v4()), extra)))
-        extra.remove("owner")
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), extra) }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4())) }
+    // 有料・会員限定の動画は media が null（so44856488 で観測）。旧形式と同じ「再生できません」の判定に乗せる
+    @Test fun nullMediaReachesTheExistingNotPlayableCheck() {
+        val data = v4().put("media", JSONObject.NULL)
+        data.getJSONObject("payment").put("billingType", "custom")
+        val result = NicoVideoWatchResponse.normalize(wrap(data), lazy())
+        assertTrue(NicoVideoHTML().isDomandOnly(result))
+        assertTrue(NicoVideoHTML().isEncryption(result.toString()))
     }
 
-    @Test fun unsupportedSeriesChannelAndVisibilityFailRatherThanFabricatingData() {
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", JSONObject().put("id", 1))) }
-        val extra = lazy()
-        extra.getJSONObject("owner").put("type", "channel")
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), extra) }
-        extra.getJSONObject("owner").put("type", "user").put("visibility", "unknown")
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), extra) }
+    // 旧形式でアカウント削除時は owner/channel ともに null で、再生はできた
+    @Test fun missingLazyOrUnknownOwnerPlaysLikeADeletedAccount() = runBlocking {
+        val reader = NicoVideoHTML()
+        val noLazy = NicoVideoWatchResponse.normalize(wrap(v4()))
+        assertNull(reader.parseUserData(noLazy))
+        assertEquals("", reader.createNicoVideoData(noLazy).uploaderName)
+        assertNull(reader.getSeriesData(noLazy))
+        for (extra in listOf(lazy().put("owner", JSONObject.NULL), JSONObject(), lazy().apply { getJSONObject("owner").put("visibility", "hidden") },
+            lazy().apply { getJSONObject("owner").put("type", "unknown") })) {
+            val result = NicoVideoWatchResponse.normalize(wrap(v4()), extra)
+            assertNull(reader.parseUserData(result))
+            assertEquals("", reader.getUploaderId(result))
+        }
+    }
+
+    // lazy のチャンネル投稿者（so38075720 で観測）を旧形式の channel に入れる
+    @Test fun channelOwnerBecomesLegacyChannel() = runBlocking {
+        val extra = JSONObject("""
+            {"owner":{"type":"channel","visibility":"visible","id":"ch2647048","name":"channel","isOfficialAnime":true,
+              "thumbnail":{"url":"https://example.com/ch","smallUrl":"https://example.com/ch-s"},"follow":null},"series":null}
+        """)
+        val result = NicoVideoWatchResponse.normalize(wrap(v4()), extra)
+        val reader = NicoVideoHTML()
+        val user = reader.parseUserData(result)!!
+        assertTrue(user.isChannel)
+        assertEquals("ch2647048", user.userId)
+        assertEquals("https://example.com/ch", user.largeIcon)
+        assertEquals("channel", reader.createNicoVideoData(result).uploaderName)
+        assertTrue(reader.isOfficial(result))
     }
 
     // Shape observed from the v4 lazy API for a user series (values synthetic).
@@ -145,31 +169,28 @@ class Issue41ResponseTest {
         assertEquals(before, source.toString())
     }
 
-    @Test fun v4SeriesEndsAreNullButIncompleteSeriesStillFails() = runBlocking {
+    // 想定外のシリーズは再生を止めず、読めない部分だけ出さない
+    @Test fun unexpectedSeriesShapeIsIgnoredInsteadOfFailing() = runBlocking {
+        val reader = NicoVideoHTML()
         val last = NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", series(next = null)))
-        assertNull(NicoVideoHTML().getSeriesHTMLData(last)!!.nextVideoData)
-        val noTitle = series().apply { remove("title") }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", noTitle)) }
-        val noVideo = series().apply { remove("video") }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", noVideo)) }
+        assertNull(reader.getSeriesHTMLData(last)!!.nextVideoData)
+        for (bad in listOf(series().apply { remove("title") }, JSONObject().put("id", 1))) {
+            val result = NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", bad))
+            assertNull(reader.getSeriesData(result))
+            assertNull(reader.getSeriesHTMLData(result))
+        }
         val badItem = series().apply { getJSONObject("video").getJSONObject("next").getJSONObject("count").remove("view") }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", badItem)) }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", "not-an-object")) }
-    }
-
-    @Test fun incompleteOrEncryptedV4DoesNotReachConsumers() {
-        val data = v4()
-        data.getJSONObject("comment").getJSONObject("nvComment").remove("threadKey")
-        reject { NicoVideoWatchResponse.normalize(wrap(data), lazy()) }
-        val encrypted = v4()
-        encrypted.getJSONObject("media").put("encryption", JSONObject().put("type", "drm"))
-        reject { NicoVideoWatchResponse.normalize(wrap(encrypted), lazy()) }
+        val html = reader.getSeriesHTMLData(NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", badItem)))!!
+        assertNull(html.nextVideoData)
+        assertEquals("sm1", html.prevVideoData!!.videoId)
+        val noVideo = NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", series().apply { remove("video") }))
+        assertNull(reader.getSeriesHTMLData(noVideo)!!.firstVideoData)
+        assertNull(reader.getSeriesData(NicoVideoWatchResponse.normalize(wrap(v4()), lazy().put("series", "not-an-object"))))
     }
 
     @Test fun serviceErrorAndEmptyBodyAreNotSuccess() {
         reject { NicoVideoWatchResponse.unwrap(null) }
         reject { NicoVideoWatchResponse.unwrap("""{"meta":{"status":403},"data":{"response":{}}}""") }
-        reject { NicoVideoWatchResponse.normalize(wrap(v4().put("error", JSONObject())), lazy()) }
     }
 
     @Test fun errorMessageIncludesReasonOnlyWhenReadable() {

@@ -4,6 +4,7 @@ import com.kusamaru.standroid.nicoapi.nicovideo.dataclass.NicoVideoData
 import com.kusamaru.standroid.tool.OkHttpClientSingleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.HttpUrl
 import okhttp3.Request
 import org.json.JSONObject
 import org.jsoup.Jsoup
@@ -87,7 +88,17 @@ class NicoVideoSearchHTMLV2 {
 
         val request = Request.Builder().apply {
             // 末尾に`responseType=json`クエリを付加することでjsonでお返事が帰ってくるみたい
-            url("https://www.nicovideo.jp/$tagOrSearch/$searchText?page=$page&order=$orderValue&sort=$sortValue&responseType=json")
+            // 検索語に # ? / などが入っても壊れないようにエンコードする
+            url(HttpUrl.Builder()
+                .scheme("https")
+                .host("www.nicovideo.jp")
+                .addPathSegment(tagOrSearch)
+                .addPathSegment(searchText)
+                .addQueryParameter("page", page)
+                .addQueryParameter("order", orderValue)
+                .addQueryParameter("sort", sortValue)
+                .addQueryParameter("responseType", "json")
+                .build())
             addHeader("Cookie", "user_session=$userSession")
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             // たぶんなくても通る
@@ -189,7 +200,12 @@ class NicoVideoSearchHTMLV2 {
      * */
     suspend fun getSearchSuggest(userSession: String, searchText: String) = withContext(Dispatchers.IO) {
         val request = Request.Builder().apply {
-            url("https://sug.search.nicovideo.jp/suggestion/expand/$searchText")
+            url(HttpUrl.Builder()
+                .scheme("https")
+                .host("sug.search.nicovideo.jp")
+                .addPathSegments("suggestion/expand")
+                .addPathSegment(searchText)
+                .build())
             addHeader("Cookie", "user_session=$userSession")
             addHeader("User-Agent", "Stan-Droid;@kusamaru_jp")
             get()

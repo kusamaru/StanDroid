@@ -1,9 +1,13 @@
 package com.kusamaru.standroid.nicoapi.nicovideo
 
-import org.json.JSONException
+import org.json.JSONArray
 import org.json.JSONObject
 
-/** Converts watch responses at the acquisition boundary, never saved/offline JSON. */
+/**
+ * watchの応答を旧形式（data.response）と同じ形にする。保存済み・オフラインのJSONには使わない。
+ *
+ * 旧形式と同じく、再生に必要な項目だけを必須にする。投稿者・シリーズなどは取れなければnullにして再生を続ける。
+ * */
 internal object NicoVideoWatchResponse {
     fun unwrap(body: String?): JSONObject {
         require(!body.isNullOrBlank()) { "動画情報の応答が空です" }
@@ -24,125 +28,61 @@ internal object NicoVideoWatchResponse {
         return if (reason.isNullOrBlank()) base else "$base: $reason"
     }
 
-    fun v4Data(response: JSONObject): JSONObject? = response.optJSONObject("\$watchV4")?.getJSONObject("data")
+    fun v4Data(response: JSONObject): JSONObject? = response.optJSONObject("\$watchV4")?.optJSONObject("data")
 
+    /**
+     * @param lazy v4/watch/lazy の data。取得できなかった場合はnull（投稿者・シリーズなしで続ける）
+     * */
     fun normalize(response: JSONObject, lazy: JSONObject? = null): JSONObject {
-        // Preserve the old response as-is, including DMC/offline-compatible data.
+        // 旧形式の応答はそのまま
         val v4 = v4Data(response) ?: return response
-        check(v4.getString("responseType").isNotBlank() && !v4.has("error")) { "動画を視聴できませんでした" }
-        val extra = requireNotNull(lazy) { "動画の追加情報を取得できませんでした" }
         val result = JSONObject(v4.toString())
         result.remove("lazy")
         result.remove("metadata")
 
         val video = result.getJSONObject("video")
-        normalizeThumbnail(video.getJSONObject("thumbnail"))
-        if (!result.isNull("viewer")) {
-            val viewer = result.getJSONObject("viewer")
-            viewer.getString("id")
-            viewer.getBoolean("isPremium")
-            video.put("viewer", JSONObject().put("like", JSONObject().put("isLiked", video.getBoolean("isLikedByViewer"))))
+        video.optJSONObject("thumbnail")?.let { thumbnail ->
+            if (!thumbnail.has("url")) thumbnail.put("url", thumbnail.optString("normal", ""))
         }
-        result.put("tag", result.getJSONObject("tags"))
+        if (!result.isNull("viewer")) {
+            video.put("viewer", JSONObject().put("like", JSONObject().put("isLiked", video.optBoolean("isLikedByViewer", false))))
+        }
+        result.put("tag", result.optJSONObject("tags") ?: JSONObject().put("items", JSONArray()))
         result.remove("tags")
 
-        val media = result.getJSONObject("media")
-        check(media.isNull("encryption")) { "暗号化された動画には対応していません" }
-        val contents = media.getJSONObject("contents")
-        media.put("domand", JSONObject()
-            .put("accessRightKey", media.getString("accessRightKey"))
-            .put("videos", contents.getJSONArray("videos"))
-            .put("audios", contents.getJSONArray("audios")))
-        media.put("delivery", JSONObject.NULL)
-        val payment = result.getJSONObject("payment")
-        payment.put("video", JSONObject().put("billingType", payment.getString("billingType")))
+        // 有料・会員限定などはmediaがnullになる。billingTypeで既存のisEncryption()に「再生できません」を出させる
+        val media = result.optJSONObject("media")
+        if (media != null) {
+            val contents = media.optJSONObject("contents")
+            media.put("domand", JSONObject()
+                .put("accessRightKey", media.opt("accessRightKey"))
+                .put("videos", contents?.opt("videos"))
+                .put("audios", contents?.opt("audios")))
+            media.put("delivery", JSONObject.NULL)
+        } else {
+            result.put("media", JSONObject().put("delivery", JSONObject.NULL).put("domand", JSONObject.NULL))
+        }
+        val payment = result.optJSONObject("payment") ?: JSONObject().also { result.put("payment", it) }
+        payment.put("video", JSONObject().put("billingType", payment.optString("billingType", "free")))
 
-        // Do not turn a failed lazy request into deleted owner/absent series data.
-        require(extra.has("owner") && extra.has("series")) { "動画の追加情報が不完全です" }
+        if (lazy == null) println("NicoVideoWatchResponse: lazy data is missing; owner and series are treated as absent")
+        putOwner(result, lazy?.optJSONObject("owner"))
+        result.put("series", lazy?.optJSONObject("series") ?: JSONObject.NULL)
+        return result
+    }
+
+    /** 旧形式の owner（ユーザー）/ channel（チャンネル）に振り分ける。それ以外は退会済みと同じ扱い（両方null） */
+    private fun putOwner(result: JSONObject, owner: JSONObject?) {
         result.put("owner", JSONObject.NULL).put("channel", JSONObject.NULL)
-        extra.optJSONObject("owner")?.let { owner ->
-            // Only the visible/user shape was observed; do not invent channel/deletion mappings.
-            check(owner.getString("visibility") == "visible" && owner.getString("type") == "user") {
-                "未対応の投稿者形式です"
-            }
-            result.put("owner", JSONObject(owner.toString())
-                .put("iconUrl", owner.getJSONObject("icon").getString("url")))
+        if (owner == null || owner.optString("visibility") != "visible") return
+        when (owner.optString("type")) {
+            "user" -> result.put("owner", JSONObject(owner.toString())
+                .put("iconUrl", owner.optJSONObject("icon")?.optString("url", "") ?: ""))
+            "channel" -> result.put("channel", JSONObject()
+                .put("id", owner.optString("id"))
+                .put("name", owner.optString("name"))
+                .put("thumbnail", JSONObject().put("url", owner.optJSONObject("thumbnail")?.optString("url", "") ?: "")))
+            else -> println("NicoVideoWatchResponse: unknown owner type: ${owner.optString("type")}")
         }
-        // The observed V4 lazy series (user series) has the same shape the legacy parsers read.
-        // A series that does not match fails before it overwrites a cache.
-        val series = extra.optJSONObject("series")
-        check(series != null || extra.isNull("series")) { "未対応のシリーズ形式です" }
-        result.put("series", if (series == null) JSONObject.NULL else validateSeries(series))
-        return validate(result)
-    }
-
-    private fun validateSeries(series: JSONObject): JSONObject {
-        try {
-            series.getInt("id")
-            series.getString("title")
-            series.getString("thumbnailUrl")
-            val video = series.getJSONObject("video")
-            // prev/next/first are absent or null at the ends of a series.
-            for (key in listOf("prev", "next", "first")) {
-                val item = video.optJSONObject(key) ?: continue
-                item.getString("id")
-                item.getString("title")
-                item.getString("registeredAt")
-                item.getJSONObject("thumbnail").getString("largeUrl")
-                val counts = item.getJSONObject("count")
-                for (name in listOf("view", "comment", "mylist")) counts.getInt(name)
-                item.getInt("duration")
-            }
-        } catch (e: JSONException) {
-            throw IllegalStateException("未対応のシリーズ形式です", e)
-        }
-        return JSONObject(series.toString())
-    }
-
-    private fun normalizeThumbnail(thumbnail: JSONObject) {
-        if (!thumbnail.has("url")) thumbnail.put("url", thumbnail.getString("normal"))
-    }
-
-    private fun validate(json: JSONObject): JSONObject {
-        val video = json.getJSONObject("video")
-        video.getString("id")
-        video.getString("title")
-        video.getString("description")
-        video.getString("registeredAt")
-        video.getLong("duration")
-        video.getJSONObject("thumbnail").getString("url")
-        val counts = video.getJSONObject("count")
-        for (key in listOf("view", "comment", "mylist", "like")) counts.getLong(key)
-        val client = json.getJSONObject("client")
-        client.getString("watchId")
-        client.getString("watchTrackId")
-        val media = json.getJSONObject("media")
-        if (media.isNull("delivery")) {
-            val domand = media.getJSONObject("domand")
-            domand.getString("accessRightKey")
-            domand.getJSONArray("videos")
-            domand.getJSONArray("audios")
-        }
-        json.getJSONObject("payment").getJSONObject("video").getString("billingType")
-        val comment = json.getJSONObject("comment").getJSONObject("nvComment")
-        comment.getString("server")
-        comment.getJSONObject("params")
-        comment.getString("threadKey")
-        val tags = json.getJSONObject("tag").getJSONArray("items")
-        for (index in 0 until tags.length()) {
-            tags.getJSONObject(index).getString("name")
-            tags.getJSONObject(index).getBoolean("isLocked")
-        }
-        json.optJSONObject("owner")?.let {
-            it.getString("id")
-            it.getString("nickname")
-            it.getString("iconUrl")
-        }
-        json.optJSONObject("channel")?.let {
-            it.getString("id")
-            it.getString("name")
-            it.getJSONObject("thumbnail").getString("url")
-        }
-        return json
     }
 }

@@ -55,7 +55,7 @@ class NicoVideoSearchViewModel(application: Application) : AndroidViewModel(appl
     var isEnd = false
 
     /** コルーチンキャンセル用 */
-    private val coroutineJob = Job()
+    private val coroutineJob = SupervisorJob() // 1回の検索失敗で以後の検索がキャンセルされないように
 
     /** 現在の位置 */
     var currentSearchPage = 1
